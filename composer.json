@@ -14,12 +14,6 @@
       "role": "developer"
     }
   ],
-  "repositories": {
-    "packagist": {
-      "type": "composer",
-      "url": "https://packagist.phpcomposer.com"
-    }
-  },
   "require": {
     "php": ">=7.0",
     "topthink/framework": "5.0.12",
