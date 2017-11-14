@@ -1,0 +1,41 @@
+{
+  "name": "h136799711/bookstore",
+  "description": "book store resource api",
+  "type": "project",
+  "license": "MIT",
+  "keywords": [
+    "h136799711"
+  ],
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "hebidu",
+      "email": "hebiduhebi@126.com",
+      "role": "developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "by\\": "architecture/src/",
+      "byTest\\": "architecture/test/",
+      "byCli\\": "architecture/cli/"
+    }
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  },
+  "require": {
+    "php": ">=7.0",
+    "php-amqplib/php-amqplib": "2.7.*",
+    "topthink/framework": "5.0.12"
+  },
+  "require-dev": {
+    "php": ">=7.0",
+    "phpunit/phpunit": "6.2",
+    "php-amqplib/php-amqplib": "2.7.*",
+    "phpdocumentor/phpdocumentor": "2.*"
+  }
+}
