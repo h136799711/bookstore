@@ -10,14 +10,18 @@
 // +----------------------------------------------------------------------
 
 return [
+
+    // 默认时区 设置为UTC时区
+    'default_timezone' => 'UTC',
+    // 应用调试模式，默认关闭，通过.env文件进行定义
+    'app_debug' => false,
+
     // +----------------------------------------------------------------------
     // | 应用设置
     // +----------------------------------------------------------------------
 
     // 应用命名空间
     'app_namespace' => 'app',
-    // 应用调试模式
-    'app_debug' => false,
     // 应用Trace
     'app_trace' => false,
     // 应用模式状态
@@ -38,8 +42,6 @@ return [
     'default_jsonp_handler' => 'jsonpReturn',
     // 默认JSONP处理方法
     'var_jsonp_handler' => 'callback',
-    // 默认时区
-    'default_timezone' => 'PRC',
     // 是否开启多语言
     'lang_switch_on' => false,
     // 默认全局过滤方法 用逗号分隔多个
