@@ -107,9 +107,11 @@ class XiashuSpiderCommand extends Command
                 $pid = posix_getpid();
                 echo "\n", $j . 'children sleep start' . $pid;
                 $name = $this->getUniqueId($pid);
+                $repo = new XiaShuSpiderUrlRepo();
                 $spiders[$j] = new XiaShuBookSpider($name, $offset + $j * $everyChildProcessSize, $offset + ($j + 1) * $everyChildProcessSize);
+                $spiders[$j]->repo = $repo;
                 $spiders[$j]->mark();
-                $spiders[$j]->start();
+//                $spiders[$j]->start();
                 exit(0);
             } else {
                 echo 'father';
