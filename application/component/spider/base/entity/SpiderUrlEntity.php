@@ -16,12 +16,14 @@
 
 namespace app\component\spider\base\entity;
 
+use by\infrastructure\base\BaseEntity;
+
 /**
  * Class SpiderUrl
  * 待爬的URL
  * @package app\component\spider\base\entity
  */
-class SpiderUrlEntity
+class SpiderUrlEntity extends BaseEntity
 {
 
     private $url;

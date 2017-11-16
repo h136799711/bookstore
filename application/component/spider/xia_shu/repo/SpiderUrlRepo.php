@@ -7,19 +7,24 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-14 14:41
+ * file created @ 2017-11-16 11:33
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace app\component\spider\xia_shu\entity;
+namespace app\component\spider\xia_shu\repo;
 
 
-use app\component\spider\base\entity\SpiderUrlEntity;
+use think\Model;
 
-class XiaShuSpiderUrlEntity extends SpiderUrlEntity
+/**
+ * Class SpiderUrlRepo
+ * 爬虫爬取的 url
+ * @package by\component\xia_shu\repo
+ */
+class SpiderUrlRepo extends Model
 {
-
+    protected $table = 'xiashu_book_url';
 }
