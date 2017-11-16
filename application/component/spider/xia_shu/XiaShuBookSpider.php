@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\xia_shu;
+namespace app\component\spider\xia_shu;
 
 
 use app\component\spider\base\AbstractSpider;
