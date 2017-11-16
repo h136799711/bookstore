@@ -23,12 +23,15 @@
   "require": {
     "php": ">=7.0",
     "topthink/framework": "5.0.12",
-    "itboye/architecture": "dev-master"
+    "itboye/architecture": "dev-master",
+    "sunra/php-simple-html-dom-parser": "1.5.2"
+
   },
   "require-dev": {
     "php": ">=7.0",
     "phpunit/phpunit": "6.2",
     "phpdocumentor/phpdocumentor": "2.*",
-    "itboye/architecture": "dev-master"
+    "itboye/architecture": "dev-master",
+    "sunra/php-simple-html-dom-parser": "1.5.2"
   }
 }

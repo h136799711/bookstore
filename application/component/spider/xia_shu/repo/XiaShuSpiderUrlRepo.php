@@ -27,11 +27,12 @@ use think\Model;
  */
 class XiaShuSpiderUrlRepo extends Model
 {
-    protected $table = 'v_xiashu_book_url_not_over';
+    protected $table = 'xiashu_book_url';
+    private $view = 'v_xiashu_book_url_not_over';
 
     public function clearMark($name)
     {
-        $result = Db::table($this->table)->lock()->where('spider_id', 'eq', $name)
+        $result = Db::table($this->view)->lock()->where('spider_id', 'eq', $name)
             ->update(['spider_id' => '', 'update_time' => time()]);
         return $result;
     }
@@ -39,14 +40,14 @@ class XiaShuSpiderUrlRepo extends Model
     public function mark($name, $startId, $endId)
     {
         $startId = $startId - 1 > 0 ? $startId - 1 : 0;
-        $result = Db::table($this->table)->lock()->where('id', '<', $endId)->where('id', '>', $startId)
+        $result = Db::table($this->view)->lock()->where('id', '<', $endId)->where('id', '>', $startId)
             ->update(['spider_id' => $name, 'update_time' => time()]);
         return $result;
     }
 
     public function queryBetween($name, $startPage = 0, $page = 10)
     {
-        $result = Db::table($this->table)->limit($startPage * $page, $page)->where('spider_id', 'eq', $name)->fetchSql(false)
+        $result = Db::table($this->view)->limit($startPage * $page, $page)->where('spider_id', 'eq', $name)->fetchSql(false)
             ->select();
         return $result;
     }

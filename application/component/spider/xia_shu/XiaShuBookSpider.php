@@ -64,7 +64,7 @@ class XiaShuBookSpider extends AbstractSpider
     public function start()
     {
         $pageIndex = 0;
-        while (true) {
+        while ($this->startId + $pageIndex < $this->endId) {
             $now = time();
             // 读取指定个数
             $batchUrlData = $this->nextBatchUrls($this->perPage);
@@ -83,7 +83,7 @@ class XiaShuBookSpider extends AbstractSpider
                 array_push($list, $tmp);
             }
 
-            $this->repo->saveAll($list);
+            $this->repo->isUpdate(true)->saveAll($list);
 
             $pageIndex += $this->perPage;
 
@@ -101,6 +101,7 @@ class XiaShuBookSpider extends AbstractSpider
     function parseUrl($data)
     {
         echo 'process ' . $data['url'], "\n";
+
         return CallResultHelper::success();
     }
 
