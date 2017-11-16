@@ -38,10 +38,6 @@ class XiaShuSpiderUrlRepo extends Model
 
     public function mark($name, $startId, $endId)
     {
-        $dbConfig = config('database');
-        var_dump($dbConfig);
-        Db::clear();
-        Db::connect($dbConfig);
         $startId = $startId - 1 > 0 ? $startId - 1 : 0;
         $result = Db::table($this->table)->lock()->where('id', '<', $endId)->where('id', '>', $startId)
             ->update(['spider_id' => $name, 'update_time' => time()]);

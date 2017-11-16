@@ -24,7 +24,6 @@ use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
-use think\Exception;
 
 class XiashuSpiderCommand extends Command
 {
@@ -107,15 +106,14 @@ class XiashuSpiderCommand extends Command
                 $pid = posix_getpid();
                 echo "\n", $j . 'children sleep start' . $pid;
                 $name = $this->getUniqueId($pid);
-                try {
+//                try {
                     $spiders[$j] = new XiaShuBookSpider($name, $offset + $j * $everyChildProcessSize, $offset + ($j + 1) * $everyChildProcessSize);
                     $spiders[$j]->mark();
-                    sleep(10);
-//                $spiders[$j]->start();
+                $spiders[$j]->start();
                     $spiders[$j]->clearMark();
-                } catch (Exception $ex) {
-                    var_dump($ex->getTraceAsString());
-                }
+//                } catch (Exception $ex) {
+//                    var_dump($ex->getTraceAsString());
+//                }
                 exit(0);
             } else {
                 echo 'father';
