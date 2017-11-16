@@ -93,6 +93,7 @@ class XiashuSpiderCommand extends Command
         $everyChildProcessSize = ceil($count / $threads);
         $children = array();
         $spiders = [];
+        $offset = 171;
 
         // 如果存在 pcntl 则采用多进程进行处理
         for ($j = 0; $j < $threads; $j++) {
@@ -106,7 +107,7 @@ class XiashuSpiderCommand extends Command
                 $pid = posix_getpid();
                 echo "\n", $j . 'children sleep start' . $pid;
                 $name = $this->getUniqueId($pid);
-                $spiders[$j] = new XiaShuBookSpider($name, $j * $everyChildProcessSize, ($j + 1) * $everyChildProcessSize);
+                $spiders[$j] = new XiaShuBookSpider($name, $offset + $j * $everyChildProcessSize, $offset + ($j + 1) * $everyChildProcessSize);
                 $spiders[$j]->mark();
                 $spiders[$j]->start();
                 exit(0);
