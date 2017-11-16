@@ -21,11 +21,11 @@ return [
     // 密码
     'password' => '364945361',
     // 端口
-    'hostport' => '',
+    'hostport' => '3306',
     // 连接dsn
     'dsn' => '',
     // 数据库连接参数
-    'params' => [],
+    'params' => [PDO::ATTR_PERSISTENT => true],
     // 数据库编码默认采用utf8
     'charset' => 'utf8',
     // 数据库表前缀
