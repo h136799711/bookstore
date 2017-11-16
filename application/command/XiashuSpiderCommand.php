@@ -19,7 +19,7 @@ namespace app\command;
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
-use by\component\xia_shu\XiaShuBookSpider;
+use app\component\xia_shu\XiaShuBookSpider;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
