@@ -24,6 +24,7 @@ use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
+use think\Exception;
 
 class XiashuSpiderCommand extends Command
 {
@@ -84,8 +85,8 @@ class XiashuSpiderCommand extends Command
     protected function runThreads($threads = 10, $interval = 3, $limit = 10)
     {
         echo "\n", 'threads' . $threads;
-        $repo = new XiaShuSpiderUrlRepo();
-        $count = $repo->count();
+//        $repo = new XiaShuSpiderUrlRepo();
+//        $count = $repo->count();
         $count = 10;
         // TODO: 获取当前总共待处理数量 n ,目前不大于20万
         // TODO: 分配给最多10个进程进行处理 n / 10 <= 20000
@@ -94,7 +95,6 @@ class XiashuSpiderCommand extends Command
         $children = array();
         $spiders = [];
         $offset = 171;
-
         // 如果存在 pcntl 则采用多进程进行处理
         for ($j = 0; $j < $threads; $j++) {
             $children[$j] = pcntl_fork();
@@ -107,11 +107,15 @@ class XiashuSpiderCommand extends Command
                 $pid = posix_getpid();
                 echo "\n", $j . 'children sleep start' . $pid;
                 $name = $this->getUniqueId($pid);
-                $repo = new XiaShuSpiderUrlRepo();
-                $spiders[$j] = new XiaShuBookSpider($name, $offset + $j * $everyChildProcessSize, $offset + ($j + 1) * $everyChildProcessSize);
-                $spiders[$j]->repo = $repo;
-                $spiders[$j]->mark();
+                try {
+                    $spiders[$j] = new XiaShuBookSpider($name, $offset + $j * $everyChildProcessSize, $offset + ($j + 1) * $everyChildProcessSize);
+                    $spiders[$j]->mark();
+                    sleep(10);
 //                $spiders[$j]->start();
+                    $spiders[$j]->clearMark();
+                } catch (Exception $ex) {
+                    var_dump($ex->getTraceAsString());
+                }
                 exit(0);
             } else {
                 echo 'father';
@@ -126,7 +130,6 @@ class XiashuSpiderCommand extends Command
 
                 //-1代表error, 大于0代表子进程已退出,返回的是子进程的pid,非阻塞时0代表没取到退出子进程
                 if ($res == -1 || $res > 0) {
-                    $spiders[$key]->clearMark();
                     unset($children[$key]);
                 }
             }

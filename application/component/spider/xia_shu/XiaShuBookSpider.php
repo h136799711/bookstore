@@ -38,11 +38,16 @@ class XiaShuBookSpider extends AbstractSpider
     public function __construct($name, $start = 0, $end = 0, $perPage = 1000)
     {
         $this->name = $name;
-//        $this->repo = new XiaShuSpiderUrlRepo();
+        $this->repo = new XiaShuSpiderUrlRepo();
         $this->startId = $start;
         $this->endId = $end;
         $this->curPage = 0;
         $this->perPage = $perPage;
+    }
+
+    public function clearMark()
+    {
+        $this->repo->clearMark($this->name);
     }
 
     /**
