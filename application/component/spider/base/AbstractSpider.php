@@ -17,7 +17,6 @@
 namespace app\component\spider\base;
 
 
-use app\component\spider\base\entity\SpiderUrlEntity;
 use by\infrastructure\base\CallResult;
 
 abstract class AbstractSpider
@@ -32,8 +31,8 @@ abstract class AbstractSpider
 
     /**
      * 解析当前的地址
-     * @param SpiderUrlEntity $urlEntity
+     * @param $data
      * @return CallResult
      */
-    abstract function parseUrl(SpiderUrlEntity $urlEntity);
+    abstract function parseUrl($data);
 }

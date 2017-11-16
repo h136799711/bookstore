@@ -18,77 +18,84 @@ namespace by\component\xia_shu;
 
 
 use app\component\spider\base\AbstractSpider;
-use app\component\spider\base\entity\SpiderUrlEntity;
 use app\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
+use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use by\infrastructure\helper\CallResultHelper;
 
 class XiaShuBookSpider extends AbstractSpider
 {
 
-    private $interval = 3;
-    private $limit = 10;
-    // 持续时间
-    private $duration = 600;
+    private $startId = 0;
+    private $endId = 0;
+    private $curPage = 0;
+    private $perPage = 1000;
+    private $name;
+    /**
+     * @var XiaShuSpiderUrlRepo
+     */
+    private $repo;
 
-    public static function newSpider()
+    public function __construct($name, $start = 0, $end = 0, $perPage = 1000)
     {
-        return new XiaShuBookSpider();
+        $this->name = $name;
+        $this->repo = new XiaShuSpiderUrlRepo();
+        $this->startId = $start;
+        $this->endId = $end;
+        $this->curPage = 0;
+        $this->perPage = $perPage;
     }
 
     /**
-     * 如果 duration 为0 ，则一直运行
-     * @param int $interval
-     * @param int $limit
-     * @param int $duration
-     * @return $this
+     * 标记
      */
-    public function init($interval = 3, $limit = 10, $duration = 600)
+    public function mark()
     {
-        if (!empty($interval)) {
-            $interval = intval($interval);
-            $this->interval = $interval <= 1 ? 1 : $interval;
-        }
-        if (!empty($limit)) {
-            $this->limit = $limit;
-        }
-        if (!empty($duration)) {
-            $this->duration = $duration;
-        }
-        return $this;
+        $this->repo->mark($this->name, $this->startId, $this->endId);
     }
 
+    /**
+     * @return $this
+     */
     public function start()
     {
-        $times = 0;
-        $passTimes = 0;
+        $pageIndex = 0;
         while (true) {
-            echo 'spider start ' . $times, "\n";
+            $now = time();
+            // 读取指定个数
+            $batchUrlData = $this->nextBatchUrls($this->perPage);
+            $list = [];
+            foreach ($batchUrlData as $data) {
+                $result = $this->parseUrl($data);
+                $tmp = ['id' => $data['id']];
+                $tmp['spider_status'] = XiaShuSpiderBookUrlEntity::SPIDER_STATUS_WAITING;
+                $tmp['spider_active_time'] = $now;
+                $tmp['spider_info'] = $result->getMsg();
+                $tmp['fail_cnt'] = 0;
 
-            $urls = $this->nextBatchUrls($this->limit);
-            foreach ($urls as $urlEntity) {
-                $this->parseUrl($urlEntity);
+                if ($result->getCode() != 0) {
+                    $this->repo->inc('fail_cnt', 1);
+                }
+                array_push($list, $tmp);
             }
 
-            if ($this->duration > 0 && $passTimes > $this->duration) {
-                break;
-            }
+            $this->repo->saveAll($list);
 
-            $times++;
-            $passTimes += $this->interval;
-            sleep($this->interval);
-            echo 'time pass ' . $passTimes, "\n";
+            $pageIndex += $this->perPage;
+
+            sleep(3);
         }
+
         return $this;
     }
 
     function nextBatchUrls($limit = 10)
     {
-        return [new XiaShuSpiderBookUrlEntity("https://www.xiashu.cc/52977")];
+        return $this->repo->queryBetween($this->name, $this->curPage, $this->perPage);
     }
 
-    function parseUrl(SpiderUrlEntity $urlEntity)
+    function parseUrl($data)
     {
-        echo 'parse' . $urlEntity->getUrl(), "\n";
+        echo 'process ' . $data['url'], "\n";
         return CallResultHelper::success();
     }
 

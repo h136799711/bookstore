@@ -18,6 +18,7 @@ namespace app\command;
 
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
+use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use by\component\xia_shu\XiaShuBookSpider;
 use think\console\Command;
 use think\console\Input;
@@ -49,54 +50,88 @@ class XiashuSpiderCommand extends Command
         $interval = $input->getOption('interval');
         $c = $input->getOption('cmd');
         $limit = $input->getOption('limit');
-        $duration = $input->getOption('duration');
-//        EchoSpider::newSpider()->init($interval, $limit, $duration)->start();
+        if ($c == 9) {
+            $repo = new XiaShuSpiderUrlRepo();
+            $count = $repo->count();
+            $everyChildProcessSize = ceil($count / $threads);
+            var_dump($everyChildProcessSize);
+            exit(0);
+        }
+
         if ($c == 1) {
             XiaShuSpiderBookUrlHelper::create();
         } elseif ($c == 2) {
             // 启动书籍爬虫
             if (function_exists('pcntl_fork')) {
                 $output->info('multiple threads');
-                $this->runThreads($threads, $interval, $limit, $duration);
+                while (true) {
+                    $this->runThreads($threads, $interval, $limit);
+                    sleep(600);
+                }
             } else {
                 $output->info('single threads');
-                XiaShuBookSpider::newSpider()->init($interval, $limit, $duration)->start();
             }
         } else {
             $output->error('c= ' . $c);
         }
     }
 
-    protected function runThreads($threads = 3, $interval = 3, $limit = 10, $duration = 600)
+    protected function getUniqueId($pid = 0)
     {
+        return strtolower('p' . $pid . '_' . md5(uniqid('xiashu_', true)));
+    }
+
+    protected function runThreads($threads = 10, $interval = 3, $limit = 10)
+    {
+        echo "\n", 'threads' . $threads;
+        $repo = new XiaShuSpiderUrlRepo();
+        $count = $repo->count();
+        $count = 10;
+        // TODO: 获取当前总共待处理数量 n ,目前不大于20万
+        // TODO: 分配给最多10个进程进行处理 n / 10 <= 20000
+        // TODO: 每个子进程处理不大于2万个链接
+        $everyChildProcessSize = ceil($count / $threads);
+        $children = array();
+        $spiders = [];
+
         // 如果存在 pcntl 则采用多进程进行处理
         for ($j = 0; $j < $threads; $j++) {
-            $pid = pcntl_fork();
+            $children[$j] = pcntl_fork();
+            $pid = $children[$j];
             if ($pid == -1) {
-                //创建失败咱就退出呗,没啥好说的
+                // 创建失败咱就退出呗,没啥好说的
                 die('could not fork');
+            } elseif ($pid == 0) {
+                // 子进程处理data数组
+                $pid = posix_getpid();
+                echo "\n", $j . 'children sleep start' . $pid;
+                $name = $this->getUniqueId($pid);
+                $spiders[$j] = new XiaShuBookSpider($name, $j * $everyChildProcessSize, ($j + 1) * $everyChildProcessSize);
+                $spiders[$j]->mark();
+                $spiders[$j]->start();
+                exit(0);
             } else {
-                if ($pid) {
-                    // 从这里开始写的代码是父进程的,因为写的是系统程序,记得退出的时候给个返回值
-                    echo "father";
-                    $i = 3;
-                    while ($i--) {
-                        echo 'father' . $i;
-                        usleep(50);
-                    }
-                    exit(0);
-                } else {
-                    echo "children";
-                    $i = 3;
-                    while ($i--) {
-                        echo 'children' . $i;
-                        usleep(50);
-                    }
-                    // 从这里开始写的代码都是在新的进程里执行的,同样正常退出的话,最好也给一个返回值
-                    exit(0);
+                echo 'father';
+            }
+
+        }
+
+
+        while (count($children) > 0) {
+            foreach ($children as $key => $pid) {
+                $res = pcntl_waitpid($pid, $status, WNOHANG);
+
+                //-1代表error, 大于0代表子进程已退出,返回的是子进程的pid,非阻塞时0代表没取到退出子进程
+                if ($res == -1 || $res > 0) {
+                    $spiders[$key]->clearMark();
+                    unset($children[$key]);
                 }
             }
+
+            sleep(1);
         }
+
+        echo "\n", "all process exited", "\n";
     }
 
 }

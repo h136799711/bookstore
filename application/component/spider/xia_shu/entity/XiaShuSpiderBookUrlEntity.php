@@ -32,19 +32,19 @@ class XiaShuSpiderBookUrlEntity extends SpiderUrlEntity
     const SPIDER_STATUS_INIT = 0;
 
     /**
-     * 使用结束
-     */
-    const SPIDER_STATUS_OVER = 1;
-
-    /**
      * 等待下次，非第一次
      */
     const SPIDER_STATUS_WAITING = 2;
 
     /**
-     * 失败
+     * 该数据正在使用中
      */
-    const SPIDER_STATUS_FAILED = 3;
+    const SPIDER_STATUS_BUSYING = 4;
+
+    /**
+     * 使用结束
+     */
+    const SPIDER_STATUS_OVER = 1;
 
     public function __construct($url)
     {

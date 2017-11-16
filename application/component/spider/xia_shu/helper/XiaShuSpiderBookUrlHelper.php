@@ -18,7 +18,7 @@ namespace app\component\spider\xia_shu\helper;
 
 
 use app\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
-use app\component\spider\xia_shu\repo\SpiderUrlRepo;
+use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use by\infrastructure\helper\Object2DataArrayHelper;
 
 class XiaShuSpiderBookUrlHelper
@@ -31,7 +31,7 @@ class XiaShuSpiderBookUrlHelper
     {
         $tpl = "https://www.xiashu.cc/";
 
-        $repo = new SpiderUrlRepo();
+        $repo = new XiaShuSpiderUrlRepo();
         $maxId = $repo->order('id', 'desc')->find();
         $start = 0;
         if ($maxId) {
