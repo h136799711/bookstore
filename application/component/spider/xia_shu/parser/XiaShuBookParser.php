@@ -134,6 +134,19 @@ class XiaShuBookParser
                 }
             }
 
+            // 检查是否书籍信息都设置了
+            if (is_null($entity->getTitle())) {
+                return CallResultHelper::fail('缺失书名');
+            }
+
+            if (is_null($entity->getCateId())) {
+                return CallResultHelper::fail('缺失分类ID');
+            }
+
+            if (is_null($entity->getAuthorName())) {
+                return CallResultHelper::fail('缺失作者笔名');
+            }
+
             $bookRepo = new XiaShuBookRepo();
             $result = $bookRepo->addIfNotExist($entity);
             if ($result->isSuccess()) {
