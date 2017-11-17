@@ -1,0 +1,28 @@
+<!-- 注意：本内容仅限于博也公司内部传阅,禁止外泄以及用于其他的商业目的
+  Copyright:  www.itboye.com Boye Inc. All rights reserved.
+ -->
+{extend name="template/base_index" /}
+
+{block name="area_header"}
+
+{/block}
+
+{block name="area_body"}
+
+<div class="container">
+    <div class="row">
+        {volist name="books" id="vo"}
+        <div class="book col-md-4 col-lg-3">
+            <div class="thumbnail"><img class="img-responsive" src="{$vo->getData('thumbnail')}" alt="封面"/></div>
+            <div class="title">{$vo->getData('title')}</div>
+            <div class="summary">{:htmlspecialchars_decode($vo->getData('summary'))}</div>
+        </div>
+        {/volist}
+    </div>
+</div>
+
+{/block}
+
+{block name="area_footer"}
+
+{/block}
