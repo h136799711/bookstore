@@ -32,7 +32,7 @@ class XiaShuSpiderUrlRepo extends Model
 
     public function clearMark($name)
     {
-        $result = Db::table($this->view)->lock()->where('spider_id', 'eq', $name)
+        $result = Db::table($this->view)->where('spider_id', 'eq', $name)
             ->update(['spider_id' => '', 'update_time' => time()]);
         return $result;
     }
@@ -40,7 +40,7 @@ class XiaShuSpiderUrlRepo extends Model
     public function mark($name, $startId, $endId)
     {
         $startId = $startId - 1 > 0 ? $startId - 1 : 0;
-        $result = Db::table($this->view)->lock()->where('id', '<', $endId)->where('id', '>', $startId)
+        $result = Db::table($this->view)->where('id', '<', $endId)->where('id', '>', $startId)
             ->update(['spider_id' => $name, 'update_time' => time()]);
         return $result;
     }

@@ -33,6 +33,7 @@ class XiaShuBookRepo extends Model
      */
     public function addIfNotExist(XiaShuBookEntity $bookEntity)
     {
+        Db::clear();
         $map = [
             'title' => $bookEntity->getTitle(),
             'author_name' => $bookEntity->getAuthorName()

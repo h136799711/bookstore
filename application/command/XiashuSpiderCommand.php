@@ -19,11 +19,13 @@ namespace app\command;
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\parser\XiaShuBookParser;
+use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookSpider;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
+use think\Db;
 
 class XiashuSpiderCommand extends Command
 {
@@ -35,21 +37,19 @@ class XiashuSpiderCommand extends Command
     protected function configure()
     {
         $this->setName('spider:xia_shu')
+            ->addOption('end', 'e', Option::VALUE_OPTIONAL, 'end', 1000)
+            ->addOption('start', 's', Option::VALUE_OPTIONAL, 'start', 0)
             ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 1: url_creator 2: bookSpider', 1)
-            ->addOption('threads', 't', Option::VALUE_OPTIONAL, 'multiple threads enable, when pcntl enable', 3)
-            ->addOption('interval', 'i', Option::VALUE_OPTIONAL, 'i loop process sleep {interval} seconds', 5)
-            ->addOption('limit', 'l', Option::VALUE_OPTIONAL, '-l limit', 2)
-            ->addOption('duration', 'd', Option::VALUE_OPTIONAL, '-d duration {interval} seconds', 300)
             ->setDescription('xiashu.cc spider');
     }
 
     protected function execute(Input $input, Output $output)
     {
         set_time_limit(0);
-        $threads = $input->getOption('threads');
-        $interval = $input->getOption('interval');
+
+        $start = $input->getOption('start');
+        $end = $input->getOption('end');
         $c = $input->getOption('cmd');
-        $limit = $input->getOption('limit');
         if ($c == 9) {
             $parse = new XiaShuBookParser("https://www.xiashu.cc/100");
             $result = $parse->parse();
@@ -61,21 +61,11 @@ class XiashuSpiderCommand extends Command
             XiaShuSpiderBookUrlHelper::create();
         } elseif ($c == 2) {
             // 启动书籍爬虫
-            if (function_exists('pcntl_fork')) {
-                $output->info('multiple threads');
-                while (true) {
-                    $this->runThreads($threads, $interval, $limit);
-                    sleep(600);
-                }
-            } else {
-                $output->info('single threads');
-                $spider = new XiaShuBookSpider('single_spider', 170, 180, 3);
-                $spider->mark();
-                $spider->start();
-                sleep(10);
-                $spider->clearMark();
-
-            }
+            $output->info('single threads');
+            $spider = new XiaShuBookSpider('single_spider', $start, $end, 100);
+            $spider->mark();
+            $spider->start();
+            $spider->clearMark();
         } else {
             $output->error('c= ' . $c);
         }
@@ -89,9 +79,9 @@ class XiashuSpiderCommand extends Command
     protected function runThreads($threads = 10, $interval = 3, $limit = 10)
     {
         echo "\n", 'threads' . $threads;
-//        $repo = new XiaShuSpiderUrlRepo();
-//        $count = $repo->count();
-        $count = 10;
+        $repo = new XiaShuSpiderUrlRepo();
+        $count = $repo->count();
+        $count = 30;
         // TODO: 获取当前总共待处理数量 n ,目前不大于20万
         // TODO: 分配给最多10个进程进行处理 n / 10 <= 20000
         // TODO: 每个子进程处理不大于2万个链接
@@ -109,19 +99,23 @@ class XiashuSpiderCommand extends Command
             } elseif ($pid == 0) {
                 // 子进程处理data数组
                 $pid = posix_getpid();
-                echo "\n", $j . 'children sleep start' . $pid;
                 $name = $this->getUniqueId($pid);
 //                try {
-                    $spiders[$j] = new XiaShuBookSpider($name, $offset + $j * $everyChildProcessSize, $offset + ($j + 1) * $everyChildProcessSize);
-                    $spiders[$j]->mark();
+                $startId = $offset + $j * $everyChildProcessSize;
+                $endId = $startId + $everyChildProcessSize;
+                echo "\n", 'children start' . $pid, "startId= " . $startId, " endId=" . $endId, "\n";
+                Db::clear();
+                Db::connect(config('database'));
+                $spiders[$j] = new XiaShuBookSpider($name, $startId, $endId);
+                $spiders[$j]->mark();
                 $spiders[$j]->start();
-                    $spiders[$j]->clearMark();
+                $spiders[$j]->clearMark();
+                sleep(3);
+                echo "\n", "子线程(" . $pid . ")执行完成", "\n";
 //                } catch (Exception $ex) {
 //                    var_dump($ex->getTraceAsString());
 //                }
                 exit(0);
-            } else {
-                echo 'father';
             }
 
         }
