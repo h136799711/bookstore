@@ -3,11 +3,21 @@
 namespace app\index\controller;
 
 
+use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
 use think\Controller;
 
 class Index extends Controller
 {
+    public function info()
+    {
+        $bookCount = (new XiaShuBookRepo())->count();
+        $authorCount = (new XiaShuAuthorRepo())->count();
+
+        $this->assign('authorCount', $authorCount);
+        $this->assign('bookCount', $bookCount);
+        return $this->fetch();
+    }
 
     public function index()
     {
