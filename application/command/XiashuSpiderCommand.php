@@ -67,7 +67,9 @@ class XiashuSpiderCommand extends Command
             } else {
                 $pid = rand(0, 999);
             }
-            
+            $offset = 171;
+            $start = $offset + $start;
+            $end = $offset + $end;
             $spider = new XiaShuBookSpider($this->getUniqueId($pid), $start, $end, 100);
             $spider->mark();
             $spider->start();
