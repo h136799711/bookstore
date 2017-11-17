@@ -36,8 +36,7 @@ class XiaShuBookSourceRepo extends Model
         Db::clear();
         $map = [
             'book_id' => $bookSourceEntity->getBookId(),
-            'book_source_address' => $bookSourceEntity->getBookSourceAddress(),
-            'book_address' => $bookSourceEntity->getBookSourceAddress()
+            'book_address' => $bookSourceEntity->getBookAddress()
         ];
 
         $result = Db::table($this->table)->where($map)->find();
