@@ -52,7 +52,8 @@ class XiashuSpiderCommand extends Command
         $limit = $input->getOption('limit');
         if ($c == 9) {
             $parse = new XiaShuBookParser("https://www.xiashu.cc/100");
-            $parse->parse();
+            $result = $parse->parse();
+            var_dump($result);
             exit(0);
         }
 
@@ -68,6 +69,12 @@ class XiashuSpiderCommand extends Command
                 }
             } else {
                 $output->info('single threads');
+                $spider = new XiaShuBookSpider('single_spider', 170, 180, 3);
+                $spider->mark();
+                $spider->start();
+                sleep(10);
+                $spider->clearMark();
+
             }
         } else {
             $output->error('c= ' . $c);

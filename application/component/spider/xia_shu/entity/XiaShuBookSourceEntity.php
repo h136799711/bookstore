@@ -7,7 +7,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-14 14:40
+ * file created @ 2017-11-17 15:27
  *********************************
  ********1.0.1********************
  *
@@ -18,21 +18,23 @@ namespace app\component\spider\xia_shu\entity;
 
 
 use app\component\spider\base\interfaces\ToArrayInterface;
-use by\component\bookstore\v1\entity\BookEntity;
+use by\component\bookstore\v1\entity\BookSourceEntity;
 use by\infrastructure\helper\Object2DataArrayHelper;
 
-class XiaShuBookEntity extends BookEntity implements ToArrayInterface
+class XiaShuBookSourceEntity extends BookSourceEntity implements ToArrayInterface
 {
+    public function __construct()
+    {
+        $this->setCreateTime(time());
+        $this->setUpdateTime(time());
+    }
+
+
+    // construct
 
     public function toArray()
     {
         return Object2DataArrayHelper::getDataArrayFrom($this);
     }
 
-
-    public function __construct()
-    {
-        $this->setCreateTime(time());
-        $this->setUpdateTime(time());
-    }
 }

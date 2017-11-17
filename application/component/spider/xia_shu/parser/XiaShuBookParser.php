@@ -17,14 +17,23 @@
 namespace app\component\spider\xia_shu\parser;
 
 
+use app\component\spider\constants\BookSiteType;
 use app\component\spider\xia_shu\entity\XiaShuAuthorEntity;
 use app\component\spider\xia_shu\entity\XiaShuBookEntity;
+use app\component\spider\xia_shu\entity\XiaShuBookSourceEntity;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
+use app\component\spider\xia_shu\repo\XiaShuBookRepo;
+use app\component\spider\xia_shu\repo\XiaShuBookSourceRepo;
+use by\infrastructure\helper\CallResultHelper;
+use simplehtmldom_1_5\simple_html_dom;
 use Sunra\PhpSimple\HtmlDomParser;
+use think\exception\ErrorException;
 
 class XiaShuBookParser
 {
+    private $errorInfo;
     private $url;
+
     private $cateArray = [
         "玄幻奇幻", "都市生活", "仙侠武侠",
         "职场商战", "历史传奇", "军事谍战",
@@ -41,6 +50,7 @@ class XiaShuBookParser
                 return $key + 1;
             }
         }
+        return 0;
     }
 
     // construct
@@ -49,73 +59,123 @@ class XiaShuBookParser
         $this->url = $url;
     }
 
+    /**
+     * 1. 保存作者信息
+     * 2. 保存书本信息
+     * 3. 保存第一个书籍页面地址用于书籍页面爬取
+     * @return \by\infrastructure\base\CallResult
+     */
     public function parse()
     {
-        $this->url = 'https://www.xiashu.cc/21400';
-        $dom = HtmlDomParser::file_get_html($this->url);
-        $entity = new XiaShuBookEntity();
-//        <meta property="og:url" content="https://www.xiashu.cc/21400/"/>
-//<meta property="og:title" content="我的绝品女总裁"/>
-//<meta property="og:image" content="https://img.xiashu.cc/cover/21/21400.jpg"/>
-//<meta property="og:novel:category" content="都市生活"/>
-//<meta property="og:novel:author" content="晴天小熊"/>
-//<meta property="og:novel:book_name" content="我的绝品女总裁"/>
-//<meta property="og:novel:read_url" content="https://www.xiashu.cc/21400/read_1.html"/>
-//<meta property="og:novel:status" content=" 连载中"/>
-//<meta property="og:novel:update_time" content="2017-08-05 13:44:15"/>
-        $ret = $dom->find('meta');
-        $authorRepo = new XiaShuAuthorRepo();
+        try {
+            $dom = HtmlDomParser::file_get_html($this->url);
+            $entity = new XiaShuBookEntity();
+            // 设置书本概述
+            $summary = $this->getBookSummary($dom);
+            $entity->setSummary($summary);
+            $ret = $dom->find('meta');
 
-        $updateTimeProperty = "og:novel:update_time";
-        $stateProperty = "og:novel:status";
-        $bookNameProperty = "og:novel:book_name";
-        $authorProperty = "og:novel:author";
-        $thumbnailProperty = "og:image";
-        $categoryProperty = "og:novel:category";
-        foreach ($ret as $domNode) {
-            $property = $domNode->getAttribute('property');
-            $content = $domNode->getAttribute('content');
-            if (!$property) {
-                continue;
+            if (count($ret) == 0) {
+                $this->errorInfo = "该书页没有meta标签";
+            } else {
+                $this->errorInfo = "该书页没有有效的meta标签,无法解析";
             }
 
-            // 连载状态
-            if ($property == $stateProperty) {
-                $state = $this->getState($content);
-                $entity->setState($state);
+            $authorRepo = new XiaShuAuthorRepo();
+            $updateTimeProperty = "og:novel:update_time";
+            $stateProperty = "og:novel:status";
+            $bookNameProperty = "og:novel:book_name";
+            $authorProperty = "og:novel:author";
+            $thumbnailProperty = "og:image";
+            $categoryProperty = "og:novel:category";
+
+            foreach ($ret as $domNode) {
+                $property = trim($domNode->getAttribute('property'));
+                $content = trim($domNode->getAttribute('content'));
+                if (!$property) {
+                    continue;
+                }
+                $this->errorInfo = "";
+
+                // 连载状态
+                if ($property == $stateProperty) {
+                    $state = $this->getState($content);
+                    $entity->setState($state);
+                }
+
+                // 书名
+                if ($property == $bookNameProperty) {
+                    $entity->setTitle($content);
+                }
+
+                // 更新时间
+                if ($property == $updateTimeProperty) {
+                    if (!empty($content)) {
+                        $entity->setUpdateTime(strtotime($content));
+                    }
+                }
+
+                // 书籍封面图片
+                if ($property == $thumbnailProperty) {
+                    $entity->setThumbnail($content);
+                }
+
+                // 书籍分类信息
+                if ($property == $categoryProperty) {
+                    $cateId = $this->getCateId($content);
+                    $entity->setCateId($cateId);
+                }
+
+                // 作者信息
+                if ($property == $authorProperty) {
+                    $authorId = $this->getAuthorId($content, $authorRepo);
+                    $entity->setAuthorId($authorId);
+                    $entity->setAuthorName($content);
+                }
             }
 
-            // 书名
-            if ($property == $bookNameProperty) {
-                $entity->setTitle($content);
+            $bookRepo = new XiaShuBookRepo();
+            $result = $bookRepo->addIfNotExist($entity);
+            if ($result->isSuccess()) {
+                $this->addXiaShuBookSource($result->getData(), $this->url);
+                return CallResultHelper::success('success');
+            } else {
+                return CallResultHelper::fail($result->getMsg());
             }
+        } catch (ErrorException $exception) {
+            return CallResultHelper::fail($exception->getMessage());
+        }
+    }
 
-            // 更新时间
-            if ($property == $updateTimeProperty) {
-                $entity->setUpdateTime($content);
-            }
+    private function addXiaShuBookSource($bookId, $bookAddress)
+    {
+        $bookSourceEntity = new XiaShuBookSourceEntity();
+        $bookSourceEntity->setBookAddress($bookAddress);
+        $bookSourceEntity->setBookId($bookId);
+        $bookSourceEntity->setBookSourceAddress(BookSiteType::XIA_SHU_BOOK_SITE);
+        $bookSourceEntity->setBookSourceName(BookSiteType::getDesc(BookSiteType::XIA_SHU_BOOK_SITE));
 
-            // 书籍封面图片
-            if ($property == $thumbnailProperty) {
-                $entity->setThumbnail($content);
-            }
+        return (new XiaShuBookSourceRepo())->addIfNotExist($bookSourceEntity);
+    }
 
-            // 书籍分类信息
-            if ($property == $categoryProperty) {
-                $cateId = $this->getCateId($content);
-                $entity->setCateId($cateId);
-            }
-
-            // 作者信息
-            if ($property == $authorProperty) {
-                $authorId = $this->getAuthorId($content, $authorRepo);
-                $entity->setAuthorId($authorId);
-                $entity->setAuthorName($content);
-            }
-
+    /**
+     * 获取书籍概述
+     * @param simple_html_dom $dom
+     * @return string
+     */
+    private function getBookSummary(simple_html_dom $dom)
+    {
+        $aboutBook = $dom->find('div#aboutbook');
+        if (count($aboutBook) > 0) {
+            $innerText = $aboutBook[0]->innertext();
+            $regex = "/<a.*?<\/a>/i";
+            $innerText = preg_replace($regex, "", $innerText);
+            $regex = "/<h3.*?<\/h3>/i";
+            $innerText = preg_replace($regex, "", $innerText);
+            return htmlspecialchars($innerText, ENT_QUOTES, 'UTF-8');
         }
 
-//        var_dump(Object2DataArrayHelper::getDataArrayFrom($entity));
+        return "";
     }
 
     private function getState($content)
@@ -127,7 +187,7 @@ class XiaShuBookParser
             case "完结":
                 return XiaShuBookEntity::STATE_END;
             default:
-                break;
+                return XiaShuBookEntity::STATE_Unknown;
         }
     }
 

@@ -19,9 +19,8 @@ namespace app\component\spider\xia_shu;
 
 use app\component\spider\base\AbstractSpider;
 use app\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
+use app\component\spider\xia_shu\parser\XiaShuBookParser;
 use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
-use by\infrastructure\helper\CallResultHelper;
-use Sunra\PhpSimple\HtmlDomParser;
 
 class XiaShuBookSpider extends AbstractSpider
 {
@@ -73,22 +72,24 @@ class XiaShuBookSpider extends AbstractSpider
             foreach ($batchUrlData as $data) {
                 $result = $this->parseUrl($data);
                 $tmp = ['id' => $data['id']];
-                $tmp['spider_status'] = XiaShuSpiderBookUrlEntity::SPIDER_STATUS_WAITING;
+                $tmp['spider_status'] = XiaShuSpiderBookUrlEntity::SPIDER_STATUS_SUCCESS;
                 $tmp['spider_active_time'] = $now;
                 $tmp['spider_info'] = $result->getMsg();
                 $tmp['fail_cnt'] = 0;
 
-                if ($result->getCode() != 0) {
+                if (!$result->isSuccess()) {
+                    // 失败次数增加一次
                     $this->repo->inc('fail_cnt', 1);
-                } else {
-                    $tmp['spider_status'] = XiaShuSpiderBookUrlEntity::SPIDER_STATUS_WAITING;
+                    $tmp['spider_status'] = XiaShuSpiderBookUrlEntity::SPIDER_STATUS_FAIL;
                 }
+
                 array_push($list, $tmp);
             }
 
             $this->repo->isUpdate(true)->saveAll($list);
 
             $pageIndex += $this->perPage;
+            $this->curPage++;
 
             sleep(3);
         }
@@ -104,10 +105,8 @@ class XiaShuBookSpider extends AbstractSpider
     function parseUrl($data)
     {
         echo 'process ' . $data['url'], "\n";
-        $dom = HtmlDomParser::file_get_html("https://www.xiashu.cc/100");
-
-
-        return CallResultHelper::success();
+        $parser = new XiaShuBookParser($data['url']);
+        return $parser->parse();
     }
 
 }

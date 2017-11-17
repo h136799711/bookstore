@@ -7,7 +7,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-16 18:55
+ * file created @ 2017-11-17 14:43
  *********************************
  ********1.0.1********************
  *
@@ -16,36 +16,39 @@
 
 namespace app\component\spider\xia_shu\repo;
 
-use app\component\spider\xia_shu\entity\XiaShuAuthorEntity;
+
+use app\component\spider\xia_shu\entity\XiaShuBookSourceEntity;
 use by\infrastructure\helper\CallResultHelper;
 use think\Db;
 use think\Model;
 
-/**
- * Class XiaShuAuthorRepo
- * 作者
- * @package app\component\spider\xia_shu\repo
- */
-class XiaShuAuthorRepo extends Model
+class XiaShuBookSourceRepo extends Model
 {
-    protected $table = "bs_author";
+    protected $table = "bs_book_source";
 
     /**
-     * 如果不存在则添加到数据库
-     * @param XiaShuAuthorEntity $authorEntity
+     * 向数据库添加数据如果不存在的话
+     * @param XiaShuBookSourceEntity $bookSourceEntity
      * @return \by\infrastructure\base\CallResult
      */
-    public function addIfNotExist(XiaShuAuthorEntity $authorEntity)
+    public function addIfNotExist(XiaShuBookSourceEntity $bookSourceEntity)
     {
-        $map = ['pen_name' => $authorEntity->getPenName()];
+        $map = [
+            'book_id' => $bookSourceEntity->getBookId(),
+            'book_source_address' => $bookSourceEntity->getBookSourceAddress(),
+            'book_address' => $bookSourceEntity->getBookSourceAddress()
+        ];
+
         $result = Db::table($this->table)->where($map)->find();
+
         if (empty($result)) {
-            $result = Db::table($this->table)->insert($authorEntity->toArray());
+            $result = Db::table($this->table)->insert($bookSourceEntity->toArray());
             if ($result == 1) {
                 return CallResultHelper::success(Db::table($this->table)->getLastInsID());
             }
         } else {
-            return CallResultHelper::success($result['id']);
+            $id = $result['id'];
+            return CallResultHelper::success($id);
         }
 
         return CallResultHelper::fail('fail');

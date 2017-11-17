@@ -32,14 +32,14 @@ class XiaShuSpiderBookUrlEntity extends SpiderUrlEntity
     const SPIDER_STATUS_INIT = 0;
 
     /**
-     * 等待下次，非第一次
+     * 成功
      */
-    const SPIDER_STATUS_WAITING = 2;
+    const SPIDER_STATUS_SUCCESS = 2;
 
     /**
-     * 该数据正在使用中
+     * 失败
      */
-    const SPIDER_STATUS_BUSYING = 4;
+    const SPIDER_STATUS_FAIL = 4;
 
     /**
      * 使用结束
