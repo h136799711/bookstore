@@ -62,7 +62,13 @@ class XiashuSpiderCommand extends Command
         } elseif ($c == 2) {
             // 启动书籍爬虫
             $output->info('single threads');
-            $spider = new XiaShuBookSpider('single_spider', $start, $end, 100);
+            if (function_exists("posix_getpid")) {
+                $pid = posix_getpid();
+            } else {
+                $pid = rand(0, 999);
+            }
+            
+            $spider = new XiaShuBookSpider($this->getUniqueId($pid), $start, $end, 100);
             $spider->mark();
             $spider->start();
             $spider->clearMark();
