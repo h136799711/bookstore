@@ -7,23 +7,21 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-14 14:40
+ * file created @ 2017-11-17 13:51
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace app\component\spider\xia_shu\entity;
+namespace app\component\spider\base\interfaces;
 
-
-use by\component\bookstore\v1\entity\BookEntity;
-
-class XiaShuBookEntity extends BookEntity
+/**
+ * Interface ToArrayInterface
+ * 类转换成数组数据
+ * @package app\component\spider\base\interfaces
+ */
+interface ToArrayInterface
 {
-    public function __construct()
-    {
-        $this->setCreateTime(time());
-        $this->setUpdateTime(time());
-    }
+    public function toArray();
 }

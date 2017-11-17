@@ -7,23 +7,35 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-14 14:40
+ * file created @ 2017-11-17 11:37
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace app\component\spider\xia_shu\entity;
+namespace app\component\spider\xia_shu;
 
 
-use by\component\bookstore\v1\entity\BookEntity;
+use app\component\spider\base\AbstractSpider;
 
-class XiaShuBookEntity extends BookEntity
+class XiaShuBookPageSpider extends AbstractSpider
 {
     public function __construct()
     {
-        $this->setCreateTime(time());
-        $this->setUpdateTime(time());
+        // TODO construct
     }
+
+    function nextBatchUrls($limit = 10)
+    {
+        // TODO: 根据当前书页，生成下一个书页
+    }
+
+    // construct
+
+    function parseUrl($data)
+    {
+        // TODO: 根据当前书页，读取书页信息
+    }
+
 }

@@ -18,8 +18,8 @@ namespace app\command;
 
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
+use app\component\spider\xia_shu\parser\XiaShuBookParser;
 use app\component\spider\xia_shu\XiaShuBookSpider;
-use Sunra\PhpSimple\HtmlDomParser;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
@@ -51,9 +51,8 @@ class XiashuSpiderCommand extends Command
         $c = $input->getOption('cmd');
         $limit = $input->getOption('limit');
         if ($c == 9) {
-            $dom = HtmlDomParser::file_get_html("https://www.xiashu.cc/100");
-
-            var_dump($dom->plaintext);
+            $parse = new XiaShuBookParser("https://www.xiashu.cc/100");
+            $parse->parse();
             exit(0);
         }
 

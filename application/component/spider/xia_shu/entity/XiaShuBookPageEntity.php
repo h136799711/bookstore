@@ -7,7 +7,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-14 14:40
+ * file created @ 2017-11-17 11:26
  *********************************
  ********1.0.1********************
  *
@@ -17,13 +17,22 @@
 namespace app\component\spider\xia_shu\entity;
 
 
-use by\component\bookstore\v1\entity\BookEntity;
+use app\component\spider\constants\BookSiteType;
+use by\component\bookstore\v1\entity\BookPageEntity;
 
-class XiaShuBookEntity extends BookEntity
+class XiaShuBookPageEntity extends BookPageEntity
 {
+
+    // construct
     public function __construct()
     {
         $this->setCreateTime(time());
         $this->setUpdateTime(time());
+        $this->setSource(BookSiteType::XIA_SHU_BOOK_SITE);
+    }
+
+    public function getSourceDesc()
+    {
+        return BookSiteType::getDesc($this->getSource());
     }
 }

@@ -21,6 +21,7 @@ use app\component\spider\base\AbstractSpider;
 use app\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
 use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use by\infrastructure\helper\CallResultHelper;
+use Sunra\PhpSimple\HtmlDomParser;
 
 class XiaShuBookSpider extends AbstractSpider
 {
@@ -79,6 +80,8 @@ class XiaShuBookSpider extends AbstractSpider
 
                 if ($result->getCode() != 0) {
                     $this->repo->inc('fail_cnt', 1);
+                } else {
+                    $tmp['spider_status'] = XiaShuSpiderBookUrlEntity::SPIDER_STATUS_WAITING;
                 }
                 array_push($list, $tmp);
             }
@@ -101,6 +104,8 @@ class XiaShuBookSpider extends AbstractSpider
     function parseUrl($data)
     {
         echo 'process ' . $data['url'], "\n";
+        $dom = HtmlDomParser::file_get_html("https://www.xiashu.cc/100");
+
 
         return CallResultHelper::success();
     }

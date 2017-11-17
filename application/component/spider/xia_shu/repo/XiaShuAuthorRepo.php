@@ -16,18 +16,38 @@
 
 namespace app\component\spider\xia_shu\repo;
 
+use app\component\spider\xia_shu\entity\XiaShuAuthorEntity;
+use by\infrastructure\helper\CallResultHelper;
+use think\Db;
+use think\Model;
+
 /**
  * Class XiaShuAuthorRepo
  * 作者
  * @package app\component\spider\xia_shu\repo
  */
-class XiaShuAuthorRepo
+class XiaShuAuthorRepo extends Model
 {
+    protected $table = "itboye_author";
 
-    // construct
-    public function __construct()
+    /**
+     * 如果不存在则添加到数据库
+     * @param XiaShuAuthorEntity $authorEntity
+     * @return \by\infrastructure\base\CallResult
+     */
+    public function addIfNotExist(XiaShuAuthorEntity $authorEntity)
     {
-        // TODO construct
-    }
+        $map = ['pen_name' => $authorEntity->getPenName()];
+        $result = Db::table($this->table)->where($map)->find();
+        if (empty($result)) {
+            $result = Db::table($this->table)->insert($authorEntity->toArray());
+            if ($result == 1) {
+                return CallResultHelper::success(Db::table($this->table)->getLastInsID());
+            }
+        } else {
+            return CallResultHelper::success($result['id']);
+        }
 
+        return CallResultHelper::fail('fail');
+    }
 }
