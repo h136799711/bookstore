@@ -37,7 +37,6 @@ class XiaShuAuthorRepo extends Model
      */
     public function addIfNotExist(XiaShuAuthorEntity $authorEntity)
     {
-        Db::clear();
         $map = ['pen_name' => $authorEntity->getPenName()];
         $result = Db::table($this->table)->where($map)->find();
         if (empty($result)) {

@@ -11,9 +11,6 @@
 
 return [
     'break_reconnect' => true,
-    'params' => [
-        PDO::ATTR_PERSISTENT => true
-    ],
     // 数据库类型
     'type' => 'mysql',
     // 服务器地址
