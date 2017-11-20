@@ -28,8 +28,9 @@ abstract class BaseModel extends Model
      */
     public function toEntity()
     {
-        $clsName = str_replace("Logic", "", get_class($this));
-        $clsName = str_replace("logic", "model", $clsName);
+        $clsName = str_replace("Model", "", get_class($this));
+        $clsName = str_replace("model", "entity", $clsName);
+        $clsName .= 'Entity';
         $entity = null;
         if (class_exists($clsName)) {
             $entity = new $clsName;

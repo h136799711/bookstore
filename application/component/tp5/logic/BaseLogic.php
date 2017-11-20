@@ -28,6 +28,16 @@ abstract class BaseLogic
      */
     protected $model;
 
+    public function __construct()
+    {
+        $clsName = str_replace("Logic", "", get_class($this));
+        $clsName = str_replace("logic", "model", $clsName);
+        $clsName .= 'Model';
+        if (class_exists($clsName)) {
+            $this->model = new $clsName;
+        }
+    }
+
     /**
      * 求和统计
      * @param $map
@@ -298,7 +308,14 @@ abstract class BaseLogic
         $list = $query->limit($start, $page->getPageSize())->select();
 
         $count = $this->getModel()->where($map)->count();
-        return ["count" => $count, "list" => $list];
+        $entityList = [];
+        foreach ($list as $vo) {
+            if ($vo instanceof BaseModel) {
+                array_push($entityList, $vo->toEntity());
+            }
+        }
+
+        return ["count" => $count, "list" => $entityList];
     }
 
     /**

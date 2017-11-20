@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\spider\base\repo;
+namespace app\component\spider\base\logic;
 
 use app\component\tp5\logic\BaseLogic;
 
