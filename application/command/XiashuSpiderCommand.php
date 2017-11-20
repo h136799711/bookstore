@@ -26,6 +26,7 @@ use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
 use think\Db;
+use think\Exception;
 
 class XiashuSpiderCommand extends Command
 {
@@ -71,12 +72,21 @@ class XiashuSpiderCommand extends Command
             $start = $offset + $start;
             $end = $offset + $end;
             $spider = new XiaShuBookSpider($this->getUniqueId($pid), $start, $end, 100);
-            $spider->mark();
-            $spider->start();
-            $spider->clearMark();
+            try {
+                $spider->mark();
+                $spider->start();
+                $spider->clearMark();
+            } catch (Exception $exception) {
+
+            }
         } else {
             $output->error('c= ' . $c);
         }
+    }
+
+    protected function logException(Exception $exception)
+    {
+
     }
 
     protected function getUniqueId($pid = 0)

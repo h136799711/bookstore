@@ -85,7 +85,6 @@ class XiaShuBookSpider extends AbstractSpider
 
                 array_push($list, $tmp);
             }
-
             $this->repo->isUpdate(true)->saveAll($list);
 
             $pageIndex += $this->perPage;

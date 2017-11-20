@@ -26,6 +26,7 @@ class XiaShuBookRepo extends Model
 {
     protected $table = "bs_book";
 
+
     /**
      * 向数据库添加数据如果不存在的话
      * @param XiaShuBookEntity $bookEntity
