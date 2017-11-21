@@ -18,7 +18,9 @@ namespace app\command;
 
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
+use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
 use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
+use app\component\spider\xia_shu\XiaShuBookPageSpider;
 use app\component\spider\xia_shu\XiaShuBookSpider;
 use think\console\Command;
 use think\console\Input;
@@ -51,10 +53,16 @@ class XiashuSpiderCommand extends Command
         $page = $input->getOption('page');
         $c = $input->getOption('cmd');
         if ($c == 9) {
-            $repo = new XiaShuSpiderUrlRepo();
-            $repo->mark('test', 10);
-            sleep(10);
-            $repo->clearMark('test');
+            $parse = new XiaShuBookPageParser();
+            $bookId = 1;
+            $pageNo = 1;
+            $url = "https://www.xiashu.cc/1/read_1.html";
+            $result = $parse->parse($bookId, $pageNo, $url);
+            var_dump($result);
+//            $repo = new XiaShuSpiderUrlRepo();
+//            $repo->mark('test', 10);
+//            sleep(10);
+//            $repo->clearMark('test');
 //            $parse = new XiaShuBookParser("https://www.xiashu.cc/100");
 //            $result = $parse->parse();
 //            var_dump($result);
@@ -80,6 +88,12 @@ class XiashuSpiderCommand extends Command
             } catch (Exception $exception) {
                 var_dump($exception->getMessage());
             }
+        } elseif ($c == 3) {
+            // 启动书页爬虫
+            $bookId = 1;
+            $spider = new XiaShuBookPageSpider($bookId);
+            $spider->start();
+
         } else {
             $output->error('c= ' . $c);
         }

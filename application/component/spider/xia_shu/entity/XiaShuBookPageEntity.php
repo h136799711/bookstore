@@ -17,11 +17,17 @@
 namespace app\component\spider\xia_shu\entity;
 
 
+use app\component\spider\base\interfaces\ToArrayInterface;
 use app\component\spider\constants\BookSiteType;
 use by\component\bookstore\v1\entity\BookPageEntity;
+use by\infrastructure\helper\Object2DataArrayHelper;
 
-class XiaShuBookPageEntity extends BookPageEntity
+class XiaShuBookPageEntity extends BookPageEntity implements ToArrayInterface
 {
+    public function toArray()
+    {
+        return Object2DataArrayHelper::getDataArrayFrom($this);
+    }
 
     // construct
     public function __construct()
