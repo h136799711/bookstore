@@ -37,8 +37,8 @@ class XiashuSpiderCommand extends Command
     protected function configure()
     {
         $this->setName('spider:xia_shu')
-            ->addOption('end', 'e', Option::VALUE_OPTIONAL, 'end', 1000)
-            ->addOption('start', 's', Option::VALUE_OPTIONAL, 'start', 0)
+            ->addOption('size', 's', Option::VALUE_OPTIONAL, 'total size', 1000)
+            ->addOption('page', 'p', Option::VALUE_OPTIONAL, 'page', 1000)
             ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 1: url_creator 2: bookSpider', 1)
             ->setDescription('xiashu.cc spider');
     }
