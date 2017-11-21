@@ -17,6 +17,7 @@
 namespace app\component\spider\xia_shu\repo;
 
 
+use app\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
 use think\Db;
 use think\Model;
 
@@ -40,12 +41,25 @@ class XiaShuSpiderUrlRepo extends Model
         return $result;
     }
 
-    public function mark($name, $startId, $endId)
+    public function mark($name, $size)
     {
-        $startId = $startId - 1 > 0 ? $startId - 1 : 0;
-        $result = Db::table($this->view)->where('id', '<', $endId)->where('id', '>', $startId)
-            ->update(['spider_id' => $name, 'update_time' => time()]);
-        return $result;
+        $result = Db::table('v_xiashu_book_url_not_over')->where('spider_id', 'eq', '')
+            ->where('spider_status', 'neq', XiaShuSpiderBookUrlEntity::SPIDER_STATUS_FAIL)->order('id', 'asc')->limit(0, $size)->select();
+        $idArr = [];
+        if ($result) {
+            foreach ($result as $vo) {
+                array_push($idArr, $vo['id']);
+            }
+        }
+
+        if (count($idArr) > 0) {
+            $result = Db::table($this->view)->where('spider_id', 'eq', '')
+                ->where('spider_status', 'neq', XiaShuSpiderBookUrlEntity::SPIDER_STATUS_FAIL)
+                ->where('id', 'in', $idArr)
+                ->update(['spider_id' => $name, 'update_time' => time()]);
+            return $result;
+        }
+        return 0;
     }
 
     public function queryBetween($name, $startPage = 0, $page = 10)

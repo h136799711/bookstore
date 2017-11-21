@@ -24,10 +24,11 @@ use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 
 class XiaShuBookSpider extends AbstractSpider
 {
-
-    private $startId = 0;
-    private $endId = 0;
+    // 总共处理多少条记录
+    private $size = 0;
+    // 当前索引
     private $curPage = 0;
+    // 每次处理
     private $perPage = 1000;
     private $name;
     /**
@@ -35,12 +36,11 @@ class XiaShuBookSpider extends AbstractSpider
      */
     public $repo;
 
-    public function __construct($name, $start = 0, $end = 0, $perPage = 1000)
+    public function __construct($name, $size = 1000, $perPage = 1000)
     {
         $this->name = $name;
         $this->repo = new XiaShuSpiderUrlRepo();
-        $this->startId = $start;
-        $this->endId = $end;
+        $this->size = $size;
         $this->curPage = 0;
         $this->perPage = $perPage;
     }
@@ -55,7 +55,7 @@ class XiaShuBookSpider extends AbstractSpider
      */
     public function mark()
     {
-        $this->repo->mark($this->name, $this->startId, $this->endId);
+        $this->repo->mark($this->name, $this->size);
     }
 
     /**
@@ -64,8 +64,10 @@ class XiaShuBookSpider extends AbstractSpider
     public function start()
     {
         $pageIndex = 0;
-        while ($this->startId + $pageIndex < $this->endId) {
+        while ($pageIndex < $this->size) {
+
             $now = time();
+
             // 读取指定个数
             $batchUrlData = $this->nextBatchUrls($this->perPage);
             $list = [];
@@ -79,17 +81,15 @@ class XiaShuBookSpider extends AbstractSpider
 
                 if (!$result->isSuccess()) {
                     // 失败次数增加一次
-                    $this->repo->inc('fail_cnt', 1);
+                    $this->repo->where('id', 'eq', $data['id'])->inc('fail_cnt', 1);
                     $tmp['spider_status'] = XiaShuSpiderBookUrlEntity::SPIDER_STATUS_FAIL;
                 }
 
                 array_push($list, $tmp);
             }
             $this->repo->isUpdate(true)->saveAll($list);
-
             $pageIndex += $this->perPage;
             $this->curPage++;
-
             sleep(3);
         }
 

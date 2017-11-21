@@ -18,7 +18,6 @@ namespace app\command;
 
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
-use app\component\spider\xia_shu\parser\XiaShuBookParser;
 use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookSpider;
 use think\console\Command;
@@ -48,13 +47,17 @@ class XiashuSpiderCommand extends Command
     {
         set_time_limit(0);
 
-        $start = $input->getOption('start');
-        $end = $input->getOption('end');
+        $size = $input->getOption('size');
+        $page = $input->getOption('page');
         $c = $input->getOption('cmd');
         if ($c == 9) {
-            $parse = new XiaShuBookParser("https://www.xiashu.cc/100");
-            $result = $parse->parse();
-            var_dump($result);
+            $repo = new XiaShuSpiderUrlRepo();
+            $repo->mark('test', 10);
+            sleep(10);
+            $repo->clearMark('test');
+//            $parse = new XiaShuBookParser("https://www.xiashu.cc/100");
+//            $result = $parse->parse();
+//            var_dump($result);
             exit(0);
         }
 
@@ -68,16 +71,14 @@ class XiashuSpiderCommand extends Command
             } else {
                 $pid = rand(0, 999);
             }
-            $offset = 171;
-            $start = $offset + $start;
-            $end = $offset + $end;
-            $spider = new XiaShuBookSpider($this->getUniqueId($pid), $start, $end, 100);
+
+            $spider = new XiaShuBookSpider($this->getUniqueId($pid), $size, $page);
             try {
                 $spider->mark();
                 $spider->start();
                 $spider->clearMark();
             } catch (Exception $exception) {
-
+                var_dump($exception->getMessage());
             }
         } else {
             $output->error('c= ' . $c);
