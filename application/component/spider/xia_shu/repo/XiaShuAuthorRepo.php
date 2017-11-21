@@ -30,6 +30,8 @@ class XiaShuAuthorRepo extends Model
 {
     protected $table = "bs_author";
 
+    protected $connection = 'cli_database';
+
     /**
      * 如果不存在则添加到数据库
      * @param XiaShuAuthorEntity $authorEntity

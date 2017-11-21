@@ -27,6 +27,9 @@ use think\Model;
  */
 class XiaShuSpiderUrlRepo extends Model
 {
+
+    protected $connection = 'cli_database';
+
     protected $table = 'xiashu_book_url';
     private $view = 'v_xiashu_book_url_not_over';
 

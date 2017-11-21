@@ -26,6 +26,7 @@ class XiaShuBookRepo extends Model
 {
     protected $table = "bs_book";
 
+    protected $connection = 'cli_database';
 
     /**
      * 向数据库添加数据如果不存在的话

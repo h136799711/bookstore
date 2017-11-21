@@ -26,6 +26,8 @@ class XiaShuBookSourceRepo extends Model
 {
     protected $table = "bs_book_source";
 
+    protected $connection = 'cli_database';
+
     /**
      * 向数据库添加数据如果不存在的话
      * @param XiaShuBookSourceEntity $bookSourceEntity
