@@ -35,16 +35,6 @@ class XiaShuBookPageSpider extends AbstractSpider
     private $startPage;
     private $latestPageIndex;
 
-    public function getBookLatestPageUrl()
-    {
-        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->bookId . "/read_" . $this->latestPageIndex . ".html";
-    }
-
-    public function getBookPageUrl()
-    {
-        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->bookId . "/read_" . $this->startPage . ".html";
-    }
-
     public function __construct($bookId)
     {
         $this->bookId = $bookId;
@@ -55,38 +45,6 @@ class XiaShuBookPageSpider extends AbstractSpider
     {
         $this->startPage = $pageNO;
         $this->latestPageIndex = $pageNO - 1;
-    }
-
-    function nextBatchUrls($limit = 10)
-    {
-        // 根据当前书页，生成下一个书页
-        $this->startPage += $limit;
-        $this->latestPageIndex += $this->startPage - 1;
-    }
-
-    // construct
-
-    function parseUrl($data)
-    {
-        $flag = true;
-        $parser = new XiaShuBookPageParser();
-
-        while ($flag) {
-            echo 'read page_no = ' . $this->startPage, "\n";
-            $url = $this->getBookPageUrl();
-            // 读取书页
-            $result = $parser->parse($this->bookId, $this->startPage, $url);
-
-            if (!$result->isSuccess()) {
-                // 读取失败了
-                echo 'read fail ' . $result->getMsg(), "\n";
-                // 保证当前读取的url记录
-                $this->updateLastestPageUrl();
-                break;
-            }
-            // 读取下一页
-            $this->nextBatchUrls(1);
-        }
     }
 
     public function start()
@@ -109,6 +67,40 @@ class XiaShuBookPageSpider extends AbstractSpider
         }
     }
 
+    public function getBookPageUrl()
+    {
+        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->bookId . "/read_" . $this->startPage . ".html";
+    }
+
+    function parseUrl($data)
+    {
+        $flag = true;
+        $parser = new XiaShuBookPageParser();
+
+        if (array_key_exists('should_create_text', $data)) {
+            $parser->setShouldCreateText($data['should_create_text']);
+        }
+
+        while ($flag) {
+            echo 'read page_no = ' . $this->startPage, "\n";
+            $url = $this->getBookPageUrl();
+            // 读取书页
+            $result = $parser->parse($this->bookId, $this->startPage, $url);
+
+            if (!$result->isSuccess()) {
+                // 读取失败了
+                echo 'read fail ' . $result->getMsg(), "\n";
+                // 保证当前读取的url记录
+                $this->updateLastestPageUrl();
+                break;
+            }
+            // 读取下一页
+            $this->nextBatchUrls(1);
+        }
+    }
+
+    // construct
+
     /**
      * 更新当前书本最新书页地址
      */
@@ -116,6 +108,18 @@ class XiaShuBookPageSpider extends AbstractSpider
     {
         $repo = new XiaShuSpiderBookPageUrlRepo();
         $repo->save(['url' => $this->getBookLatestPageUrl()], ['book_id' => $this->bookId]);
+    }
+
+    public function getBookLatestPageUrl()
+    {
+        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->bookId . "/read_" . $this->latestPageIndex . ".html";
+    }
+
+    function nextBatchUrls($limit = 10)
+    {
+        // 根据当前书页，生成下一个书页
+        $this->startPage += $limit;
+        $this->latestPageIndex += $this->startPage - 1;
     }
 
     private function parsePage()

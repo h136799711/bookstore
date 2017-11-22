@@ -27,10 +27,12 @@ class XiaShuBookPageParser
 {
 
     private $repo;
+    private $shouldCreateText;
 
     public function __construct()
     {
         $this->repo = new XiaShuBookPageRepo();
+        $this->shouldCreateText = false;
     }
 
     /**
@@ -74,11 +76,41 @@ class XiaShuBookPageParser
                 return CallResultHelper::fail('page content empty');
             }
 
+            if ($this->isShouldCreateText() && !empty($bookPageEntity->getPageContent())) {
+                $filePath = ROOT_PATH . "txt/b" . $bookPageEntity->getBookId() . '/' . $bookPageEntity->getBookId() . '_' . $pageNo . '.txt';
+                $this->file_write($filePath, $bookPageEntity->getPageContent());
+            }
+
             return $this->repo->add($bookPageEntity);
         } catch (ErrorException $exception) {
             return CallResultHelper::fail($exception->getMessage());
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function isShouldCreateText()
+    {
+        return $this->shouldCreateText;
+    }
+
+    /**
+     * @param bool $shouldCreateText
+     */
+    public function setShouldCreateText($shouldCreateText)
+    {
+        $this->shouldCreateText = $shouldCreateText;
+    }
+
+    private function file_write($path, $content)
+    {
+        echo 'save text to' . $path;
+        $file = fopen($path, 'w+');
+
+        fwrite($file, $content);
+
+        fclose($file);
+    }
 
 }

@@ -96,7 +96,7 @@ class XiashuSpiderCommand extends Command
             // TODO 创建一个视图
 //            $bookRepo = new XiaShuBookRepo();
 //            while (true){
-            $bookId = 2;
+            $bookId = 1;
             $spider = new XiaShuBookPageSpider($bookId);
             $spider->start();
 //            }
@@ -107,14 +107,14 @@ class XiashuSpiderCommand extends Command
         $output->info('cost time=' . $startTime);
     }
 
-    protected function logException(Exception $exception)
-    {
-
-    }
-
     protected function getUniqueId($pid = 0)
     {
         return strtolower('p' . $pid . '_' . md5(uniqid('xiashu_', true)));
+    }
+
+    protected function logException(Exception $exception)
+    {
+
     }
 
     protected function runThreads($threads = 10, $interval = 3, $limit = 10)
