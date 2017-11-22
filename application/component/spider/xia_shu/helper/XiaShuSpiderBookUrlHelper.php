@@ -23,6 +23,18 @@ use by\infrastructure\helper\Object2DataArrayHelper;
 
 class XiaShuSpiderBookUrlHelper
 {
+    public static function getBookPageNo($url)
+    {
+        $regex = "/https:\/\/www.xiashu.cc\/(\d*)\/read_(\d*)/i";
+        $match = [];
+        preg_match($regex, $url, $match);
+        if (is_array($match) && count($match) == 3) {
+            return intval($match[2]);
+        }
+
+        return 0;
+    }
+
     /**
      * 创建书籍链接
      * @param int $size

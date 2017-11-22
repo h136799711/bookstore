@@ -25,8 +25,7 @@ class XiaShuBookCategoryEntity extends BookCategoryEntity
     // construct
     public function __construct()
     {
-        $this->setCreateTime(time());
-        $this->setUpdateTime(time());
+        parent::__construct();
     }
 
 }

@@ -30,6 +30,7 @@ class SpiderUrlEntity extends BaseEntity
 
     public function __construct($url)
     {
+        parent::__construct();
         $this->url = rtrim($url, '/');
     }
 

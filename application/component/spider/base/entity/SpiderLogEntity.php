@@ -27,6 +27,7 @@ class SpiderLogEntity extends BaseEntity
     // construct
     public function __construct()
     {
+        parent::__construct();
         $this->setInfo('');
         $this->setUpdateTime(time());
         $this->setCreateTime(time());

@@ -25,6 +25,7 @@ class XiaShuAuthorEntity extends AuthorEntity implements ToArrayInterface
 {
     public function __construct()
     {
+        parent::__construct();
         $this->setCreateTime(time());
         $this->setUpdateTime(time());
     }

@@ -18,15 +18,23 @@ namespace app\component\spider\xia_shu\entity;
 
 
 use app\component\spider\base\entity\SpiderUrlEntity;
+use app\component\spider\base\interfaces\ToArrayInterface;
 use app\component\spider\constants\BookSiteType;
+use by\infrastructure\helper\Object2DataArrayHelper;
 
 /**
  * Class XiaShuSpiderBookPageUrlEntity
  * 书籍的书页爬取url
  * @package app\component\spider\xia_shu\entity
  */
-class XiaShuSpiderBookPageUrlEntity extends SpiderUrlEntity
+class XiaShuSpiderBookPageUrlEntity extends SpiderUrlEntity implements ToArrayInterface
 {
+    public function toArray()
+    {
+        return Object2DataArrayHelper::getDataArrayFrom($this);
+    }
+
+
     /**
      * 初始化
      */

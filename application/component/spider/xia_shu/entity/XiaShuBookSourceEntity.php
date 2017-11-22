@@ -25,8 +25,7 @@ class XiaShuBookSourceEntity extends BookSourceEntity implements ToArrayInterfac
 {
     public function __construct()
     {
-        $this->setCreateTime(time());
-        $this->setUpdateTime(time());
+        parent::__construct();
     }
 
 

@@ -19,7 +19,9 @@ namespace app\component\spider\xia_shu;
 
 use app\component\spider\base\AbstractSpider;
 use app\component\spider\constants\BookSiteType;
+use app\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
 use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
+use app\component\spider\xia_shu\repo\XiaShuBookPageRepo;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 
 /**
@@ -46,8 +48,13 @@ class XiaShuBookPageSpider extends AbstractSpider
     public function __construct($bookId)
     {
         $this->bookId = $bookId;
-        $this->latestPageIndex = 0;
-        $this->startPage = 1;
+        $this->setStartPage(1);
+    }
+
+    private function setStartPage($pageNO)
+    {
+        $this->startPage = $pageNO;
+        $this->latestPageIndex = $pageNO - 1;
     }
 
     function nextBatchUrls($limit = 10)
@@ -63,18 +70,20 @@ class XiaShuBookPageSpider extends AbstractSpider
     {
         $flag = true;
         $parser = new XiaShuBookPageParser();
+
         while ($flag) {
+            echo 'read page_no = ' . $this->startPage, "\n";
             $url = $this->getBookPageUrl();
             // 读取书页
             $result = $parser->parse($this->bookId, $this->startPage, $url);
 
             if (!$result->isSuccess()) {
                 // 读取失败了
+                echo 'read fail ' . $result->getMsg(), "\n";
                 // 保证当前读取的url记录
                 $this->updateLastestPageUrl();
                 break;
             }
-
             // 读取下一页
             $this->nextBatchUrls(1);
         }
@@ -82,7 +91,22 @@ class XiaShuBookPageSpider extends AbstractSpider
 
     public function start()
     {
-        $this->parseUrl([]);
+        $repo = new XiaShuSpiderBookPageUrlRepo();
+        $entity = new XiaShuSpiderBookPageUrlEntity($this->getBookPageUrl());
+        $entity->setBookId($this->bookId);
+        $result = $repo->addIfNotExist($entity);
+        if ($result->isSuccess()) {
+            $bookPage = (new XiaShuBookPageRepo())->where('book_id', 'eq', $this->bookId)->order('page_no', 'desc')->find();
+            if (!empty($bookPage)) {
+                $pageNo = $bookPage['page_no'] + 1;
+            } else {
+                $pageNo = 1;
+            }
+            $this->setStartPage($pageNo);
+            $this->parseUrl([]);
+        } else {
+            echo 'book_page_spider add fail. ' . $result->getMsg();
+        }
     }
 
     /**
@@ -90,9 +114,8 @@ class XiaShuBookPageSpider extends AbstractSpider
      */
     private function updateLastestPageUrl()
     {
-        $this->latestPageIndex;
         $repo = new XiaShuSpiderBookPageUrlRepo();
-        $repo->where('book_id', $this->bookId)->save(['url' => $this->getBookLatestPageUrl()]);
+        $repo->save(['url' => $this->getBookLatestPageUrl()], ['book_id' => $this->bookId]);
     }
 
     private function parsePage()

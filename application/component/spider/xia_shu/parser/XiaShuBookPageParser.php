@@ -49,11 +49,15 @@ class XiaShuBookPageParser
             $bookPageEntity = new XiaShuBookPageEntity();
             $bookPageEntity->setBookId($bookId);
             $bookPageEntity->setPageNo($pageNo);
+
+
             $items = $dom->find("div.info span", 2);
-            $updateTime = $items->innertext();
-            $updateTime = str_replace('更新时间：', '', $updateTime);
-            $updateTime = strtotime($updateTime);
-            $bookPageEntity->setUpdateTime($updateTime);
+            if ($items) {
+                $updateTime = $items->innertext();
+                $updateTime = str_replace('更新时间：', '', $updateTime);
+                $updateTime = strtotime($updateTime);
+                $bookPageEntity->setUpdateTime($updateTime);
+            }
 
             $items = $dom->find("div.title h1 a", 0);
             if ($items) {
@@ -63,7 +67,6 @@ class XiaShuBookPageParser
             }
             $contentSelector = "div#chaptercontent";
             $items = $dom->find($contentSelector, 0);
-
             if ($items) {
                 $bookPageEntity->setPageContent($items->innertext());
             } else {

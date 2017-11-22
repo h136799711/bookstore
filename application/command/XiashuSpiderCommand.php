@@ -19,6 +19,7 @@ namespace app\command;
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
+use app\component\spider\xia_shu\repo\XiaShuBookRepo;
 use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
 use app\component\spider\xia_shu\XiaShuBookSpider;
@@ -68,7 +69,7 @@ class XiashuSpiderCommand extends Command
 //            var_dump($result);
             exit(0);
         }
-
+        $startTime = microtime(true);
         if ($c == 1) {
             XiaShuSpiderBookUrlHelper::create();
         } elseif ($c == 2) {
@@ -90,13 +91,19 @@ class XiashuSpiderCommand extends Command
             }
         } elseif ($c == 3) {
             // 启动书页爬虫
+            // TODO 获取所有书籍
+            $bookRepo = new XiaShuBookRepo();
+//            while (true){
             $bookId = 1;
+            $result =
             $spider = new XiaShuBookPageSpider($bookId);
             $spider->start();
-
+//            }
         } else {
             $output->error('c= ' . $c);
         }
+        $startTime = microtime(true) - $startTime;
+        $output->info('cost time=' . $startTime);
     }
 
     protected function logException(Exception $exception)

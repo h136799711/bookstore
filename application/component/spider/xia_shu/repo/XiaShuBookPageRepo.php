@@ -28,6 +28,7 @@ class XiaShuBookPageRepo extends Model
 
     protected $connection = 'cli_database';
 
+
     /**
      * 向数据库添加数据
      * @param XiaShuBookPageEntity $bookPageEntity

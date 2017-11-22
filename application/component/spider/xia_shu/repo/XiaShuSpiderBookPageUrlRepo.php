@@ -17,6 +17,8 @@
 namespace app\component\spider\xia_shu\repo;
 
 
+use app\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
+use by\infrastructure\helper\CallResultHelper;
 use think\Db;
 use think\Model;
 
@@ -31,6 +33,28 @@ class XiaShuSpiderBookPageUrlRepo extends Model
     protected $connection = 'cli_database';
 
     protected $table = 'xiashu_book_page_url';
+
+    public function addIfNotExist(XiaShuSpiderBookPageUrlEntity $urlEntity)
+    {
+        $map = [
+            'book_id' => $urlEntity->getBookId(),
+            'source' => $urlEntity->getSource()
+        ];
+
+        $result = Db::table($this->table)->where($map)->find();
+
+        if (empty($result)) {
+            $result = Db::table($this->table)->insert($urlEntity->toArray());
+            if ($result == 1) {
+                return CallResultHelper::success(Db::table($this->table)->getLastInsID());
+            }
+        } else {
+            $id = $result['id'];
+            return CallResultHelper::success($id);
+        }
+
+        return CallResultHelper::fail('fail');
+    }
 
     public function queryBetween($name, $startPage = 0, $page = 10)
     {
