@@ -6,10 +6,15 @@
 [![Daily Downloads](https://poser.pugx.org/h136799711/bookstore/d/daily)](https://packagist.org/packages/h136799711/bookstore)
 [![License](https://poser.pugx.org/h136799711/bookstore/license)](https://packagist.org/packages/h136799711/bookstore)
 
-## book resource spider   
+## book resource spider 
+
+## 书本目录结构
+
+./txt/ceil{$book_id/5000}/{$book_id}/{$page_id}.txt
+## 封面
+./cover/ceil{$book_id/5000}/cover{$book_id}.jpg
 
 ## TODO
-
 1. 图片下载到本地
 2. 书页读取到数据库中
 3. 生成书籍txt文本文件

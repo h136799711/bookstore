@@ -12,7 +12,6 @@
 
 return [
     'cli_database' => [
-        'break_reconnect' => true,
         // 数据库类型
         'type' => 'mysql',
         // 服务器地址
