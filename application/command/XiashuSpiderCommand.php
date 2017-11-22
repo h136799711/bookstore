@@ -19,7 +19,6 @@ namespace app\command;
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
-use app\component\spider\xia_shu\repo\XiaShuBookRepo;
 use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
 use app\component\spider\xia_shu\XiaShuBookSpider;
@@ -92,10 +91,12 @@ class XiashuSpiderCommand extends Command
         } elseif ($c == 3) {
             // 启动书页爬虫
             // TODO 获取所有书籍
-            $bookRepo = new XiaShuBookRepo();
+            // TODO 书籍状态不等于已爬取完成状态
+            // TODO 最新爬取时间不是当天的书
+            // TODO 创建一个视图
+//            $bookRepo = new XiaShuBookRepo();
 //            while (true){
-            $bookId = 1;
-            $result =
+            $bookId = 2;
             $spider = new XiaShuBookPageSpider($bookId);
             $spider->start();
 //            }

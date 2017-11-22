@@ -26,7 +26,8 @@ class XiaShuBookPageEntity extends BookPageEntity implements ToArrayInterface
 {
     public function toArray()
     {
-        return Object2DataArrayHelper::getDataArrayFrom($this);
+        $data = ['update_time', 'create_time', 'page_content', 'page_title', 'source', 'book_id', 'page_no'];
+        return Object2DataArrayHelper::getDataArrayFrom($this, $data);
     }
 
     // construct
