@@ -162,7 +162,9 @@ class XiaShuBookParser
 
     private function addXiaShuBookSource($bookId, $bookAddress)
     {
+        $sourceBookId = str_replace(BookSiteType::XIA_SHU_BOOK_SITE . '/', '', $bookAddress);
         $bookSourceEntity = new XiaShuBookSourceEntity();
+        $bookSourceEntity->setSourceBookId(intval($sourceBookId));
         $bookSourceEntity->setBookAddress($bookAddress);
         $bookSourceEntity->setBookId($bookId);
         $bookSourceEntity->setBookSourceAddress(BookSiteType::XIA_SHU_BOOK_SITE);

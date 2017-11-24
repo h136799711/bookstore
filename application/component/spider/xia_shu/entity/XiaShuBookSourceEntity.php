@@ -23,11 +23,28 @@ use by\infrastructure\helper\Object2DataArrayHelper;
 
 class XiaShuBookSourceEntity extends BookSourceEntity implements ToArrayInterface
 {
+    private $sourceBookId;
+
     public function __construct()
     {
         parent::__construct();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSourceBookId()
+    {
+        return $this->sourceBookId;
+    }
+
+    /**
+     * @param mixed $sourceBookId
+     */
+    public function setSourceBookId($sourceBookId)
+    {
+        $this->sourceBookId = $sourceBookId;
+    }
 
     // construct
 

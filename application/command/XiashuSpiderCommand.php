@@ -18,15 +18,13 @@ namespace app\command;
 
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
-use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
-use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
 use app\component\spider\xia_shu\XiaShuBookSpider;
+use app\component\spider\xia_shu\XiaShuNewBookSpider;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
-use think\Db;
 use think\Exception;
 
 class XiashuSpiderCommand extends Command
@@ -53,12 +51,16 @@ class XiashuSpiderCommand extends Command
         $page = $input->getOption('page');
         $c = $input->getOption('cmd');
         if ($c == 9) {
-            $parse = new XiaShuBookPageParser();
-            $bookId = 1;
-            $pageNo = 1;
-            $url = "https://www.xiashu.cc/1/read_1.html";
-            $result = $parse->parse($bookId, $pageNo, $url);
-            var_dump($result);
+            $spider = new XiaShuNewBookSpider('');
+//            $ret = $spider->curl_request("https://www.xiashu.cc/175930");
+//            var_dump($ret);
+            $spider->start();
+//            $parse = new XiaShuBookPageParser();
+//            $bookId = 1;
+//            $pageNo = 1;
+//            $url = "https://www.xiashu.cc/1/read_1.html";
+//            $result = $parse->parse($bookId, $pageNo, $url);
+//            var_dump($result);
 //            $repo = new XiaShuSpiderUrlRepo();
 //            $repo->mark('test', 10);
 //            sleep(10);
@@ -118,65 +120,13 @@ class XiashuSpiderCommand extends Command
 
     }
 
-    protected function runThreads($threads = 10, $interval = 3, $limit = 10)
+    /**
+     * 开启书籍页面下载-每次一本书
+     */
+    protected function startBookSpider()
     {
-        echo "\n", 'threads' . $threads;
-        $repo = new XiaShuSpiderUrlRepo();
-        $count = $repo->count();
-        $count = 30;
-        // TODO: 获取当前总共待处理数量 n ,目前不大于20万
-        // TODO: 分配给最多10个进程进行处理 n / 10 <= 20000
-        // TODO: 每个子进程处理不大于2万个链接
-        $everyChildProcessSize = ceil($count / $threads);
-        $children = array();
-        $spiders = [];
-        $offset = 171;
-        // 如果存在 pcntl 则采用多进程进行处理
-        for ($j = 0; $j < $threads; $j++) {
-            $children[$j] = pcntl_fork();
-            $pid = $children[$j];
-            if ($pid == -1) {
-                // 创建失败咱就退出呗,没啥好说的
-                die('could not fork');
-            } elseif ($pid == 0) {
-                // 子进程处理data数组
-                $pid = posix_getpid();
-                $name = $this->getUniqueId($pid);
-//                try {
-                $startId = $offset + $j * $everyChildProcessSize;
-                $endId = $startId + $everyChildProcessSize;
-                echo "\n", 'children start' . $pid, "startId= " . $startId, " endId=" . $endId, "\n";
-                Db::clear();
-                Db::connect(config('database'));
-                $spiders[$j] = new XiaShuBookSpider($name, $startId, $endId);
-                $spiders[$j]->mark();
-                $spiders[$j]->start();
-                $spiders[$j]->clearMark();
-                sleep(3);
-                echo "\n", "子线程(" . $pid . ")执行完成", "\n";
-//                } catch (Exception $ex) {
-//                    var_dump($ex->getTraceAsString());
-//                }
-                exit(0);
-            }
+        $latestBookId = $this->getLatest();
 
-        }
-
-
-        while (count($children) > 0) {
-            foreach ($children as $key => $pid) {
-                $res = pcntl_waitpid($pid, $status, WNOHANG);
-
-                //-1代表error, 大于0代表子进程已退出,返回的是子进程的pid,非阻塞时0代表没取到退出子进程
-                if ($res == -1 || $res > 0) {
-                    unset($children[$key]);
-                }
-            }
-
-            sleep(1);
-        }
-
-        echo "\n", "all process exited", "\n";
     }
 
 }
