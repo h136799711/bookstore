@@ -96,6 +96,7 @@ class XiashuSpiderCommand extends Command
             // TODO 创建一个视图
 //            $bookRepo = new XiaShuBookRepo();
 //            while (true){
+
             $bookId = 1;
             $spider = new XiaShuBookPageSpider($bookId);
             $spider->start();

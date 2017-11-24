@@ -49,6 +49,10 @@ class XiaShuBookPageSpider extends AbstractSpider
 
     public function start()
     {
+        // TODO: 检查该书是否已完结
+
+
+
         $repo = new XiaShuSpiderBookPageUrlRepo();
         $entity = new XiaShuSpiderBookPageUrlEntity($this->getBookPageUrl());
         $entity->setBookId($this->bookId);

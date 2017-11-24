@@ -156,7 +156,7 @@ class XiaShuBookParser
                 return CallResultHelper::fail($result->getMsg());
             }
         } catch (ErrorException $exception) {
-            return CallResultHelper::fail($exception->getMessage());
+            return CallResultHelper::fail('', $exception->getMessage());
         }
     }
 
