@@ -21,9 +21,11 @@ use app\component\spider\constants\BookSiteType;
 use app\component\spider\xia_shu\entity\XiaShuAuthorEntity;
 use app\component\spider\xia_shu\entity\XiaShuBookEntity;
 use app\component\spider\xia_shu\entity\XiaShuBookSourceEntity;
+use app\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookSourceRepo;
+use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use by\infrastructure\helper\CallResultHelper;
 use simplehtmldom_1_5\simple_html_dom;
 use Sunra\PhpSimple\HtmlDomParser;
@@ -136,28 +138,40 @@ class XiaShuBookParser
 
             // 检查是否书籍信息都设置了
             if (is_null($entity->getTitle())) {
-                return CallResultHelper::fail('缺失书名');
+                return CallResultHelper::fail('', '缺失书名');
             }
 
             if (is_null($entity->getCateId())) {
-                return CallResultHelper::fail('缺失分类ID');
+                return CallResultHelper::fail('', '缺失分类ID');
             }
 
             if (is_null($entity->getAuthorName())) {
-                return CallResultHelper::fail('缺失作者笔名');
+                return CallResultHelper::fail('', '缺失作者笔名');
             }
 
             $bookRepo = new XiaShuBookRepo();
             $result = $bookRepo->addIfNotExist($entity);
             if ($result->isSuccess()) {
                 $this->addXiaShuBookSource($result->getData(), $this->url);
+                $this->addBookInitPageUrl($result->getData(), $this->url);
                 return CallResultHelper::success('success');
             } else {
-                return CallResultHelper::fail($result->getMsg());
+                return CallResultHelper::fail('', $result->getMsg());
             }
         } catch (ErrorException $exception) {
             return CallResultHelper::fail('', $exception->getMessage());
         }
+    }
+
+    private function addBookInitPageUrl($bookId, $bookUrl)
+    {
+        $pageInitUrl = $bookUrl . '/read_1.html';
+        $bookPageEntity = new XiaShuSpiderBookPageUrlEntity($pageInitUrl);
+        $bookPageEntity->setBookId($bookId);
+        $bookPageEntity->setSpiderInfo('');
+        $bookPageEntity->setSpiderStatus(XiaShuSpiderBookPageUrlEntity::SPIDER_STATUS_INIT);
+
+        return (new XiaShuSpiderBookPageUrlRepo())->addIfNotExist($bookPageEntity);
     }
 
     private function addXiaShuBookSource($bookId, $bookAddress)

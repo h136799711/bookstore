@@ -51,7 +51,8 @@ class XiaShuNewBookSpider extends AbstractSpider
         echo "\n", 'start from' . $this->getBookUrl($this->curBookId), "\n";
         $repo = new XiaShuSpiderUrlRepo();
         echo "\n", 'is valid start?', $this->isValidBookId($this->curBookId) ? "yes" : 'no';
-        while ($this->isValidBookId($this->curBookId)) {
+        $failTimes = 0;
+        while ($failTimes > 10 && $this->isValidBookId($this->curBookId)) {
             $url = $this->getBookUrl($this->curBookId);
             $data = [
                 'url' => $url
@@ -59,6 +60,7 @@ class XiaShuNewBookSpider extends AbstractSpider
             $result = $this->parseUrl($data);
 
             if (!$result->isSuccess()) {
+                $failTimes++;
                 // 记录到爬取记录
                 $entity = new XiaShuSpiderBookUrlEntity($url);
                 $entity->setSpiderStatus(XiaShuSpiderBookUrlEntity::SPIDER_STATUS_FAIL);
