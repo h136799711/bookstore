@@ -52,7 +52,7 @@ class XiaShuNewBookSpider extends AbstractSpider
         $repo = new XiaShuSpiderUrlRepo();
         echo "\n", 'is valid start?', $this->isValidBookId($this->curBookId) ? "yes" : 'no';
         $failTimes = 0;
-        while ($failTimes > 10 && $this->isValidBookId($this->curBookId)) {
+        while ($failTimes < 10 && $this->isValidBookId($this->curBookId)) {
             $url = $this->getBookUrl($this->curBookId);
             $data = [
                 'url' => $url
