@@ -182,7 +182,7 @@ class XiaShuBookPageSpider extends AbstractSpider
     function nextBatchUrls($limit = 10)
     {
         // 根据当前书页，生成下一个书页
-        $this->startPage += $limit;
-        $this->latestPageIndex += $this->startPage - 1;
+        $this->startPage = $this->startPage + $limit;
+        $this->latestPageIndex = $this->startPage - 1;
     }
 }
