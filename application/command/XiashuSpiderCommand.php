@@ -99,7 +99,6 @@ class XiashuSpiderCommand extends Command
                 var_dump($exception->getMessage());
             }
         } elseif ($c == 3) {
-
             $save_text = $input->getOption('save_text');
             // 启动书页爬虫
             $bookRepo = new XiaShuSpiderBookPageUrlRepo();
