@@ -18,11 +18,15 @@ namespace app\component\spider\xia_shu;
 
 
 use app\component\spider\base\AbstractSpider;
+use app\component\spider\constants\BookSiteIntegerType;
 use app\component\spider\constants\BookSiteType;
+use app\component\spider\xia_shu\entity\XiaShuBookEntity;
 use app\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
 use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
+use app\component\spider\xia_shu\parser\XiaShuBookStateParser;
 use app\component\spider\xia_shu\repo\XiaShuBookPageRepo;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
+use think\Model;
 
 /**
  * Class XiaShuBookPageSpider
@@ -31,6 +35,7 @@ use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
  */
 class XiaShuBookPageSpider extends AbstractSpider
 {
+    const  MaxNotUpdateTime = 3 * 30 * 24 * 3600; // 90 天
     private $bookId;
     private $startPage;
     private $latestPageIndex;
@@ -49,10 +54,6 @@ class XiaShuBookPageSpider extends AbstractSpider
 
     public function start()
     {
-        // TODO: 检查该书是否已完结
-
-
-
         $repo = new XiaShuSpiderBookPageUrlRepo();
         $entity = new XiaShuSpiderBookPageUrlEntity($this->getBookPageUrl());
         $entity->setBookId($this->bookId);
@@ -69,6 +70,11 @@ class XiaShuBookPageSpider extends AbstractSpider
         } else {
             echo 'book_page_spider add fail. ' . $result->getMsg();
         }
+    }
+
+    public function getXiashuBookUrl()
+    {
+        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->bookId;
     }
 
     public function getBookPageUrl()
@@ -96,6 +102,8 @@ class XiaShuBookPageSpider extends AbstractSpider
                 echo 'read fail ' . $result->getMsg(), "\n";
                 // 保证当前读取的url记录
                 $this->updateLastestPageUrl();
+                // 检查书籍是否完结
+                $this->checkIsOver();
                 break;
             }
             // 读取下一页
@@ -103,7 +111,40 @@ class XiaShuBookPageSpider extends AbstractSpider
         }
     }
 
-    // construct
+    /**
+     * 检查书籍是否完结
+     */
+    private function checkIsOver()
+    {
+        //
+        $url = $this->getXiashuBookUrl();
+        $parser = new XiaShuBookStateParser($url);
+        $ret = $parser->parse();
+        if ($ret->isSuccess()) {
+            $repo = new XiaShuSpiderBookPageUrlRepo();
+            $map = ['book_id' => $this->bookId, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE];
+
+            if ($ret->getData() == XiaShuBookEntity::STATE_END) {
+                $repo->save(['is_spider_over' => 1, 'spider_info' => '书已完结且爬取完成'], $map);
+            } else {
+                // 判断update_time 是否大于
+                $result = $repo->where($map)->find();
+                if (!empty($result)) {
+                    if ($result instanceof Model) {
+                        // 这个更新时间在每次读取到该书新的章节的时候会更新一次
+                        // 没有读取到新章节不会更新
+                        $updateTime = $result->getData('update_time');
+                        if (time() - self::MaxNotUpdateTime > $updateTime) {
+                            // 超过 MaxNotUpdateTime 没有更新了,则判断书籍断更了
+                            $day = self::MaxNotUpdateTime / 86400;
+                            $info = "超过 " . $day . " 天没有更新了, 可能断更了";
+                            $repo->save(['is_spider_over' => 2, 'spider_info' => $info], $map);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * 更新当前书本最新书页地址
@@ -111,7 +152,8 @@ class XiaShuBookPageSpider extends AbstractSpider
     private function updateLastestPageUrl()
     {
         $repo = new XiaShuSpiderBookPageUrlRepo();
-        $repo->save(['url' => $this->getBookLatestPageUrl()], ['book_id' => $this->bookId]);
+        $map = ['book_id' => $this->bookId, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE];
+        $repo->saveIfUpdateUrl($map, $this->getBookLatestPageUrl());
     }
 
     public function getBookLatestPageUrl()

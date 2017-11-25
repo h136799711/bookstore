@@ -65,7 +65,7 @@ class XiaShuNewBookSpider extends AbstractSpider
                 $entity = new XiaShuSpiderBookUrlEntity($url);
                 $entity->setSpiderStatus(XiaShuSpiderBookUrlEntity::SPIDER_STATUS_FAIL);
                 $entity->setSpiderInfo($result->getMsg());
-                $repo->insert($entity->toArray());
+                $repo->addOrUpdate($entity);
             }
 
             $this->nextBatchUrls(1);

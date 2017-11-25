@@ -17,6 +17,7 @@
 namespace app\component\spider\xia_shu\repo;
 
 
+use app\component\spider\constants\BookSiteIntegerType;
 use app\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
 use by\infrastructure\helper\CallResultHelper;
 use think\Db;
@@ -33,6 +34,40 @@ class XiaShuSpiderBookPageUrlRepo extends Model
     protected $connection = 'cli_database';
 
     protected $table = 'xiashu_book_page_url';
+
+    protected $view = "v_xiashu_book_page_url";
+
+    public function saveIfUpdateUrl($map, $url)
+    {
+        $result = $this->where($map)->find();
+
+        if ($result) {
+            if ($url == $result->getData('url')) {
+                return;
+            }
+            $this->where($map)->update(['update_time' => time(), 'url' => $url]);
+        }
+    }
+
+    /**
+     * 获取有效的
+     * @param int $limit
+     * @return \by\infrastructure\base\CallResult
+     */
+    public function getValidSpiderBookPageUrl($limit = 1)
+    {
+        $map = [
+            'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE
+        ];
+        $limit = $limit > 100 ? 100 : $limit;
+        $result = Db::table($this->view)->where($map)->limit(0, $limit)->select();
+
+        if (empty($result)) {
+            return CallResultHelper::fail('', 'no valid url');
+        } else {
+            return CallResultHelper::success($result);
+        }
+    }
 
     public function addIfNotExist(XiaShuSpiderBookPageUrlEntity $urlEntity)
     {

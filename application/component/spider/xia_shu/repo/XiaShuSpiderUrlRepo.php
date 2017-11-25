@@ -68,4 +68,25 @@ class XiaShuSpiderUrlRepo extends Model
             ->select();
         return $result;
     }
+
+    public function addOrUpdate(XiaShuSpiderBookUrlEntity $entity)
+    {
+        $map = [
+            'url' => $entity->getUrl()
+        ];
+
+        $result = $this->where($map)->find();
+        if (!empty($result)) {
+            $id = $result->getData('id');
+            $array = $entity->toArray();
+            if (array_key_exists('id', $array)) {
+                unset($array['id']);
+            }
+
+            $result = $this->update($entity->toArray(), ['id' => $id]);
+        } else {
+            $result = $this->insert($entity->toArray());
+        }
+        return $result;
+    }
 }

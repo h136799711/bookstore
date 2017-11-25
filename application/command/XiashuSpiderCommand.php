@@ -18,9 +18,9 @@ namespace app\command;
 
 
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
+use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
 use app\component\spider\xia_shu\XiaShuBookSpider;
-use app\component\spider\xia_shu\XiaShuNewBookSpider;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
@@ -37,7 +37,7 @@ class XiashuSpiderCommand extends Command
     protected function configure()
     {
         $this->setName('spider:xia_shu')
-            ->addOption('size', 's', Option::VALUE_OPTIONAL, 'total size', 1000)
+            ->addOption('size', 's', Option::VALUE_OPTIONAL, 'total size', 1)
             ->addOption('page', 'p', Option::VALUE_OPTIONAL, 'page', 1000)
             ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 1: url_creator 2: bookSpider', 1)
             ->setDescription('xiashu.cc spider');
@@ -51,10 +51,17 @@ class XiashuSpiderCommand extends Command
         $page = $input->getOption('page');
         $c = $input->getOption('cmd');
         if ($c == 9) {
-            $spider = new XiaShuNewBookSpider('');
+            $repo = new XiaShuSpiderBookPageUrlRepo();
+            $repo->saveIfUpdateUrl(['book_id' => 173834], 'https://www.xiashu.cc/176010/read_1.html');
+
+//            $parser = new XiaShuBookStateParser("https://www.xiashu.cc/1");
+//            $ret = $parser->parse();
+//            var_dump($ret);
+
+//            $spider = new XiaShuNewBookSpider('');
 //            $ret = $spider->curl_request("https://www.xiashu.cc/175930");
 //            var_dump($ret);
-            $spider->start();
+//            $spider->start();
 //            $parse = new XiaShuBookPageParser();
 //            $bookId = 1;
 //            $pageNo = 1;
@@ -91,18 +98,21 @@ class XiashuSpiderCommand extends Command
                 var_dump($exception->getMessage());
             }
         } elseif ($c == 3) {
-            // 启动书页爬虫
-            // TODO 获取所有书籍
-            // TODO 书籍状态不等于已爬取完成状态
-            // TODO 最新爬取时间不是当天的书
-            // TODO 创建一个视图
-//            $bookRepo = new XiaShuBookRepo();
-//            while (true){
 
-            $bookId = 1;
-            $spider = new XiaShuBookPageSpider($bookId);
-            $spider->start();
-//            }
+            // 启动书页爬虫
+            $bookRepo = new XiaShuSpiderBookPageUrlRepo();
+            $ret = $bookRepo->getValidSpiderBookPageUrl($size);
+            if ($ret->isSuccess()) {
+                foreach ($ret->getData() as $book) {
+                    var_dump($book);
+                    $bookId = $book['book_id'];
+                    $spider = new XiaShuBookPageSpider($bookId);
+                    $spider->start();
+                }
+            } else {
+                var_dump($ret->getMsg());
+            }
+
         } else {
             $output->error('c= ' . $c);
         }
