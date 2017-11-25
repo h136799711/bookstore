@@ -77,8 +77,9 @@ class XiaShuBookPageParser
             }
 
             if ($this->isShouldCreateText() && !empty($bookPageEntity->getPageContent())) {
-                $filePath = ROOT_PATH . "txt/b" . $bookPageEntity->getBookId() . '/' . $bookPageEntity->getBookId() . '_' . $pageNo . '.txt';
-                $this->file_write($filePath, $bookPageEntity->getPageContent());
+                $filePath = ROOT_PATH . "txt/b" . $bookPageEntity->getBookId() . '/';
+                $fileName = $bookPageEntity->getBookId() . '_' . $pageNo . '.txt';
+                $this->file_write($filePath, $fileName, $bookPageEntity->getPageContent());
             }
 
             return $this->repo->add($bookPageEntity);
@@ -103,10 +104,21 @@ class XiaShuBookPageParser
         $this->shouldCreateText = $shouldCreateText;
     }
 
-    private function file_write($path, $content)
+    function mkdirs($dir, $mode = 0777)
+    {
+        if (is_dir($dir) || @mkdir($dir, $mode)) return TRUE;
+        return @mkdir($dir, $mode);
+    }
+
+    private function file_write($path, $filename, $content)
     {
         echo 'save text to' . $path;
-        $file = fopen($path, 'w+');
+        if (!$this->mkdirs($path)) {
+            echo 'save fail';
+            return;
+        }
+
+        $file = fopen($path . $filename, 'w+');
 
         fwrite($file, $content);
 

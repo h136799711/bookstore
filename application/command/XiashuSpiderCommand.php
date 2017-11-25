@@ -39,6 +39,7 @@ class XiashuSpiderCommand extends Command
         $this->setName('spider:xia_shu')
             ->addOption('size', 's', Option::VALUE_OPTIONAL, 'total size', 1)
             ->addOption('page', 'p', Option::VALUE_OPTIONAL, 'page', 1000)
+            ->addOption('save_text', 't', Option::VALUE_OPTIONAL, 'should save the content to  file, default is no. 0 for no or 1 for yes', 0)
             ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 1: url_creator 2: bookSpider', 1)
             ->setDescription('xiashu.cc spider');
     }
@@ -99,14 +100,17 @@ class XiashuSpiderCommand extends Command
             }
         } elseif ($c == 3) {
 
+            $save_text = $input->getOption('save_text');
             // 启动书页爬虫
             $bookRepo = new XiaShuSpiderBookPageUrlRepo();
             $ret = $bookRepo->getValidSpiderBookPageUrl($size);
             if ($ret->isSuccess()) {
                 foreach ($ret->getData() as $book) {
-                    var_dump($book);
                     $bookId = $book['book_id'];
                     $spider = new XiaShuBookPageSpider($bookId);
+                    if ($save_text == 1) {
+                        $spider->ifSaveText = true;
+                    }
                     $spider->start();
                 }
             } else {

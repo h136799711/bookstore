@@ -31,4 +31,5 @@ sftp-config.json
 .vscode/
 vendor/
 composer.lock
+txt/*
 

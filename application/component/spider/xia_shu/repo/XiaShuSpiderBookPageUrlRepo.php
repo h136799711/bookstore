@@ -60,8 +60,7 @@ class XiaShuSpiderBookPageUrlRepo extends Model
             'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE
         ];
         $limit = $limit > 100 ? 100 : $limit;
-        $result = Db::table($this->view)->where($map)->limit(0, $limit)->select();
-
+        $result = Db::table($this->view)->where($map)->limit(0, $limit)->fetchSql(false)->select();
         if (empty($result)) {
             return CallResultHelper::fail('', 'no valid url');
         } else {

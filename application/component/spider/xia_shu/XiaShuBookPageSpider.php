@@ -39,10 +39,12 @@ class XiaShuBookPageSpider extends AbstractSpider
     private $bookId;
     private $startPage;
     private $latestPageIndex;
+    public $ifSaveText;
 
     public function __construct($bookId)
     {
         $this->bookId = $bookId;
+        $this->ifSaveText = false;
         $this->setStartPage(1);
     }
 
@@ -85,12 +87,11 @@ class XiaShuBookPageSpider extends AbstractSpider
     function parseUrl($data)
     {
         $flag = true;
+
         $parser = new XiaShuBookPageParser();
+        $parser->setShouldCreateText($this->ifSaveText);
 
-        if (array_key_exists('should_create_text', $data)) {
-            $parser->setShouldCreateText($data['should_create_text']);
-        }
-
+        echo 'start read book url ' . $this->getXiashuBookUrl(), "\n";
         while ($flag) {
             echo 'read page_no = ' . $this->startPage, "\n";
             $url = $this->getBookPageUrl();
@@ -109,6 +110,18 @@ class XiaShuBookPageSpider extends AbstractSpider
             // 读取下一页
             $this->nextBatchUrls(1);
         }
+        $this->updateSpiderTime();
+    }
+
+    /**
+     * 更新已爬取的时间
+     */
+    private function updateSpiderTime()
+    {
+        $repo = new XiaShuSpiderBookPageUrlRepo();
+        $map = ['book_id' => $this->bookId, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE];
+        $repo->save(['spider_active_time' => time()], $map);
+
     }
 
     /**
@@ -116,7 +129,7 @@ class XiaShuBookPageSpider extends AbstractSpider
      */
     private function checkIsOver()
     {
-        //
+        echo 'start check book is over', "\n";
         $url = $this->getXiashuBookUrl();
         $parser = new XiaShuBookStateParser($url);
         $ret = $parser->parse();
@@ -125,6 +138,7 @@ class XiaShuBookPageSpider extends AbstractSpider
             $map = ['book_id' => $this->bookId, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE];
 
             if ($ret->getData() == XiaShuBookEntity::STATE_END) {
+                echo 'book spider is over 1';
                 $repo->save(['is_spider_over' => 1, 'spider_info' => '书已完结且爬取完成'], $map);
             } else {
                 // 判断update_time 是否大于
@@ -137,6 +151,7 @@ class XiaShuBookPageSpider extends AbstractSpider
                         if (time() - self::MaxNotUpdateTime > $updateTime) {
                             // 超过 MaxNotUpdateTime 没有更新了,则判断书籍断更了
                             $day = self::MaxNotUpdateTime / 86400;
+                            echo 'book spider is over 2';
                             $info = "超过 " . $day . " 天没有更新了, 可能断更了";
                             $repo->save(['is_spider_over' => 2, 'spider_info' => $info], $map);
                         }
@@ -151,6 +166,7 @@ class XiaShuBookPageSpider extends AbstractSpider
      */
     private function updateLastestPageUrl()
     {
+        echo 'update latest page url', "\n";
         $repo = new XiaShuSpiderBookPageUrlRepo();
         $map = ['book_id' => $this->bookId, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE];
         $repo->saveIfUpdateUrl($map, $this->getBookLatestPageUrl());
