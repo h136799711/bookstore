@@ -107,7 +107,14 @@ class XiashuSpiderCommand extends Command
             if ($ret->isSuccess()) {
                 foreach ($ret->getData() as $book) {
                     $bookId = $book['book_id'];
-                    $spider = new XiaShuBookPageSpider($bookId);
+                    $sourceBookNo = XiaShuSpiderBookUrlHelper::getBookPageId($book['url']);
+                    echo 'book url ' . $book['url'], "\n";
+                    if ($sourceBookNo == 0) {
+                        echo 'get source book no fail from ' . $book['url'], "\n";
+                        continue;
+                    }
+                    echo 'read source_book_no ' . $sourceBookNo . ' book id ' . $bookId, "\n";
+                    $spider = new XiaShuBookPageSpider($bookId, $sourceBookNo);
                     if ($save_text == 1) {
                         $spider->ifSaveText = true;
                     }

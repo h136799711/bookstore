@@ -23,12 +23,25 @@ use by\infrastructure\helper\Object2DataArrayHelper;
 
 class XiaShuSpiderBookUrlHelper
 {
+    public static function getBookPageId($url)
+    {
+        $regex = "/https:\/\/www.xiashu.cc\/(\d*)/i";
+        $match = [];
+        preg_match($regex, $url, $match);
+        if (is_array($match) && count($match) == 2) {
+            return intval($match[1]);
+        }
+
+        return 0;
+    }
+
     public static function getBookPageNo($url)
     {
         $regex = "/https:\/\/www.xiashu.cc\/(\d*)\/read_(\d*)/i";
         $match = [];
         preg_match($regex, $url, $match);
         if (is_array($match) && count($match) == 3) {
+            var_dump($match);
             return intval($match[2]);
         }
 

@@ -37,13 +37,15 @@ class XiaShuBookPageSpider extends AbstractSpider
 {
     const  MaxNotUpdateTime = 3 * 30 * 24 * 3600; // 90 天
     private $bookId;
+    private $sourceBookNo;
     private $startPage;
     private $latestPageIndex;
     public $ifSaveText;
 
-    public function __construct($bookId)
+    public function __construct($bookId, $sourceBookNo)
     {
         $this->bookId = $bookId;
+        $this->sourceBookNo = $sourceBookNo;
         $this->ifSaveText = false;
         $this->setStartPage(1);
     }
@@ -76,12 +78,12 @@ class XiaShuBookPageSpider extends AbstractSpider
 
     public function getXiashuBookUrl()
     {
-        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->bookId;
+        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->sourceBookNo;
     }
 
     public function getBookPageUrl()
     {
-        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->bookId . "/read_" . $this->startPage . ".html";
+        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->sourceBookNo . "/read_" . $this->startPage . ".html";
     }
 
     function parseUrl($data)
@@ -174,7 +176,7 @@ class XiaShuBookPageSpider extends AbstractSpider
 
     public function getBookLatestPageUrl()
     {
-        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->bookId . "/read_" . $this->latestPageIndex . ".html";
+        return BookSiteType::XIA_SHU_BOOK_SITE . "/" . $this->sourceBookNo . "/read_" . $this->latestPageIndex . ".html";
     }
 
     function nextBatchUrls($limit = 10)
@@ -182,15 +184,5 @@ class XiaShuBookPageSpider extends AbstractSpider
         // 根据当前书页，生成下一个书页
         $this->startPage += $limit;
         $this->latestPageIndex += $this->startPage - 1;
-    }
-
-    private function parsePage()
-    {
-
-    }
-
-    private function isBookStateOver()
-    {
-
     }
 }
