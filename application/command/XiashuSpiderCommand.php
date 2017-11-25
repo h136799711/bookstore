@@ -21,6 +21,7 @@ use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
 use app\component\spider\xia_shu\XiaShuBookSpider;
+use app\component\spider\xia_shu\XiaShuNewBookSpider;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
@@ -123,6 +124,9 @@ class XiashuSpiderCommand extends Command
                 var_dump($ret->getMsg());
             }
 
+        } elseif ($c == 4) {
+            $spider = new XiaShuNewBookSpider('');
+            $spider->start();
         } else {
             $output->error('c= ' . $c);
         }
