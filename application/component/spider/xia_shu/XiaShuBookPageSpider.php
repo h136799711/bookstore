@@ -26,6 +26,7 @@ use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
 use app\component\spider\xia_shu\parser\XiaShuBookStateParser;
 use app\component\spider\xia_shu\repo\XiaShuBookPageRepo;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
+use think\Exception;
 use think\Model;
 
 /**
@@ -97,32 +98,50 @@ class XiaShuBookPageSpider extends AbstractSpider
         while ($flag) {
             echo 'read page_no = ' . $this->startPage, "\n";
             $url = $this->getBookPageUrl();
-            // 读取书页
-            $result = $parser->parse($this->bookId, $this->startPage, $url);
+            try {
+                // 读取书页
+                $result = $parser->parse($this->bookId, $this->startPage, $url);
 
-            if (!$result->isSuccess()) {
-                // 读取失败了
-                echo 'read fail ' . $result->getMsg(), "\n";
+                if (!$result->isSuccess()) {
+                    // 读取失败了
+                    echo 'read fail ' . $result->getMsg(), "\n";
+                    // 保证当前读取的url记录
+                    $this->updateLastestPageUrl();
+                    // 检查书籍是否完结
+                    $this->checkIsOver();
+                    break;
+                }
+            } catch (Exception $exception) {
+                $this->updateSpiderTime(true);
                 // 保证当前读取的url记录
                 $this->updateLastestPageUrl();
-                // 检查书籍是否完结
-                $this->checkIsOver();
-                break;
+                return;
             }
             // 读取下一页
             $this->nextBatchUrls(1);
         }
-        $this->updateSpiderTime();
+        $this->updateSpiderTime(false);
     }
 
     /**
      * 更新已爬取的时间
+     * @param bool $fail
      */
-    private function updateSpiderTime()
+    private function updateSpiderTime($fail = false)
     {
         $repo = new XiaShuSpiderBookPageUrlRepo();
         $map = ['book_id' => $this->bookId, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE];
-        $repo->save(['spider_active_time' => time()], $map);
+        $updateData = ['spider_active_time' => time()];
+        try {
+            $repo->startTrans();
+            if ($fail) {
+                $repo->inc('fail_cnt', 1);
+            }
+            $repo->save($updateData, $map);
+            $repo->commit();
+        } catch (Exception $exception) {
+            $repo->rollback();
+        }
 
     }
 

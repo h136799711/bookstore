@@ -106,9 +106,10 @@ class XiashuSpiderCommand extends Command
             $ret = $bookRepo->getValidSpiderBookPageUrl($size);
             if ($ret->isSuccess()) {
                 foreach ($ret->getData() as $book) {
+                    $datetime = date('Y-m-d H:i:s', time());
                     $bookId = $book['book_id'];
                     $sourceBookNo = XiaShuSpiderBookUrlHelper::getBookPageId($book['url']);
-                    echo 'book url ' . $book['url'], "\n";
+                    echo $datetime . ' book url ' . $book['url'], "\n";
                     if ($sourceBookNo == 0) {
                         echo 'get source book no fail from ' . $book['url'], "\n";
                         continue;
