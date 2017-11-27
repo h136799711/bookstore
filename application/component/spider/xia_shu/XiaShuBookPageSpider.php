@@ -26,6 +26,7 @@ use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
 use app\component\spider\xia_shu\parser\XiaShuBookStateParser;
 use app\component\spider\xia_shu\repo\XiaShuBookPageRepo;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
+use by\infrastructure\helper\CallResultHelper;
 use think\Exception;
 use think\Model;
 
@@ -71,10 +72,11 @@ class XiaShuBookPageSpider extends AbstractSpider
                 $pageNo = 1;
             }
             $this->setStartPage($pageNo);
-            $this->parseUrl([]);
+            return $this->parseUrl([]);
         } else {
             echo 'book_page_spider add fail. ' . $result->getMsg();
         }
+        return CallResultHelper::fail('', 'XiaShuSpiderBookPageUrlRepo addIfNotExist fail');
     }
 
     public function getXiashuBookUrl()
@@ -90,7 +92,8 @@ class XiaShuBookPageSpider extends AbstractSpider
     function parseUrl($data)
     {
         $flag = true;
-
+        // 新章节数量
+        $newPageCount = 0;
         $parser = new XiaShuBookPageParser();
         $parser->setShouldCreateText($this->ifSaveText);
 
@@ -110,17 +113,20 @@ class XiaShuBookPageSpider extends AbstractSpider
                     // 检查书籍是否完结
                     $this->checkIsOver();
                     break;
+                } else {
+                    $newPageCount++;
                 }
             } catch (Exception $exception) {
                 $this->updateSpiderTime(true);
                 // 保证当前读取的url记录
                 $this->updateLastestPageUrl();
-                return;
+                return CallResultHelper::fail($newPageCount, 'parse url exception' . $exception->getMessage());
             }
             // 读取下一页
             $this->nextBatchUrls(1);
         }
         $this->updateSpiderTime(false);
+        return CallResultHelper::success($newPageCount);
     }
 
     /**

@@ -101,30 +101,39 @@ class XiashuSpiderCommand extends Command
             }
         } elseif ($c == 3) {
             $save_text = $input->getOption('save_text');
-            // 启动书页爬虫
-            $bookRepo = new XiaShuSpiderBookPageUrlRepo();
-            $ret = $bookRepo->getValidSpiderBookPageUrl($size);
-            if ($ret->isSuccess()) {
-                foreach ($ret->getData() as $book) {
-                    $datetime = date('Y-m-d H:i:s', time());
-                    $bookId = $book['book_id'];
-                    $sourceBookNo = XiaShuSpiderBookUrlHelper::getBookPageId($book['url']);
-                    echo $datetime . ' book url ' . $book['url'], "\n";
-                    if ($sourceBookNo == 0) {
-                        echo 'get source book no fail from ' . $book['url'], "\n";
-                        continue;
-                    }
-                    echo 'read source_book_no ' . $sourceBookNo . ' book id ' . $bookId, "\n";
-                    $spider = new XiaShuBookPageSpider($bookId, $sourceBookNo);
-                    if ($save_text == 1) {
-                        $spider->ifSaveText = true;
-                    }
-                    $spider->start();
-                }
-            } else {
-                var_dump($ret->getMsg());
-            }
+            $size = 1;
+            $breakFlag = true;
 
+            while ($breakFlag) {
+                $costTime = microtime(true) - $startTime;
+                if ($costTime > 1800) {
+                    // 超过 时间 则不执行
+                    break;
+                }
+                // 启动书页爬虫
+                $bookRepo = new XiaShuSpiderBookPageUrlRepo();
+                $ret = $bookRepo->getValidSpiderBookPageUrl($size);
+                if ($ret->isSuccess()) {
+                    foreach ($ret->getData() as $book) {
+                        $datetime = date('Y-m-d H:i:s', time());
+                        $bookId = $book['book_id'];
+                        $sourceBookNo = XiaShuSpiderBookUrlHelper::getBookPageId($book['url']);
+                        echo $datetime . ' book url ' . $book['url'], "\n";
+                        if ($sourceBookNo == 0) {
+                            echo 'get source book no fail from ' . $book['url'], "\n";
+                            continue;
+                        }
+                        echo 'read source_book_no ' . $sourceBookNo . ' book id ' . $bookId, "\n";
+                        $spider = new XiaShuBookPageSpider($bookId, $sourceBookNo);
+                        if ($save_text == 1) {
+                            $spider->ifSaveText = true;
+                        }
+                        $spider->start();
+                    }
+                } else {
+                    var_dump($ret->getMsg());
+                }
+            }
         } elseif ($c == 4) {
             $spider = new XiaShuNewBookSpider('');
             $spider->start();
