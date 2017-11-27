@@ -58,12 +58,26 @@ class PicDownloadHelperTest extends BaseTestCase
     /**
      * @covers PictureDownloadHelper::downloadAndSaveTo()
      */
-    public function testDownloadAndSaveTo()
+//    public function testDownloadAndSaveTo()
+//    {
+//        $url = "https://img.xiashu.cc/cover/0/2.jpg";
+//        $saveDir = "./public/cover";
+//        // ['file_name' => $filename, 'save_path' => $save_dir . $filename]
+//        $result = PictureDownloadHelper::downloadAndSaveTo($url, $saveDir);
+//        echo StringHelper::utf8ToGbk($result->getMsg());
+//        $this->assertTrue($result->isSuccess());
+//        if ($result->isSuccess()) {
+//            $data = $result->getData();
+//            var_dump($data);
+//        }
+//    }
+
+    public function testQiniuUploader()
     {
         $url = "https://img.xiashu.cc/cover/0/2.jpg";
-        $saveDir = "./public/cover";
+        $saveName = "cover/test/" . rand(0, 1000);
         // ['file_name' => $filename, 'save_path' => $save_dir . $filename]
-        $result = PictureDownloadHelper::downloadAndSaveTo($url, $saveDir);
+        $result = PictureDownloadHelper::uploadToQiniu($url, $saveName);
         echo StringHelper::utf8ToGbk($result->getMsg());
         $this->assertTrue($result->isSuccess());
         if ($result->isSuccess()) {

@@ -17,8 +17,10 @@
 namespace app\component\picture\helper;
 
 
+use app\component\picture\config\QiniuDefaultConfig;
 use app\component\picture\entity\BsPictureEntity;
 use app\component\picture\logic\BsPictureLogic;
+use app\component\qiniu\QiniuUploader;
 use by\infrastructure\base\CallResult;
 use by\infrastructure\constants\StatusEnum;
 use by\infrastructure\helper\CallResultHelper;
@@ -111,7 +113,7 @@ class PictureDownloadHelper
         // $size=strlen($img);
         $path = $save_dir . $filename;
         if (file_exists($path)) {
-            return CallResultHelper::fail('图片已存在');
+            return CallResultHelper::success(['file_name' => $filename, 'save_path' => $save_dir . $filename]);
         }
         //文件大小
         $fp2 = @fopen($path, 'a');
@@ -122,5 +124,39 @@ class PictureDownloadHelper
         fclose($fp2);
         unset($img, $url);
         return CallResultHelper::success(['file_name' => $filename, 'save_path' => $save_dir . $filename]);
+    }
+
+    /**
+     * @param $url
+     * @param string $saveName
+     * @return CallResult
+     */
+    public static function uploadToQiniu($url, $saveName = '')
+    {
+
+        $ext = strrchr($url, '.');
+        if (!in_array($ext, ['.gif', ".jpg", ".png"])) {
+            return CallResultHelper::fail('图片后缀非法(支持jpg,gif,png)');
+        }
+
+        if (trim($saveName) == '') {
+            //保存文件名
+            $saveName = time();
+        }
+        if (strpos(".", $saveName) === false) {
+            $saveName .= $ext;
+        }
+
+        ob_start();
+        readfile($url);
+        $data = ob_get_contents();
+        ob_end_clean();
+
+        $config = new QiniuDefaultConfig();
+        $uploader = new QiniuUploader($config);
+        $upToken = $uploader->uploadToken($config->getDefaultBucket());
+        $result = $uploader->put($upToken, $saveName, $data);
+
+        return $result;
     }
 }
