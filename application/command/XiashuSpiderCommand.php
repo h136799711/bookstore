@@ -133,6 +133,8 @@ class XiashuSpiderCommand extends Command
                 } else {
                     var_dump($ret->getMsg());
                 }
+                
+                sleep(1);
             }
         } elseif ($c == 4) {
             $spider = new XiaShuNewBookSpider('');
