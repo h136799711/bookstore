@@ -76,7 +76,7 @@ class XiaShuBookPageSpider extends AbstractSpider
         } else {
             echo 'book_page_spider add fail. ' . $result->getMsg();
         }
-        return CallResultHelper::fail('', 'XiaShuSpiderBookPageUrlRepo addIfNotExist fail');
+        return CallResultHelper::fail('XiaShuSpiderBookPageUrlRepo addIfNotExist fail');
     }
 
     public function getXiashuBookUrl()

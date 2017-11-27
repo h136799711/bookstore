@@ -20,13 +20,11 @@ namespace app\command;
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
-use app\component\spider\xia_shu\XiaShuBookSpider;
 use app\component\spider\xia_shu\XiaShuNewBookSpider;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
-use think\Exception;
 
 class XiashuSpiderCommand extends Command
 {
@@ -41,7 +39,7 @@ class XiashuSpiderCommand extends Command
             ->addOption('size', 's', Option::VALUE_OPTIONAL, 'total size', 1)
             ->addOption('page', 'p', Option::VALUE_OPTIONAL, 'page', 1000)
             ->addOption('save_text', 't', Option::VALUE_OPTIONAL, 'should save the content to  file, default is no. 0 for no or 1 for yes', 0)
-            ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 1: url_creator 2: bookSpider', 1)
+            ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 3: book spider 4: book page spider 5: book cover image download', 0)
             ->setDescription('xiashu.cc spider');
     }
 
@@ -80,26 +78,8 @@ class XiashuSpiderCommand extends Command
             exit(0);
         }
         $startTime = microtime(true);
-        if ($c == 1) {
-            XiaShuSpiderBookUrlHelper::create();
-        } elseif ($c == 2) {
-            // 启动书籍爬虫
-            $output->info('single threads');
-            if (function_exists("posix_getpid")) {
-                $pid = posix_getpid();
-            } else {
-                $pid = rand(0, 999);
-            }
 
-            $spider = new XiaShuBookSpider($this->getUniqueId($pid), $size, $page);
-            try {
-                $spider->mark();
-                $spider->start();
-                $spider->clearMark();
-            } catch (Exception $exception) {
-                var_dump($exception->getMessage());
-            }
-        } elseif ($c == 3) {
+        if ($c == 3) {
             $save_text = $input->getOption('save_text');
             $size = 1;
             $breakFlag = true;
@@ -133,36 +113,25 @@ class XiashuSpiderCommand extends Command
                 } else {
                     var_dump($ret->getMsg());
                 }
-                
+
                 sleep(1);
             }
         } elseif ($c == 4) {
             $spider = new XiaShuNewBookSpider('');
             $spider->start();
+        } elseif ($c == 5) {
+            //
         } else {
-            $output->error('c= ' . $c);
+            $output->error('unknown c= ' . $c);
         }
+
         $startTime = microtime(true) - $startTime;
         $output->info('cost time=' . $startTime);
     }
+
 
     protected function getUniqueId($pid = 0)
     {
         return strtolower('p' . $pid . '_' . md5(uniqid('xiashu_', true)));
     }
-
-    protected function logException(Exception $exception)
-    {
-
-    }
-
-    /**
-     * 开启书籍页面下载-每次一本书
-     */
-    protected function startBookSpider()
-    {
-        $latestBookId = $this->getLatest();
-
-    }
-
 }

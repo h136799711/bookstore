@@ -63,16 +63,16 @@ class XiaShuBookStateParser
                 if ($property == $stateProperty) {
                     $state = $this->getState($content);
                     if ($state == XiaShuBookEntity::STATE_Unknown) {
-                        return CallResultHelper::fail('', '书籍状态无法识别');
+                        return CallResultHelper::fail('书籍状态无法识别');
                     }
                     return CallResultHelper::success($state);
                 }
             }
 
-            return CallResultHelper::fail('', $this->errorInfo);
+            return CallResultHelper::fail($this->errorInfo);
 
         } catch (ErrorException $exception) {
-            return CallResultHelper::fail('', $exception->getMessage());
+            return CallResultHelper::fail($exception->getMessage());
         }
     }
 

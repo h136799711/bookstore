@@ -19,6 +19,7 @@ namespace app\component\tp5\logic;
 
 use app\component\tp5\model\BaseModel;
 use by\component\paging\vo\PagingParams;
+use by\infrastructure\interfaces\ObjectToArrayInterface;
 use think\Paginator;
 
 abstract class BaseLogic
@@ -243,12 +244,17 @@ abstract class BaseLogic
 
     /**
      * add 添加
+     * 支持 类传入
      * @param $entity
      * @param $pk string 主键
      * @return bool
      */
     public function add($entity, $pk = 'id')
     {
+        if ($entity instanceof ObjectToArrayInterface) {
+            $entity = $entity->toArray();
+        }
+
         $result = $this->model->data($entity)->isUpdate(false)->save();
         if (!empty($pk)) {
             $result = $this->getInsertId($pk);

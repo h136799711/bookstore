@@ -2,18 +2,9 @@
 <phpunit bootstrap="./vendor/autoload.php"
          stopOnError="true"
          stopOnFailure="true">
-    <testsuite name="infra">
-        <directory>./test/infrastructure</directory>
+    <testsuite name="all">
+        <directory>./test/</directory>
     </testsuite>
-
-    <testsuites>
-        <testsuite name="infra">
-            <directory>./test/infrastructure/*Test.php</directory>
-        </testsuite>
-        <testsuite name="test2">
-            <directory>./test</directory>
-        </testsuite>
-    </testsuites>
 
     <logging>
         <log type="coverage-html" target="./runtime/report" lowUpperBound="35"

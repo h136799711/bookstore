@@ -138,15 +138,15 @@ class XiaShuBookParser
 
             // 检查是否书籍信息都设置了
             if (is_null($entity->getTitle())) {
-                return CallResultHelper::fail('', '缺失书名');
+                return CallResultHelper::fail('缺失书名');
             }
 
             if (is_null($entity->getCateId())) {
-                return CallResultHelper::fail('', '缺失分类ID');
+                return CallResultHelper::fail('缺失分类ID');
             }
 
             if (is_null($entity->getAuthorName())) {
-                return CallResultHelper::fail('', '缺失作者笔名');
+                return CallResultHelper::fail('缺失作者笔名');
             }
 
             $bookRepo = new XiaShuBookRepo();
@@ -156,10 +156,10 @@ class XiaShuBookParser
                 $this->addBookInitPageUrl($result->getData(), $this->url);
                 return CallResultHelper::success('success');
             } else {
-                return CallResultHelper::fail('', $result->getMsg());
+                return CallResultHelper::fail($result->getMsg());
             }
         } catch (ErrorException $exception) {
-            return CallResultHelper::fail('', $exception->getMessage());
+            return CallResultHelper::fail($exception->getMessage());
         }
     }
 

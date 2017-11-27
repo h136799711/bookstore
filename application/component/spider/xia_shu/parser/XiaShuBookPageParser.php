@@ -73,7 +73,7 @@ class XiaShuBookPageParser
                 $bookPageEntity->setPageContent($items->innertext());
             } else {
                 $bookPageEntity->setPageContent('--');
-                return CallResultHelper::fail('', 'page content empty');
+                return CallResultHelper::fail('page content empty');
             }
 
             if ($this->isShouldCreateText() && !empty($bookPageEntity->getPageContent())) {
@@ -84,7 +84,7 @@ class XiaShuBookPageParser
 
             return $this->repo->add($bookPageEntity);
         } catch (ErrorException $exception) {
-            return CallResultHelper::fail('', $exception->getMessage());
+            return CallResultHelper::fail($exception->getMessage());
         }
     }
 
