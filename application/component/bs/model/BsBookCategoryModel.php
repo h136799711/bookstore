@@ -17,9 +17,9 @@
 namespace app\component\bs\model;
 
 
-use think\Model;
+use app\component\tp5\model\BaseModel;
 
-class BsBookCategoryModel extends Model
+class BsBookCategoryModel extends BaseModel
 {
     protected $table = "bs_book_category";
 }

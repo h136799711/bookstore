@@ -23,7 +23,27 @@ namespace app\component\qiniu\interfaces;
  */
 interface QiniuConfigInterface
 {
+    /**
+     * 获取应用key
+     * @return string
+     */
     public function getAppKey();
 
+    /**
+     * 获取密钥
+     * @return string
+     */
     public function getSecretKey();
+
+    /**
+     * 获取默认绑定的域名
+     * @return string
+     */
+    public function getBindDomainName();
+
+    /**
+     * 获取默认的bucket空间名称
+     * @return string
+     */
+    public function getDefaultBucket();
 }

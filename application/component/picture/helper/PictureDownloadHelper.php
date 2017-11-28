@@ -135,6 +135,8 @@ class PictureDownloadHelper
     {
 
         $ext = strrchr($url, '.');
+        $ext = explode('?', $ext);
+        $ext = $ext[0];
         if (!in_array($ext, ['.gif', ".jpg", ".png"])) {
             return CallResultHelper::fail('图片后缀非法(支持jpg,gif,png)');
         }
@@ -154,9 +156,37 @@ class PictureDownloadHelper
 
         $config = new QiniuDefaultConfig();
         $uploader = new QiniuUploader($config);
-        $upToken = $uploader->uploadToken($config->getDefaultBucket());
+        $result = $uploader->uploadToken($config->getDefaultBucket());
+        if (!$result->isSuccess()) {
+            return $result;
+        }
+        $upToken = $result->getData();
         $result = $uploader->put($upToken, $saveName, $data);
+        if (!$result->isSuccess()) {
+            return $result;
+        }
+        $resultData = $result->getData();
+        $path = $resultData['key'];
+        $size = $resultData['fsize'];
+        $tmp = explode("/", $saveName);
+        $saveFilename = $tmp[count($tmp) - 1];
+        $md5 = md5($data);
+        $sha1 = sha1($data);
+        $entity = new BsPictureEntity();
+        $entity->setPrimaryFileUri($path);
+        $entity->setSaveName($saveFilename);
+        $entity->setOriName($url);
+        $entity->setSize($size);
+        $entity->setUrl($path);
+        $entity->setMd5($md5);
+        $entity->setSha1($sha1);
+        $entity->setStatus(StatusEnum::ENABLE);
+        $entity->setExt($ext);
+        $result = (new BsPictureLogic())->add($entity);
+        $entity->setId($result);
 
-        return $result;
+        return CallResultHelper::success($entity);
     }
+
+
 }

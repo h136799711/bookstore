@@ -7,19 +7,25 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-21 10:14
+ * file created @ 2017-11-28 11:47
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace app\component\bs\model;
+namespace appTest\spider;
 
 
-use app\component\tp5\model\BaseModel;
+use app\component\spider\xia_shu\XiaShuCoverSpider;
+use appTest\base\BaseTestCase;
 
-class BsBookModel extends BaseModel
+class XiaShuCoverSpiderTest extends BaseTestCase
 {
-    protected $table = "bs_book";
+    public function testDownloadThumbnail()
+    {
+        $spider = new XiaShuCoverSpider();
+        $size = 1;
+        $spider->downloadThumbnail($size);
+    }
 }

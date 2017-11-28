@@ -20,6 +20,7 @@ namespace app\command;
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
+use app\component\spider\xia_shu\XiaShuCoverSpider;
 use app\component\spider\xia_shu\XiaShuNewBookSpider;
 use think\console\Command;
 use think\console\Input;
@@ -120,7 +121,7 @@ class XiashuSpiderCommand extends Command
             $spider = new XiaShuNewBookSpider('');
             $spider->start();
         } elseif ($c == 5) {
-            //
+            $this->downloadPic($size);
         } else {
             $output->error('unknown c= ' . $c);
         }
@@ -133,5 +134,11 @@ class XiashuSpiderCommand extends Command
     protected function getUniqueId($pid = 0)
     {
         return strtolower('p' . $pid . '_' . md5(uniqid('xiashu_', true)));
+    }
+
+    protected function downloadPic($size = 1)
+    {
+        $spider = new XiaShuCoverSpider();
+        $spider->downloadThumbnail($size);
     }
 }

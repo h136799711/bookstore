@@ -17,6 +17,8 @@
 namespace appTest\qiniu;
 
 
+use app\component\picture\config\QiniuDefaultConfig;
+use app\component\qiniu\QiniuUploader;
 use appTest\base\BaseTestCase;
 
 
@@ -25,11 +27,10 @@ class QiniuUploaderTest extends BaseTestCase
 
     public function testUpload()
     {
-//        $bucket = "img1-qqav-club";
-//        $config = new QiniuDefaultConfig();
-//        $uploader = new QiniuUploader($config);
-//        $upToken = $uploader->uploadToken($bucket);
-//        echo $upToken;
-//        $this->assertNotEmpty($upToken);
+        $config = new QiniuDefaultConfig();
+        $uploader = new QiniuUploader($config);
+        $upToken = $uploader->uploadToken($config->getDefaultBucket());
+        echo $upToken;
+        $this->assertNotEmpty($upToken);
     }
 }

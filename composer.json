@@ -30,9 +30,9 @@
     "topthink/framework": "5.0.12",
     "itboye/architecture": "dev-master",
     "sunra/php-simple-html-dom-parser": "1.5.2",
-    "topthink/think-testing": "dev-master",
     "qiniu/php-sdk": "dev-master"
   },
   "require-dev": {
+    "topthink/think-testing": "dev-master"
   }
 }

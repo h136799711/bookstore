@@ -2,6 +2,9 @@
 <phpunit bootstrap="./vendor/autoload.php"
          stopOnError="true"
          stopOnFailure="true">
+    <testsuite name="spider">
+        <directory>./test/spider</directory>
+    </testsuite>
     <testsuite name="qiniu">
         <directory>./test/qiniu</directory>
     </testsuite>

@@ -17,7 +17,6 @@
 namespace appTest\component\picture\helper;
 
 use app\component\picture\helper\PictureDownloadHelper;
-use app\component\string_extend\StringHelper;
 use appTest\base\BaseTestCase;
 
 /**
@@ -72,17 +71,17 @@ class PicDownloadHelperTest extends BaseTestCase
 //        }
 //    }
 
-    public function testQiniuUploader()
-    {
-        $url = "https://img.xiashu.cc/cover/0/2.jpg";
-        $saveName = "cover/test/" . rand(0, 1000);
-        // ['file_name' => $filename, 'save_path' => $save_dir . $filename]
-        $result = PictureDownloadHelper::uploadToQiniu($url, $saveName);
-        echo StringHelper::utf8ToGbk($result->getMsg());
-        $this->assertTrue($result->isSuccess());
-        if ($result->isSuccess()) {
-            $data = $result->getData();
-            var_dump($data);
-        }
-    }
+//    public function testQiniuUploader()
+//    {
+//        $url = "https://pic.xiashu.cc/image/nocover.jpg";
+//        $saveName = "cover/test/" . rand(0, 1000);
+//        // ['file_name' => $filename, 'save_path' => $save_dir . $filename]
+//        $result = PictureDownloadHelper::uploadToQiniu($url, $saveName);
+//        echo StringHelper::utf8ToGbk($result->getMsg());
+//        $this->assertTrue($result->isSuccess());
+//        if ($result->isSuccess()) {
+//            $data = $result->getData();
+//            var_dump($data);
+//        }
+//    }
 }

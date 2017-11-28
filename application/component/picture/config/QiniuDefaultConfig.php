@@ -38,4 +38,10 @@ class QiniuDefaultConfig implements QiniuConfigInterface
         return "img1-qqav-club";
     }
 
+    public function getBindDomainName()
+    {
+        return "http://img1.8raw.com";
+    }
+
+
 }
