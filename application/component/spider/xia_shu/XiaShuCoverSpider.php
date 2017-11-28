@@ -20,7 +20,6 @@ use app\component\bs\entity\BsBookEntity;
 use app\component\bs\logic\BsBookLogic;
 use app\component\picture\entity\BsPictureEntity;
 use app\component\picture\helper\PictureDownloadHelper;
-use app\component\picture\logic\BsPictureLogic;
 use app\component\string_extend\StringHelper;
 use by\component\paging\vo\PagingParams;
 
@@ -31,7 +30,8 @@ use by\component\paging\vo\PagingParams;
  */
 class XiaShuCoverSpider
 {
-    private $xiashuNocover = "https://pic.xiashu.cc/image/nocover.jpg";
+    private $xiashuNocover1 = "https://pic.xiashu.cc/image/nocover.jpg";
+    private $xiashuNocover2 = "https://img.xiashu.cc/image/nocover.jpg";
 
     private $nocover = "http://img1.8raw.com/cover/nocover.jpg";
 
@@ -39,35 +39,36 @@ class XiaShuCoverSpider
     {
         $list = $this->queryThumbnial($size);
         $update = [];
-        $bsPictureLogic = new BsPictureLogic();
         foreach ($list as $vo) {
             if ($vo instanceof BsBookEntity) {
                 $id = $vo->getId();
                 echo 'book id = ' . $id, "\n";
                 $thumbnail = $vo->getThumbnail();
-                if ($thumbnail == $this->xiashuNocover) {
+                if ($thumbnail == $this->xiashuNocover1 || $thumbnail == $this->xiashuNocover2) {
+                    // 无需下载
                     $thumbnail = $this->nocover;
-                }
-                $path = strval($id);
-                if (strlen($path) < 5) {
-                    $path = "0";
                 } else {
-                    $path = ceil($id / 10000);
-                }
-                $saveName = "cover/" . $path . '/' . $id;
-                $result = $this->downloadPic($thumbnail, $saveName);
-
-                if ($result->isSuccess()) {
-                    $data = $result->getData();
-//                    var_dump($data);
-                    if ($data instanceof BsPictureEntity) {
-                        $thumbnail = $data->getUrl();
+                    //
+                    $path = strval($id);
+                    if (strlen($path) < 5) {
+                        $path = "0";
                     } else {
-                        $thumbnail .= '?op=fail';
+                        $path = ceil($id / 10000);
                     }
-                } else {
-                    echo StringHelper::utf8ToGbk($result->getMsg()), "\n";
-                    $thumbnail .= '?op=error';
+                    $saveName = "cover/" . $path . '/' . $id;
+                    $result = $this->downloadPic($thumbnail, $saveName);
+
+                    if ($result->isSuccess()) {
+                        $data = $result->getData();
+                        if ($data instanceof BsPictureEntity) {
+                            $thumbnail = $data->getUrl();
+                        } else {
+                            $thumbnail .= '?op=fail';
+                        }
+                    } else {
+                        echo StringHelper::utf8ToGbk($result->getMsg()), "\n";
+                        $thumbnail .= '?op=error';
+                    }
                 }
                 array_push($update, ['id' => $id, 'thumbnail' => $thumbnail]);
             }
