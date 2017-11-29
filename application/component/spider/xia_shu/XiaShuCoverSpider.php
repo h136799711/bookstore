@@ -46,6 +46,9 @@ class XiaShuCoverSpider
                     $id = $vo->getId();
                     echo 'book id = ' . $id, "\n";
                     $thumbnail = $vo->getThumbnail();
+                    $tmp = explode("?", $thumbnail);
+                    $thumbnail = $tmp[0];
+                    
                     if ($thumbnail == $this->xiashuNocover1 || $thumbnail == $this->xiashuNocover2) {
                         // 无需下载
                         $thumbnail = $this->nocover;
