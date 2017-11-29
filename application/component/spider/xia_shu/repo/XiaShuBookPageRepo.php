@@ -36,8 +36,7 @@ class XiaShuBookPageRepo extends Model
      */
     public function add(XiaShuBookPageEntity $bookPageEntity)
     {
-
-        $result = Db::table($this->table)->insert($bookPageEntity->toArray());
+        $result = $this->insert($bookPageEntity->toArray());
         if ($result == 1) {
             return CallResultHelper::success(Db::table($this->table)->getLastInsID());
         }
