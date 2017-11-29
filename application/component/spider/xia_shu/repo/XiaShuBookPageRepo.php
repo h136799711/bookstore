@@ -26,7 +26,7 @@ class XiaShuBookPageRepo extends Model
 {
     protected $table = "bs_book_page";
 
-    protected $connection = 'cli_database';
+    protected $connection = 'book_page_db';
 
 
     /**
