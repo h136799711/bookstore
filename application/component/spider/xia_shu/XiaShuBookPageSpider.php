@@ -113,6 +113,7 @@ class XiaShuBookPageSpider extends AbstractSpider
                 $this->updateSpiderTime(true);
                 // 保证当前读取的url记录
                 $this->updateLastestPageUrl();
+                echo 'exception' . $exception->getMessage();
                 return CallResultHelper::fail($newPageCount, 'parse url exception' . $exception->getMessage());
             }
             // 读取下一页
