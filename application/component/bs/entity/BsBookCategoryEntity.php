@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\entity;
+namespace app\component\bs\entity;
 
 
 use by\component\bookstore\v1\entity\BookCategoryEntity;

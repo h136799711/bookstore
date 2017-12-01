@@ -5,11 +5,11 @@ namespace app\index\controller;
 
 use app\component\bs\logic\BsBookCategoryLogic;
 use app\component\bs\logic\BsBookLogic;
+use app\component\bs\params\BsBookSearchParams;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
 use app\component\tp5\controller\BaseController;
-use app\component\tp5\helper\RequestHelper;
-use by\component\paging\vo\PagingParams;
+use think\paginator\driver\Bootstrap;
 
 class Index extends BaseController
 {
@@ -36,22 +36,28 @@ class Index extends BaseController
      */
     public function search()
     {
-        $p = RequestHelper::post('p', 0);
-        $map = [];
-        $logic = new BsBookLogic();
-        $pagingParams = new PagingParams();
-        $pagingParams->setPageIndex($p);
+        // 类目信息
+        $this->category();
+        // 查询参数
+        $params = new BsBookSearchParams();
+        $this->setParamsEntity($params);
+        // 分页信息
+        $pagingParams = $this->getPagingParams();
         $pagingParams->setPageSize(20);
-        $result = $logic->query($map, $pagingParams, "id asc");
-        var_dump($result);
+        $map = $params->getMap();
+        $logic = new BsBookLogic();
+        $result = $logic->queryWithPagingHtml($map, $pagingParams, "id asc");
+        if ($result instanceof Bootstrap) {
+            $this->assign('bs_book_list', $result);
+        }
 
         return $this->fetch();
     }
 
-    private function getCategory()
+    public function category()
     {
         $logic = new BsBookCategoryLogic();
-        $result = $logic->queryNoPaging([], 'id desc,type desc');
+        $result = $logic->queryNoPaging([], 'type desc, sort desc');
         $this->assign('bs_cate', $result);
     }
 }

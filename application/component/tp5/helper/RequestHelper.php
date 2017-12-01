@@ -17,7 +17,7 @@
 namespace app\component\tp5\helper;
 
 
-use app\component\tp5\exception\ParamsLackException;
+use by\infrastructure\helper\CallResultHelper;
 use think\Request;
 
 class RequestHelper
@@ -28,13 +28,13 @@ class RequestHelper
         $value = $request->post($key, $default);
 
         if ($default == $value && !empty($emptyErrMsg)) {
-            throw new ParamsLackException($emptyErrMsg);
+            return CallResultHelper::fail($emptyErrMsg);
         }
-
-        return $value;
+        $value = self::filterEmoji($value);
+        return CallResultHelper::success($value);
     }
 
-    protected function filterEmoji($strText, $bool = false)
+    protected static function filterEmoji($strText, $bool = false)
     {
         $preg = '/\\\ud([8-9a-f][0-9a-z]{2})/i';
         if ($bool == true) {

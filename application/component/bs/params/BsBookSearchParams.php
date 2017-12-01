@@ -17,15 +17,43 @@
 namespace app\component\bs\params;
 
 use by\component\bookstore\v1\entity\BookEntity;
+use by\infrastructure\helper\Object2DataArrayHelper;
+use by\infrastructure\interfaces\ObjectToArrayInterface;
 
 /**
  * Class BsBookSearchParams
  * 书籍查询参数
  * @package app\component\bs\params
  */
-class BsBookSearchParams
+class BsBookSearchParams implements ObjectToArrayInterface
 {
+    public function toArray()
+    {
+        return Object2DataArrayHelper::getDataArrayFrom($this);
+    }
 
+    public function getMap()
+    {
+        $map = [];
+        if (!empty($this->penName)) {
+            $map['author_name'] = ['like', '%' . $this->penName . '%'];
+        }
+        if (!empty($this->bookName)) {
+            $map['title'] = ['like', '%' . $this->bookName . '%'];
+        }
+
+        if (!empty($this->bookCategoryId)) {
+            $map['cate_id'] = $this->bookCategoryId;
+        }
+
+        if ($this->bookState == BookEntity::STATE_END || $this->bookState == BookEntity::STATE_Serialize) {
+            $map['state'] = $this->bookState;
+        }
+
+        return $map;
+    }
+
+    private $penName;
     private $bookName;
     private $bookState;
     private $bookCategoryId;
@@ -36,6 +64,22 @@ class BsBookSearchParams
         $this->setBookCategoryId(0);
         $this->setBookName('');
         $this->setBookState(BookEntity::STATE_Unknown);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPenName()
+    {
+        return $this->penName;
+    }
+
+    /**
+     * @param mixed $penName
+     */
+    public function setPenName($penName)
+    {
+        $this->penName = $penName;
     }
 
     /**

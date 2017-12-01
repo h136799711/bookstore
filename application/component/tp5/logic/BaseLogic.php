@@ -339,7 +339,7 @@ abstract class BaseLogic
      * @param bool $fields
      * @return Paginator
      */
-    public function queryWithPagingHtml($map, PagingParams $page, $order = false, $params = false, $fields = false)
+    public function queryWithPagingHtml($map, PagingParams $page, $order = false, $params = [], $fields = false)
     {
         $query = $this->model;
         if (!is_null($map)) $query = $query->where($map);

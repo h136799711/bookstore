@@ -17,13 +17,37 @@
 namespace app\component\tp5\controller;
 
 
+use app\component\tp5\helper\RequestHelper;
+use by\component\paging\vo\PagingParams;
+use by\infrastructure\helper\Object2DataArrayHelper;
 use think\Controller;
+use think\Request;
 
 class BaseController extends Controller
 {
-    public function post($key, $default = '', $emptyErrMsg = '')
+    public function getPagingParams()
     {
+        $p = $this->post('p', 0);
+        $pagingParams = new PagingParams();
+        $pagingParams->setPageIndex($p);
+        return $pagingParams;
+    }
 
+    public function setParamsEntity($params)
+    {
+        Object2DataArrayHelper::setData($params, $this->post());
+    }
+
+    public function post($key = '', $default = '', $emptyErrMsg = '')
+    {
+        if ($key === '') {
+            return Request::instance()->param();
+        }
+
+        $callResult = RequestHelper::post($key, $default, $emptyErrMsg);
+        if (!$callResult->isSuccess()) {
+            $this->error($callResult->getMsg());
+        }
     }
 
     public function _empty()
