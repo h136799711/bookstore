@@ -7,11 +7,11 @@ use app\component\bs\logic\BsBookCategoryLogic;
 use app\component\bs\logic\BsBookLogic;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
+use app\component\tp5\controller\BaseController;
 use app\component\tp5\helper\RequestHelper;
 use by\component\paging\vo\PagingParams;
-use think\Controller;
 
-class Index extends Controller
+class Index extends BaseController
 {
     public function info()
     {

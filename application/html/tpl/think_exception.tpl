@@ -524,9 +524,6 @@ return implode(', ', $result);
 </div>
 <?php } ?>
 
-<div class="copyright">
-    <a title="首页" href="<?php echo config('site_url'); ?>">首页</a>
-</div>
 
 <?php if(\think\App::$debug) { ?>
 <script>

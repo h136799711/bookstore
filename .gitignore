@@ -34,4 +34,4 @@ composer.lock
 txt/*
 !txt/deny.txt
 public/cover/*
-
+.env

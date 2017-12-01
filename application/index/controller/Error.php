@@ -7,26 +7,21 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-12-01 10:35
+ * file created @ 2017-12-01 11:09
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace app\component\tp5\controller;
+namespace app\index\controller;
 
 
-use think\Controller;
+use app\component\tp5\controller\BaseController;
 
-class BaseController extends Controller
+class Error extends BaseController
 {
-    public function post($key, $default = '', $emptyErrMsg = '')
-    {
-
-    }
-
-    public function _empty()
+    public function index()
     {
         return $this->fetch(APP_PATH . 'html/404/web/index.html');
     }
