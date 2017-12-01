@@ -48,7 +48,7 @@
     <div class="row ">
         {volist name="bs_book_list" id="vo"}
         <div class="book col-md-4 col-lg-3">
-            <a href="{:url($vo['id'])}" target="_blank" title="查看书籍">
+            <a href="{:url('/'.$vo['id'])}" target="_blank" title="查看书籍">
                 <div class="thumbnail">
                     <img class="lazy img-responsive" src="http://img1.8raw.com/cover/nocover.jpg"
                          data-src="{$vo->getData('thumbnail')}" alt="封面"/></div>
