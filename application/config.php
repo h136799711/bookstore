@@ -11,6 +11,12 @@
 
 
 return [
+    'site_url' => 'http://bs.qqav.club',
+    // 覆盖tp5的默认配置
+    'dispatch_success_tmpl' => APP_PATH . 'html/tpl' . DS . 'dispatch_jump.tpl',
+    'dispatch_error_tmpl' => APP_PATH . 'html/tpl' . DS . 'dispatch_jump.tpl',
+    // 异常页面的模板文件
+    'exception_tmpl' => APP_PATH . 'html/tpl' . DS . 'think_exception.tpl',
     // 该配置仅在部署模式下生效
     'http_exception_template' => [
         // 定义404错误的重定向页面地址
