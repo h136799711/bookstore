@@ -26,7 +26,7 @@ class XiaShuBookPageRepo extends Model
 {
     protected $table = "bs_book_page";
 
-    protected $connection = 'cli_database';
+    protected $connection = 'book_page_db';
 
 
     /**
@@ -36,8 +36,7 @@ class XiaShuBookPageRepo extends Model
      */
     public function add(XiaShuBookPageEntity $bookPageEntity)
     {
-
-        $result = Db::table($this->table)->insert($bookPageEntity->toArray());
+        $result = $this->insert($bookPageEntity->toArray());
         if ($result == 1) {
             return CallResultHelper::success(Db::table($this->table)->getLastInsID());
         }
