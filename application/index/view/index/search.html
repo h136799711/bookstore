@@ -33,12 +33,19 @@
         height: 180px;
         overflow: hidden;
     }
+
+    a:hover {
+        text-decoration: none;
+    }
 </style>
 {/block}
 
 {block name="area_body"}
 
 <div class="container">
+    <div class="h4">
+        有效书籍总数 : {$book_count}
+    </div>
     <form class="form">
         <div class="row form-group">
             <div class="col-lg-2 col-md-3">作者笔名:</div>
@@ -83,11 +90,11 @@
             <div class="inner-box">
                 <a href="{:url('/'.$vo['id'])}" target="_blank" title="查看书籍">
                     <div class="thumbnail">
-                        <img class="lazy img-responsive" src="http://img1.8raw.com/cover/nocover.jpg" width="100px"
-                             height="140px"
+                        <img class="lazy img-responsive" src="http://img1.8raw.com/cover/nocover.jpg" width="120px"
+                             height="160px"
                              data-original="{$vo->getData('thumbnail')}" alt="封面"/></div>
-                    <div class="title">{$vo->getData('title')}</div>
-                    <div class="author">{$vo->getData('author_name')}</div>
+                    <div class="title text-center"><h3>{$vo->getData('title')}</h3></div>
+                    <div class="author  text-center">{$vo->getData('author_name')}</div>
                     <div class="summary">{:htmlspecialchars_decode($vo->getData('summary'))}</div>
                 </a>
             </div>

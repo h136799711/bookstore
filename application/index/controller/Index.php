@@ -5,6 +5,7 @@ namespace app\index\controller;
 
 use app\component\bs\logic\BsBookCategoryLogic;
 use app\component\bs\logic\BsBookLogic;
+use app\component\bs\logic\BsBookPageLogic;
 use app\component\bs\params\BsBookSearchParams;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
@@ -34,6 +35,10 @@ class Index extends BaseController
      */
     public function search()
     {
+
+        $bookCount = (new BsBookPageLogic())->getValidBookCount();
+        $this->assign('book_count', $bookCount);
+
         // 类目信息
         $this->category();
         // 查询参数
@@ -44,7 +49,7 @@ class Index extends BaseController
         $pagingParams->setPageSize(20);
         $map = $params->getMap();
         $logic = new BsBookLogic();
-        $result = $logic->queryWithPagingHtml($map, $pagingParams, "id asc");
+        $result = $logic->queryWithPagingHtml($map, $pagingParams, "id asc", $params->toArray());
         if ($result instanceof Bootstrap) {
             $this->assign('bs_book_list', $result);
         }

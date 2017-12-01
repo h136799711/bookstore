@@ -18,7 +18,19 @@ namespace app\component\bs\logic;
 
 
 use app\component\tp5\logic\BaseLogic;
+use think\Db;
 
 class BsBookPageLogic extends BaseLogic
 {
+    /**
+     * 获取有书页的书籍数目
+     * @return int|string
+     */
+    public function getValidBookCount()
+    {
+        $subQuery = $this->getModel()->group('book_id')->field('book_id')->buildSql();
+        $count = Db::connect('book_page_db')->table($subQuery . ' a')->count();
+
+        return $count;
+    }
 }
