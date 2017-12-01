@@ -27,6 +27,8 @@ class Index extends BaseController
 
         $this->assign('authorCount', $authorCount);
         $this->assign('bookCount', $bookCount);
+        $bookCount = (new BsBookPageLogic())->getValidBookCount();
+        $this->assign('validBookCount', $bookCount);
         return $this->fetch();
     }
 
