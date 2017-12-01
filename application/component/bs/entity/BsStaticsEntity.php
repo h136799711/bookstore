@@ -17,6 +17,7 @@
 namespace app\component\bs\entity;
 
 
+use app\component\bs\constants\BsStaticsParam;
 use by\infrastructure\base\BaseEntity;
 use by\infrastructure\helper\Object2DataArrayHelper;
 use by\infrastructure\interfaces\ObjectToArrayInterface;
@@ -28,6 +29,15 @@ class BsStaticsEntity extends BaseEntity implements ObjectToArrayInterface
         return Object2DataArrayHelper::getDataArrayFrom($this);
     }
 
+    public function getStKeyDesc()
+    {
+        if ($this->stKey == BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT) {
+            return "每日新增书籍数";
+        } elseif ($this->stKey == BsStaticsParam::EVERY_DAY_ADD_BOOK_PAGE_COUNT) {
+            return "每日新增章节数";
+        }
+        return "未知";
+    }
 
     private $stKey;
     private $stValue;

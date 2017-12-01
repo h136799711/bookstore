@@ -38,15 +38,18 @@ class BsStaticsLogic extends BaseLogic
         $logic = new BsBookPageLogic();
         $count = $logic->getValidBookCount();
         $map = ['st_key'=>BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT];
-        $result = $this->getInfo($map, 'create_time desc');
-
+        $result = $this->getInfo($map, 'update_time desc');
         if ($result instanceof BsStaticsEntity) {
+            echo 'update';
             // 更新
             $stValue = $result->getStValue();
             if ($stValue != $count) {
-                $this->save($map, ['st_value'=>$count]);
+                $this->save($map, ['st_value'=>$count, 'update_time'=>time()]);
+            } else {
+                $this->save($map, ['update_time'=>time()]);
             }
         } else {
+            echo 'insert';
             // 插入
             $entity = new BsStaticsEntity();
             $entity->setStKey(BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT);
@@ -68,12 +71,14 @@ class BsStaticsLogic extends BaseLogic
         $map['create_time'] = $logTime;
         $result = $this->getInfo($map);
         if ($result instanceof BsStaticsEntity) {
-            $this->save($map, ['st_value' => $count]);
+            $this->save($map, ['st_value' => $count, 'update_time' => time()]);
         } else {
             // 插入
             $entity = new BsStaticsEntity();
-            $entity->setStKey(BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT);
+            $entity->setStKey(BsStaticsParam::EVERY_DAY_ADD_BOOK_PAGE_COUNT);
             $entity->setStValue($count);
+            $entity->setCreateTime($logTime);
+            $entity->setUpdateTime($logTime);
             $this->add($entity);
         }
 

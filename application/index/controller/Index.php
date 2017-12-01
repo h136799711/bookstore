@@ -6,6 +6,7 @@ namespace app\index\controller;
 use app\component\bs\logic\BsBookCategoryLogic;
 use app\component\bs\logic\BsBookLogic;
 use app\component\bs\logic\BsBookPageLogic;
+use app\component\bs\logic\BsStaticsLogic;
 use app\component\bs\params\BsBookSearchParams;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
@@ -29,6 +30,12 @@ class Index extends BaseController
         $this->assign('bookCount', $bookCount);
         $bookCount = (new BsBookPageLogic())->getValidBookCount();
         $this->assign('validBookCount', $bookCount);
+
+        $logic = new BsStaticsLogic();
+        $map['create_time'] = ['gt', time() - 30*24*3600];
+
+        $result = $logic->queryNoPaging($map, "create_time desc");
+        $this->assign('list', $result);
         return $this->fetch();
     }
 

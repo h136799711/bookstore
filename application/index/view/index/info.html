@@ -9,10 +9,16 @@
 
 {block name="area_body"}
 
-<div class="container">validBookCount
+<div class="container">
     <h3>已爬取书总数: {$validBookCount}</h3>
     <h3>书总数: {$bookCount}</h3>
     <h3>作者数: {$authorCount}</h3>
+    <ul>
+    {volist name="list" id="vo"}
+        <li>{$vo->getStKeyDesc()}: {$vo->getStValue()}
+            <br/> 创建时间：{:toDatetime($vo->getCreateTime())} 更新时间：{:toDatetime($vo->getUpdateTime())}</li>
+    {/volist}
+    </ul>
 </div>
 
 {/block}
