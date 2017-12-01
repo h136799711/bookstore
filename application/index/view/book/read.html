@@ -5,16 +5,98 @@
 
 {block name="area_header"}
 <style type="text/css">
+    .readpage {
+        background: #dfdfdf;
+        padding: 10px;
+    }
+
+    .readpage .title {
+    }
+
+    .readpage .article {
+        margin: 30px auto 0;
+        background: #f6f4ec;
+    }
+
+    .readpage .article .summary {
+        margin-top: 30px;
+        font-size: 14px;
+        line-height: 25px;
+        color: #999;
+    }
+
+    .readpage .article .content {
+        padding: 10px;
+    }
+
+    .readpage .readtips {
+
+    }
 </style>
 {/block}
 
 {block name="area_body"}
-
-<div class="container">
+<div class="readpage">
+    <div class="container ">
+        <div class="nav col-lg-12 center-block">
+            <a class="btn btn-primary btn-lg  col-lg-5" href="{:url($book_id.'/'.$pre_page_no)}" target="_self">上一章</a>
+            <a class="btn btn-primary btn-lg    col-lg-2" href="{:url($book_id)}" target="_self">目录</a>
+            <a class="btn btn-primary  btn-lg col-lg-5 " href="{:url($book_id.'/'.$next_page_no)}"
+               target="_self">下一章</a>
+        </div>
+        <div class="nav center-block hidden">
+            <a class="btn btn-primary" href="{:url($book_id.'/'.$pre_page_no)}" target="_self">上一章</a>
+            <a class="btn btn-primary" href="{:url($book_id)}" target="_self">目录</a>
+            <a class="btn btn-primary " href="{:url($book_id.'/'.$next_page_no)}" target="_self">下一章</a>
+        </div>
+        <article>
+            <div class="row article">
+                <div class="col-lg-12 title center-block text-center">
+                    <h1>{$page->getPageTitle()}</h1>
+                </div>
+                <div class="col-lg-12 col-md-12   col-xs-12 summary">
+                    <div class="col-lg-4 col-md-4  col-xs-4 text-center">小说: {$book->getTitle()}</div>
+                    <div class="col-lg-4 col-md-4  col-xs-4 text-center">作者: {$book->getAuthorName()}</div>
+                    <div class="col-lg-4 col-md-4  col-xs-4 text-center">更新时间: {$page->getUpdateTime()}</div>
+                </div>
+                <div class="col-lg-12 content">
+                    {$page->getPageContent()}
+                </div>
+            </div>
+        </article>
+        <div class="nav col-lg-12 center-block">
+            <a class="btn btn-primary btn-lg  col-lg-5" href="{:url($book_id.'/'.$pre_page_no)}" target="_self">上一章</a>
+            <a class="btn btn-primary btn-lg  col-lg-2" href="{:url($book_id)}" target="_self">目录</a>
+            <a class="btn btn-primary  btn-lg col-lg-5 " href="{:url($book_id.'/'.$next_page_no)}"
+               target="_self">下一章</a>
+        </div>
+        <div class="readtips text-center">
+            可以使用← →快捷键阅读
+        </div>
+    </div>
 </div>
-
 {/block}
 
 {block name="area_footer"}
-
+<script type="application/javascript">
+    $(function () {
+        document.onkeydown = function (e) {
+            var isIe = (document.all) ? true : false;
+            var key;
+            if (isIe) {
+                key = window.event.keyCode;
+            } else {
+                key = e.which;
+            }
+            if (key === 37) {
+                console.log('left');
+                window.location.href = "{:url($book_id.'/'.$pre_page_no)}";
+            }
+            if (key === 39) {
+                console.log('right');
+                window.location.href = "{:url($book_id.'/'.$next_page_no)}";
+            }
+        }
+    });
+</script>
 {/block}

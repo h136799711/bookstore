@@ -7,18 +7,24 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-21 10:13
+ * file created @ 2017-11-17 11:32
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace app\component\bs\logic;
+namespace app\component\bs\entity;
 
 
-use app\component\tp5\logic\BaseLogic;
+use by\component\bookstore\v1\entity\BookPageEntity;
 
-class BsBookLogic extends BaseLogic
+class BsBookPageEntity extends BookPageEntity
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
 }

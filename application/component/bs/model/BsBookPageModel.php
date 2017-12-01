@@ -7,18 +7,21 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-21 10:13
+ * file created @ 2017-11-21 10:14
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace app\component\bs\logic;
+namespace app\component\bs\model;
 
 
-use app\component\tp5\logic\BaseLogic;
+use app\component\tp5\model\BaseModel;
 
-class BsBookLogic extends BaseLogic
+class BsBookPageModel extends BaseModel
 {
+    protected $table = "bs_book_page";
+
+    protected $connection = 'book_page_db';
 }

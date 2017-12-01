@@ -6,29 +6,15 @@ namespace app\index\controller;
 use app\component\bs\logic\BsBookCategoryLogic;
 use app\component\bs\logic\BsBookLogic;
 use app\component\bs\params\BsBookSearchParams;
-use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
-use app\component\spider\xia_shu\repo\XiaShuBookRepo;
 use app\component\tp5\controller\BaseController;
 use think\paginator\driver\Bootstrap;
 
 class Index extends BaseController
 {
-    public function info()
-    {
-        $bookCount = (new XiaShuBookRepo())->count();
-        $authorCount = (new XiaShuAuthorRepo())->count();
-
-        $this->assign('authorCount', $authorCount);
-        $this->assign('bookCount', $bookCount);
-        return $this->fetch();
-    }
 
     public function index()
     {
-        $books = (new XiaShuBookRepo())->limit(0, 100)->select();
-
-        $this->assign('books', $books);
-        return $this->fetch();
+        $this->redirect(url('index/index/search'));
     }
 
     /**

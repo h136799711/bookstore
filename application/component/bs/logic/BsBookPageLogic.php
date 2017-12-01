@@ -19,6 +19,6 @@ namespace app\component\bs\logic;
 
 use app\component\tp5\logic\BaseLogic;
 
-class BsBookLogic extends BaseLogic
+class BsBookPageLogic extends BaseLogic
 {
 }

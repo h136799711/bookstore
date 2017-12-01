@@ -10,12 +10,12 @@
 // +----------------------------------------------------------------------
 
 return [
-    'book/:id$' => [
+    ':id$' => [
         'book/detail',
-        ['method' => 'get', 'ext' => 'html'],
+        ['method' => 'get'],
         ['id' => '\d+']
     ],
-    'read/:id/[:page_no]$' => [
+    ':id/[:page_no]$' => [
         'book/read',
         ['method' => 'get', 'ext' => 'html'],
         ['id' => '\d+', 'page_no' => '\d+']

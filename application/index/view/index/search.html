@@ -4,6 +4,7 @@
 {extend name="template/base_index" /}
 
 {block name="area_header"}
+<script type="text/javascript" src="__CDN__/jquery-lazyload/1.9.3/jquery.lazyload.min.js"></script>
 <style type="text/css">
     .cate_items li {
         float: left;
@@ -47,9 +48,10 @@
     <div class="row ">
         {volist name="bs_book_list" id="vo"}
         <div class="book col-md-4 col-lg-3">
-            <a href="{:url('book/detail',['id'=>$vo['id']])}" title="查看书籍">
+            <a href="{:url($vo['id'])}" target="_blank" title="查看书籍">
                 <div class="thumbnail">
-                    <img class="img-responsive" src="{$vo->getData('thumbnail')}" alt="封面"/></div>
+                    <img class="lazy img-responsive" src="http://img1.8raw.com/cover/nocover.jpg"
+                         data-src="{$vo->getData('thumbnail')}" alt="封面"/></div>
                 <div class="title">{$vo->getData('title')}</div>
                 <div class="author">{$vo->getData('author_name')}</div>
                 <div class="summary">{:htmlspecialchars_decode($vo->getData('summary'))}</div>
@@ -65,5 +67,9 @@
 {/block}
 
 {block name="area_footer"}
-
+<script type="text/javascript">
+    $(function () {
+        $("img.lazy").lazyload();
+    })
+</script>
 {/block}

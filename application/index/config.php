@@ -5,7 +5,7 @@ if (!defined('ITBOYE_CDN')) {
 }
 
 return [
-    'site_url' => 'https://bs.qqav.club',
+    'site_url' => 'http://bs.qqav.club',
     // 默认输出类型
     'default_return_type' => 'html',
     'view_replace_str' => [

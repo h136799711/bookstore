@@ -201,7 +201,7 @@ abstract class BaseLogic
      * @param $map
      * @param bool $order
      * @param bool $field
-     * @return array
+     * @return array|false|null|object|\PDOStatement|string|\think\Model
      */
     public function getInfo($map, $order = false, $field = false)
     {
@@ -216,6 +216,10 @@ abstract class BaseLogic
         }
 
         $result = $query->where($map)->find();
+
+        if ($result instanceof BaseModel) {
+            return $result->toEntity();
+        }
 
         return $result;
     }

@@ -27,7 +27,7 @@ class BaseController extends Controller
 {
     public function getPagingParams()
     {
-        $p = $this->post('p', 0);
+        $p = $this->param('p', 0);
         $pagingParams = new PagingParams();
         $pagingParams->setPageIndex($p);
         return $pagingParams;
@@ -35,7 +35,7 @@ class BaseController extends Controller
 
     public function setParamsEntity($params)
     {
-        Object2DataArrayHelper::setData($params, $this->post());
+        Object2DataArrayHelper::setData($params, $this->param());
     }
 
     public function param($key = '', $default = '', $emptyErrMsg = '')
