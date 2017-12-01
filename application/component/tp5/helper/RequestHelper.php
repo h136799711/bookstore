@@ -22,10 +22,10 @@ use think\Request;
 
 class RequestHelper
 {
-    public static function post($key, $default = '', $emptyErrMsg = '')
+    public static function param($key, $default = '', $emptyErrMsg = '')
     {
         $request = Request::instance();
-        $value = $request->post($key, $default);
+        $value = $request->param($key, $default);
 
         if ($default == $value && !empty($emptyErrMsg)) {
             return CallResultHelper::fail($emptyErrMsg);

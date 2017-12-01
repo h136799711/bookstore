@@ -38,13 +38,13 @@ class BaseController extends Controller
         Object2DataArrayHelper::setData($params, $this->post());
     }
 
-    public function post($key = '', $default = '', $emptyErrMsg = '')
+    public function param($key = '', $default = '', $emptyErrMsg = '')
     {
         if ($key === '') {
             return Request::instance()->param();
         }
 
-        $callResult = RequestHelper::post($key, $default, $emptyErrMsg);
+        $callResult = RequestHelper::param($key, $default, $emptyErrMsg);
         if (!$callResult->isSuccess()) {
             $this->error($callResult->getMsg());
         }

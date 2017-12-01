@@ -10,12 +10,15 @@
 // +----------------------------------------------------------------------
 
 return [
-    '__pattern__' => [
-        'name' => '\w+',
+    'book/:id$' => [
+        'book/detail',
+        ['method' => 'get', 'ext' => 'html'],
+        ['id' => '\d+']
     ],
-    '[hello]' => [
-        ':id' => ['index/hello', ['method' => 'get'], ['id' => '\d+']],
-        ':name' => ['index/hello', ['method' => 'post']],
-    ],
+    'read/:id/[:page_no]$' => [
+        'book/read',
+        ['method' => 'get', 'ext' => 'html'],
+        ['id' => '\d+', 'page_no' => '\d+']
+    ]
 
 ];
