@@ -11,6 +11,12 @@
 
 
 return [
+    // 该配置仅在部署模式下生效
+    'http_exception_template' => [
+        // 定义404错误的重定向页面地址
+        404 => APP_PATH . '/html/404/web.html'
+    ],
+
     'book_page_db' => [
         // 数据库类型
         'type' => 'mysql',

@@ -3,9 +3,11 @@
 namespace app\index\controller;
 
 
-use app\component\spider\base\logic\SpiderLogLogic;
+use app\component\bs\logic\BsBookCategoryLogic;
+use app\component\bs\logic\BsBookLogic;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
+use app\component\tp5\helper\RequestHelper;
 use by\component\paging\vo\PagingParams;
 use think\Controller;
 
@@ -29,11 +31,27 @@ class Index extends Controller
         return $this->fetch();
     }
 
-    public function test()
+    /**
+     * 搜索
+     */
+    public function search()
     {
-        $logic = new SpiderLogLogic();
+        $p = RequestHelper::post('p', 0);
+        $map = [];
+        $logic = new BsBookLogic();
         $pagingParams = new PagingParams();
-        $pagingParams->setPageSize(2);
-        var_dump($logic->query(null, $pagingParams, "id asc"));
+        $pagingParams->setPageIndex($p);
+        $pagingParams->setPageSize(20);
+        $result = $logic->query($map, $pagingParams, "id asc");
+        var_dump($result);
+
+        return $this->fetch();
+    }
+
+    private function getCategory()
+    {
+        $logic = new BsBookCategoryLogic();
+        $result = $logic->queryNoPaging([], 'id desc,type desc');
+        $this->assign('bs_cate', $result);
     }
 }
