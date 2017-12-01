@@ -282,7 +282,7 @@ abstract class BaseLogic
      * @param $map array 查询条件
      * @param $order boolean|string 排序条件
      * @param $fields boolean|string 只获取指定字段
-     * @return false|\PDOStatement|string|\think\Collection
+     * @return array
      */
     public function queryNoPaging($map = null, $order = false, $fields = false)
     {
@@ -291,7 +291,13 @@ abstract class BaseLogic
         if (false !== $order) $query = $query->order($order);
         if (false !== $fields) $query = $query->field($fields);
         $list = $query->select();
-        return $list;
+        $entityList = [];
+        foreach ($list as $vo) {
+            if ($vo instanceof BaseModel) {
+                array_push($entityList, $vo->toEntity());
+            }
+        }
+        return $entityList;
     }
 
 
