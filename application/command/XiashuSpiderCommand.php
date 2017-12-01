@@ -17,6 +17,7 @@
 namespace app\command;
 
 
+use app\component\bs\logic\BsStaticsLogic;
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
@@ -40,7 +41,7 @@ class XiashuSpiderCommand extends Command
             ->addOption('size', 's', Option::VALUE_OPTIONAL, 'total size', 1)
             ->addOption('page', 'p', Option::VALUE_OPTIONAL, 'page', 1000)
             ->addOption('save_text', 't', Option::VALUE_OPTIONAL, 'should save the content to  file, default is no. 0 for no or 1 for yes', 0)
-            ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 3: book spider 4: book page spider 5: book cover image download', 0)
+            ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 3: book spider 4: book page spider 5: book cover image download 6: statics ', 0)
             ->setDescription('xiashu.cc spider');
     }
 
@@ -79,8 +80,9 @@ class XiashuSpiderCommand extends Command
             exit(0);
         }
         $startTime = microtime(true);
-
-        if ($c == 3) {
+        if ($c == 6) {
+            (new BsStaticsLogic())->statics();
+        } elseif ($c == 3) {
             $save_text = $input->getOption('save_text');
             $size = 1;
             $breakFlag = true;
