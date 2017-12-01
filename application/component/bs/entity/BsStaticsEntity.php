@@ -18,9 +18,17 @@ namespace app\component\bs\entity;
 
 
 use by\infrastructure\base\BaseEntity;
+use by\infrastructure\helper\Object2DataArrayHelper;
+use by\infrastructure\interfaces\ObjectToArrayInterface;
 
-class BsStaticsEntity extends BaseEntity
+class BsStaticsEntity extends BaseEntity implements ObjectToArrayInterface
 {
+    public function toArray()
+    {
+        return Object2DataArrayHelper::getDataArrayFrom($this);
+    }
+
+
     private $stKey;
     private $stValue;
 

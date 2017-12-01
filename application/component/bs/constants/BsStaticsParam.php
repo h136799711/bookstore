@@ -19,6 +19,14 @@ namespace app\component\bs\constants;
 
 class BsStaticsParam
 {
+    /**
+     * 每日新增书籍数量
+     */
     const EVERY_DAY_NEW_BOOK_COUNT = 'every_day_new_book_count';
+
+    /**
+     * 每日新增书页
+     */
+    const EVERY_DAY_ADD_BOOK_PAGE_COUNT = 'one_day_add_book_page_count';
 
 }
