@@ -25,6 +25,12 @@ use think\Request;
 
 class BaseController extends Controller
 {
+
+    public function _initialize()
+    {
+        cookie('timezone');
+    }
+
     public function getPagingParams()
     {
         $p = $this->param('p', 0);

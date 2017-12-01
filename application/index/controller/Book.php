@@ -7,6 +7,7 @@ use app\component\bs\entity\BsBookEntity;
 use app\component\bs\entity\BsBookPageEntity;
 use app\component\bs\logic\BsBookLogic;
 use app\component\bs\logic\BsBookPageLogic;
+use app\component\spider\constants\BookSiteIntegerType;
 use app\component\tp5\controller\BaseController;
 
 class Book extends BaseController
@@ -18,7 +19,24 @@ class Book extends BaseController
      */
     public function detail($id)
     {
-        var_dump($id);
+
+        $bookEntity = (new BsBookLogic())->getInfo(['id' => $id]);
+        if ($bookEntity instanceof BsBookEntity) {
+            $this->assign('book', $bookEntity);
+        } else {
+            $this->error('没有该书籍信息', url('index/index/index'));
+        }
+
+        $result = (new BsBookPageLogic())->queryNoPaging(['book_id' => $id, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE], 'page_no asc', 'book_id, page_no,page_title,update_time, source');
+
+        if (is_array($result)) {
+            $this->assign('page_count', count($result));
+            $this->assign('book_page_list', $result);
+        } else {
+            $this->assign('page_count', 0);
+            $this->assign('book_page_list', []);
+        }
+
         return $this->fetch();
     }
 
@@ -41,7 +59,7 @@ class Book extends BaseController
         $prePageNo = $page_no - 1 > 0 ? $page_no - 1 : $page_no;
         $nextPageNo = $page_no + 1;
 
-        $bookPageEntity = (new BsBookPageLogic())->getInfo(['book_id' => $id, 'page_no' => $page_no]);
+        $bookPageEntity = (new BsBookPageLogic())->getInfo(['book_id' => $id, 'page_no' => $page_no, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE]);
         if ($bookPageEntity instanceof BsBookPageEntity) {
             $this->assign('page', $bookPageEntity);
         } else {

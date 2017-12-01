@@ -5,16 +5,89 @@
 
 {block name="area_header"}
 <style type="text/css">
+    .book {
+        color: #444444;
+        padding: 10px;
+        padding-bottom: 100px;
+    }
+
+    .book .info .author {
+
+    }
+
+    .book .info .summary {
+        height: 180px;
+        overflow: hidden;
+    }
+
+    .book .info .summary.expand {
+        height: 100%;
+    }
+
+    .book .info .toggle_expand {
+        position: absolute;
+        right: 10px;
+        top: -20px;
+    }
+
+    .book .book_page_list {
+
+    }
+
+    .book .book_page_list .book_page_item .title {
+        float: left;
+    }
+
+    .book .book_page_list .book_page_item .update_time {
+        float: right;
+    }
 </style>
 {/block}
 
 {block name="area_body"}
 
 <div class="container">
+    <div class="col-lg-12 book">
+        <div class="col-lg-5 col-md-6 col-sm-12 thumbnail">
+            <img class="thumbnail img-responsive" src="{$book->getThumbnail()}" alt="封面">
+        </div>
+        <div class="col-lg-7 col-md-6 col-sm-12 info">
+            <div class="title"><h3>{$book->getTitle()}</h3></div>
+            <div class="author">{$book->getAuthorName()}</div>
+            <div class="col-xs-12">
+                <div class="summary">{:htmlspecialchars_decode($book->getSummary())}</div>
+                <a class="j_toggle_summary toggle_expand" href="javascript:void(0);">[+]展开</a>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 book_page_list">
+            <div class="total_page">总章节: 约{$page_count}章</div>
+            <ul class="list-unstyled">
+                {volist name="book_page_list" id="book_page"}
+                <li class="book_page_item clearfix">
+                    <a href="{:url('/'.$book->getId().'/'.$book_page->getPageNo())}" target="_blank">
+                        <span class="title">{$book_page->getPageNo()}. {$book_page->getPageTitle()}</span><span
+                            class="update_time">{:toDatetime($book_page->getUpdateTime())}</span>
+                    </a>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
 </div>
 
 {/block}
 
 {block name="area_footer"}
-
+<script type="text/javascript">
+    $(function () {
+        $(".j_toggle_summary").click(function () {
+            $(".book .summary").toggleClass("expand");
+            if ($(".book .summary").hasClass("expand")) {
+                $(".j_toggle_summary").text('[-] 收起');
+            } else {
+                $(".j_toggle_summary").text('[+] 展开');
+            }
+        });
+    })
+</script>
 {/block}

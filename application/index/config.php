@@ -9,10 +9,10 @@ return [
     // 默认输出类型
     'default_return_type' => 'html',
     'view_replace_str' => [
-        '__PUBLIC__' => ROOT_PATH . '/static/' . request()->module() . '',
-        '__JS__' => ROOT_PATH . '/static/' . request()->module() . '/js',
-        '__CSS__' => ROOT_PATH . '/static/' . request()->module() . '/css',
-        '__IMG__' => ROOT_PATH . '/static/' . request()->module() . '/img',
+        '__PUBLIC__' => '/static/' . request()->module() . '',
+        '__JS__' => '/static/' . request()->module() . '/js',
+        '__CSS__' => '/static/' . request()->module() . '/css',
+        '__IMG__' => '/static/' . request()->module() . '/img',
         '__SELF__' => request()->url(),
         '__CDN__' => ITBOYE_CDN,
         '__APP_VERSION__' => time()

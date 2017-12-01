@@ -49,6 +49,7 @@ class Index extends BaseController
             $this->assign('bs_book_list', $result);
         }
 
+        $this->assign('book_category_id', $params->getBookCategoryId());
         return $this->fetch();
     }
 
