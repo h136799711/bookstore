@@ -18,7 +18,7 @@ namespace app\component\spider\xia_shu\entity;
 
 
 use app\component\spider\base\interfaces\ToArrayInterface;
-use app\component\spider\constants\BookSiteType;
+use app\component\spider\constants\BookSiteIntegerType;
 use by\component\bookstore\v1\entity\BookPageEntity;
 use by\infrastructure\helper\Object2DataArrayHelper;
 
@@ -26,7 +26,7 @@ class XiaShuBookPageEntity extends BookPageEntity implements ToArrayInterface
 {
     public function toArray()
     {
-        $data = ['update_time', 'create_time', 'page_content', 'page_title', 'source', 'book_id', 'page_no'];
+        $data = ['update_time', 'create_time', 'page_content', 'page_title', 'source_type', 'book_id', 'page_no'];
         return Object2DataArrayHelper::getDataArrayFrom($this, $data);
     }
 
@@ -34,11 +34,11 @@ class XiaShuBookPageEntity extends BookPageEntity implements ToArrayInterface
     public function __construct()
     {
         parent::__construct();
-        $this->setSource(BookSiteType::XIA_SHU_BOOK_SITE);
+        $this->setSourceType(BookSiteIntegerType::XIA_SHU_BOOK_SITE);
     }
 
     public function getSourceDesc()
     {
-        return BookSiteType::getDesc($this->getSource());
+        return BookSiteIntegerType::getDesc($this->getSourceType());
     }
 }

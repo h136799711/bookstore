@@ -20,6 +20,7 @@ namespace app\component\tp5\logic;
 use app\component\tp5\model\BaseModel;
 use by\component\paging\vo\PagingParams;
 use by\infrastructure\interfaces\ObjectToArrayInterface;
+use think\Exception;
 use think\Paginator;
 
 abstract class BaseLogic
@@ -29,13 +30,15 @@ abstract class BaseLogic
      */
     protected $model;
 
-    public function __construct()
+    public function __construct($initModel = true)
     {
-        $clsName = str_replace("Logic", "", get_class($this));
-        $clsName = str_replace("logic", "model", $clsName);
-        $clsName .= 'Model';
-        if (class_exists($clsName)) {
-            $this->model = new $clsName;
+        if ($initModel) {
+            $clsName = str_replace("Logic", "", get_class($this));
+            $clsName = str_replace("logic", "model", $clsName);
+            $clsName .= 'Model';
+            if (class_exists($clsName)) {
+                $this->model = new $clsName;
+            }
         }
     }
 
@@ -252,11 +255,16 @@ abstract class BaseLogic
      * @param $entity
      * @param $pk string 主键
      * @return bool
+     * @throws Exception
      */
     public function add($entity, $pk = 'id')
     {
         if ($entity instanceof ObjectToArrayInterface) {
             $entity = $entity->toArray();
+        }
+
+        if (!is_array($entity)) {
+            throw new Exception('error entity paramter');
         }
 
         $result = $this->model->data($entity)->isUpdate(false)->save();

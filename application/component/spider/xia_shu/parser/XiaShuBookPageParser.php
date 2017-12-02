@@ -17,7 +17,12 @@
 namespace app\component\spider\xia_shu\parser;
 
 
+use app\component\bs\entity\BsBookPageContentEntity;
+use app\component\bs\logic\BsBookPageContentLogic;
+use app\component\spider\constants\BookSiteIntegerType;
+use app\component\spider\constants\BookSiteType;
 use app\component\spider\xia_shu\entity\XiaShuBookPageEntity;
+use app\component\spider\xia_shu\helper\CurlHelper;
 use app\component\spider\xia_shu\repo\XiaShuBookPageRepo;
 use by\infrastructure\helper\CallResultHelper;
 use Sunra\PhpSimple\HtmlDomParser;
@@ -27,11 +32,13 @@ class XiaShuBookPageParser
 {
 
     private $repo;
+    private $logic;
     private $shouldCreateText;
 
     public function __construct()
     {
         $this->repo = new XiaShuBookPageRepo();
+        $this->logic = new BsBookPageContentLogic(BookSiteIntegerType::XIA_SHU_BOOK_SITE);
         $this->shouldCreateText = false;
     }
 
@@ -42,15 +49,18 @@ class XiaShuBookPageParser
      * @param $pageNo
      * @param $url
      * @return \by\infrastructure\base\CallResult
+     * @throws \think\Exception
      */
     public function parse($bookId, $pageNo, $url)
     {
         try {
-            $dom = HtmlDomParser::file_get_html($url);
-
+            $html = CurlHelper::getHtml($url, BookSiteType::XIA_SHU_BOOK_SITE);
+            $dom = HtmlDomParser::str_get_html($html);
+            $pageContent = new BsBookPageContentEntity();
             $bookPageEntity = new XiaShuBookPageEntity();
             $bookPageEntity->setBookId($bookId);
             $bookPageEntity->setPageNo($pageNo);
+            $bookPageEntity->setSourceType(BookSiteIntegerType::XIA_SHU_BOOK_SITE);
 
 
             $items = $dom->find("div.info span", 2);
@@ -70,19 +80,27 @@ class XiaShuBookPageParser
             $contentSelector = "div#chaptercontent";
             $items = $dom->find($contentSelector, 0);
             if ($items) {
-                $bookPageEntity->setPageContent($items->innertext());
+                $pageContent->setBookId($bookId);
+                $pageContent->setPageNo($pageNo);
+                $pageContent->setPageContent($items->innertext());
             } else {
-                $bookPageEntity->setPageContent('--');
+                $pageContent->setPageContent('--');
                 return CallResultHelper::fail('page content empty');
             }
 
-            if ($this->isShouldCreateText() && !empty($bookPageEntity->getPageContent())) {
+            if ($this->isShouldCreateText() && !empty($pageContent->getPageContent())) {
                 $filePath = ROOT_PATH . "txt/b" . $bookPageEntity->getBookId() . '/';
                 $fileName = $bookPageEntity->getBookId() . '_' . $pageNo . '.txt';
-                $this->file_write($filePath, $fileName, $bookPageEntity->getPageContent());
+                $this->file_write($filePath, $fileName, $pageContent->getPageContent());
             }
-
-            return $this->repo->add($bookPageEntity);
+            // 插入书页信息
+            $callResult = $this->repo->add($bookPageEntity);
+            if ($callResult->isSuccess()) {
+                // 插入书籍内容
+                $this->logic->add($pageContent, '');
+                return CallResultHelper::success('0');
+            }
+            return $callResult;
         } catch (ErrorException $exception) {
             return CallResultHelper::fail($exception->getMessage());
         }

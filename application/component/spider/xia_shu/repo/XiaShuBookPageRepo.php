@@ -19,7 +19,6 @@ namespace app\component\spider\xia_shu\repo;
 
 use app\component\spider\xia_shu\entity\XiaShuBookPageEntity;
 use by\infrastructure\helper\CallResultHelper;
-use think\Db;
 use think\Model;
 
 class XiaShuBookPageRepo extends Model
@@ -38,7 +37,7 @@ class XiaShuBookPageRepo extends Model
     {
         $result = $this->insert($bookPageEntity->toArray());
         if ($result == 1) {
-            return CallResultHelper::success(Db::table($this->table)->getLastInsID());
+            return CallResultHelper::success(0);
         }
 
         return CallResultHelper::fail('insert fail');

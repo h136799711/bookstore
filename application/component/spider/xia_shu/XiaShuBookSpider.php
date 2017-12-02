@@ -60,6 +60,7 @@ class XiaShuBookSpider extends AbstractSpider
 
     /**
      * @return $this
+     * @throws \Exception
      */
     public function start()
     {

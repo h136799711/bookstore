@@ -18,7 +18,7 @@ class Index extends BaseController
 
     public function index()
     {
-        $this->redirect(url('index/index/search'));
+        $this->redirect(('index/search'));
     }
 
     public function info()

@@ -17,6 +17,7 @@
 namespace app\command;
 
 
+use app\component\bs\entity\BsBookPageContentEntity;
 use app\component\bs\logic\BsStaticsLogic;
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
@@ -53,8 +54,20 @@ class XiashuSpiderCommand extends Command
         $page = $input->getOption('page');
         $c = $input->getOption('cmd');
         if ($c == 9) {
-            $repo = new XiaShuSpiderBookPageUrlRepo();
-            $repo->saveIfUpdateUrl(['book_id' => 173834], 'https://www.xiashu.cc/176010/read_1.html');
+            $bookId = 144798;
+            $sourceBookNo = 146837;
+            $entity = new BsBookPageContentEntity();
+            $entity->setPageNo(1);
+            $entity->setBookId($bookId);
+            $entity->setPageContent('');
+
+            $spider = new XiaShuBookPageSpider($bookId, $sourceBookNo);
+            $spider->start();
+//            $html = CurlHelper::getHtml('https://www.xiashu.cc/176010/read_1.html', BookSiteType::XIA_SHU_BOOK_SITE);
+//            $dom = HtmlDomParser::str_get_html($html);
+//            var_dump($dom);
+//            $repo = new XiaShuSpiderBookPageUrlRepo();
+//            $repo->saveIfUpdateUrl(['book_id' => 173834], 'https://www.xiashu.cc/176010/read_1.html');        $
 
 //            $parser = new XiaShuBookStateParser("https://www.xiashu.cc/1");
 //            $ret = $parser->parse();
@@ -118,6 +131,7 @@ class XiashuSpiderCommand extends Command
                 }
 
                 sleep(1);
+                break;
             }
         } elseif ($c == 4) {
             $spider = new XiaShuNewBookSpider('');

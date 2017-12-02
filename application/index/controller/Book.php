@@ -4,7 +4,9 @@ namespace app\index\controller;
 
 
 use app\component\bs\entity\BsBookEntity;
+use app\component\bs\entity\BsBookPageContentEntity;
 use app\component\bs\entity\BsBookPageEntity;
+use app\component\bs\factory\PageContentLogicFactory;
 use app\component\bs\logic\BsBookLogic;
 use app\component\bs\logic\BsBookPageLogic;
 use app\component\spider\constants\BookSiteIntegerType;
@@ -27,7 +29,7 @@ class Book extends BaseController
             $this->error('没有该书籍信息', url('index/index/index'));
         }
 
-        $result = (new BsBookPageLogic())->queryNoPaging(['book_id' => $id, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE], 'page_no asc', 'book_id, page_no,page_title,update_time, source');
+        $result = (new BsBookPageLogic())->queryNoPaging(['book_id' => $id, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE], 'page_no asc', 'book_id, page_no,page_title,update_time');
 
         if (is_array($result)) {
             $this->assign('page_count', count($result));
@@ -48,6 +50,7 @@ class Book extends BaseController
      */
     public function read($id, $page_no = 1)
     {
+        $sourceType = $this->param('source_type', BookSiteIntegerType::XIA_SHU_BOOK_SITE);
         $bookEntity = (new BsBookLogic())->getInfo(['id' => $id]);
         if ($bookEntity instanceof BsBookEntity) {
             $this->assign('book', $bookEntity);
@@ -63,7 +66,15 @@ class Book extends BaseController
         if ($bookPageEntity instanceof BsBookPageEntity) {
             $this->assign('page', $bookPageEntity);
         } else {
-            $this->error('没有该章节信息', url($id));
+            $this->error('没有该章节信息', url('/' . $id));
+        }
+
+        $logic = PageContentLogicFactory::create(BookSiteIntegerType::XIA_SHU_BOOK_SITE);
+        $bookPageContentEntity = $logic->getInfo(['book_id' => $id, 'page_no' => $page_no]);
+        if ($bookPageContentEntity instanceof BsBookPageContentEntity) {
+            $this->assign('page', $bookPageContentEntity);
+        } else {
+            $this->error('没有该章节内容信息', url('/' . $id));
         }
 
 
@@ -73,5 +84,6 @@ class Book extends BaseController
 
         return $this->fetch();
     }
+
 
 }
