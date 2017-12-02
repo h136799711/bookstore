@@ -72,7 +72,7 @@ class Book extends BaseController
         $logic = PageContentLogicFactory::create(BookSiteIntegerType::XIA_SHU_BOOK_SITE);
         $bookPageContentEntity = $logic->getInfo(['book_id' => $id, 'page_no' => $page_no]);
         if ($bookPageContentEntity instanceof BsBookPageContentEntity) {
-            $this->assign('page', $bookPageContentEntity);
+            $this->assign('bpc', $bookPageContentEntity);
         } else {
             $this->error('没有该章节内容信息', url('/' . $id));
         }

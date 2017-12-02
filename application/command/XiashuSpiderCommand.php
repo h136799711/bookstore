@@ -54,8 +54,8 @@ class XiashuSpiderCommand extends Command
         $page = $input->getOption('page');
         $c = $input->getOption('cmd');
         if ($c == 9) {
-            $bookId = 144798;
-            $sourceBookNo = 146837;
+            $bookId = 13934;
+            $sourceBookNo = 18636;
             $entity = new BsBookPageContentEntity();
             $entity->setPageNo(1);
             $entity->setBookId($bookId);
@@ -131,7 +131,6 @@ class XiashuSpiderCommand extends Command
                 }
 
                 sleep(1);
-                break;
             }
         } elseif ($c == 4) {
             $spider = new XiaShuNewBookSpider('');
