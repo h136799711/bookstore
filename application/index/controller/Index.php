@@ -10,6 +10,7 @@ use app\component\bs\logic\BsStaticsLogic;
 use app\component\bs\params\BsBookSearchParams;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
+use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\tp5\controller\BaseController;
 use think\paginator\driver\Bootstrap;
 
@@ -72,5 +73,14 @@ class Index extends BaseController
         $logic = new BsBookCategoryLogic();
         $result = $logic->queryNoPaging([], 'type desc, sort desc');
         $this->assign('bs_cate', $result);
+    }
+
+    public function priority_up()
+    {
+        $id = $this->param('id', 0);
+
+        $repo = (new XiaShuSpiderBookPageUrlRepo());
+        $repo->setInc('priority', 1);
+        $this->success('操作成功');
     }
 }
