@@ -39,8 +39,8 @@ class XiaShuBookPageSpider extends AbstractSpider
     public $ifSaveText;
     private $bookId;
     private $sourceBookNo;
-    private $startPage;
-    private $latestPageIndex;
+    private $startPage;// 当前读取的页码
+    private $latestPageIndex;// 读取成功的最新页码
 
     public function __construct($bookId, $sourceBookNo)
     {
@@ -89,7 +89,7 @@ class XiaShuBookPageSpider extends AbstractSpider
         $newPageCount = 0;
         $parser = new XiaShuBookPageParser();
         $parser->setShouldCreateText($this->ifSaveText);
-
+        $failCnt = 0;// 为了处理部分页面跳 页数的问题， 519章节 521章节 中间缺520章节这种类型的问题
         echo 'start read book url ' . $this->getXiashuBookUrl(), "\n";
         while ($flag) {
             echo 'read page_no = ' . $this->startPage, "\n";
@@ -99,16 +99,24 @@ class XiaShuBookPageSpider extends AbstractSpider
                 $result = $parser->parse($this->bookId, $this->startPage, $url);
 
                 if (!$result->isSuccess()) {
-                    // 读取失败了
-                    echo 'read fail ' . $result->getMsg(), "\n";
-                    // 保证当前读取的url记录
-                    $this->updateLastestPageUrl();
-                    // 检查书籍是否完结
-                    $this->checkIsOver();
-                    break;
+                    $failCnt++;
+                    if ($failCnt > 3) {
+                        // 大于3次才
+                        // 读取失败了
+                        echo 'read fail ' . $result->getMsg(), "\n";
+                        // 保证当前读取的url记录
+                        $this->updateLastestPageUrl();
+                        // 检查书籍是否完结
+                        $this->checkIsOver();
+                        break;
+                    }
                 } else {
-                    $newPageCount++;
+                    // 读取成功
+                    $this->latestPageIndex = $this->startPage;
                 }
+
+                $newPageCount++;
+
             } catch (Exception $exception) {
                 $this->updateSpiderTime(true);
                 // 保证当前读取的url记录
@@ -200,6 +208,5 @@ class XiaShuBookPageSpider extends AbstractSpider
     {
         // 根据当前书页，生成下一个书页
         $this->startPage = $this->startPage + $limit;
-        $this->latestPageIndex = $this->startPage - 1;
     }
 }
