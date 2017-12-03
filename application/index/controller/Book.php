@@ -15,6 +15,7 @@ use app\component\bs\logic\BsBookSourceLogic;
 use app\component\spider\constants\BookSiteIntegerType;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\tp5\controller\BaseController;
+use app\component\tp5\helper\StaticHtmlHelper;
 use think\Exception;
 
 class Book extends BaseController
@@ -50,10 +51,12 @@ class Book extends BaseController
     /**
      * 阅读页面
      * @param $id
-     * @param $page_no
+     * @param int $page_no
+     * @param int $fail_read_cnt
      * @return mixed
+     * @throws Exception
      */
-    public function read($id, $page_no = 1)
+    public function read($id, $page_no = 1, $fail_read_cnt = 0)
     {
         $sourceType = $this->param('source_type', BookSiteIntegerType::XIA_SHU_BOOK_SITE);
         $bookEntity = (new BsBookLogic())->getInfo(['id' => $id]);
@@ -66,6 +69,7 @@ class Book extends BaseController
 
         $prePageNo = $page_no - 1 > 0 ? $page_no - 1 : $page_no;
         $nextPageNo = $page_no + 1;
+
 
         $bookPageEntity = (new BsBookPageLogic())->getInfo(['book_id' => $id, 'page_no' => $page_no, 'source_type' => $sourceType]);
         if ($bookPageEntity instanceof BsBookPageEntity) {
@@ -90,8 +94,22 @@ class Book extends BaseController
                 $this->assign('page_url', PageContentParserFactory::getBookPageReadUrl($sourceType, $sourceBookId, $page_no));
                 $callResult = $parser->parse($sourceBookId, $page_no);
                 if ($callResult->isSuccess()) {
-                    $this->assign('bpc', $callResult->getData());
+                    $data = $callResult->getData();
+                    $this->assign('bpc', $data['page_content']);
+                    $pageContentData = ['book_id' => $id, 'page_no' => $page_no, 'page_content' => $data['page_content']];
+                    // 插入到书籍内容
+                    $logic->add($pageContentData, false);
+                    // 插入到书籍内容
+                    $pageInfoData = ['source_type' => $sourceType, 'page_title' => $data['page_title'], 'book_id' => $id, 'page_no' => $page_no, 'create_time' => time(), 'update_time' => $data['update_time']];
+                    ((new BsBookPageLogic())->addIfNotExist($pageInfoData));
                 } else {
+
+                    if ($fail_read_cnt < 5) {
+                        $fail_read_cnt++;
+                        $page_no++;
+                        return $this->read($id, $page_no, $fail_read_cnt);
+                    }
+
                     $this->error('没有该章节内容信息', url('/' . $id));
                 }
             } else {
@@ -102,8 +120,10 @@ class Book extends BaseController
         $this->assign('book_id', $id);
         $this->assign('pre_page_no', $prePageNo);
         $this->assign('next_page_no', $nextPageNo);
-
-        return $this->fetch();
+        $pathinfo = $this->request->pathinfo();
+        $fetch = $this->fetch();
+        StaticHtmlHelper::write($pathinfo, $fetch);
+        return $fetch;
     }
 
     public function priority_up()

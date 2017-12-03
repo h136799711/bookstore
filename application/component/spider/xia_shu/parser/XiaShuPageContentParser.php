@@ -21,7 +21,6 @@ use app\component\spider\constants\BookSiteType;
 use app\component\spider\xia_shu\helper\CurlHelper;
 use by\infrastructure\helper\CallResultHelper;
 use Sunra\PhpSimple\HtmlDomParser;
-use think\exception\ErrorException;
 
 class XiaShuPageContentParser
 {
@@ -44,7 +43,6 @@ class XiaShuPageContentParser
             $url = BookSiteType::XIA_SHU_BOOK_SITE . '/' . $bookId . '/read_' . $pageNo . '.html';
             $html = CurlHelper::getHtml($url, BookSiteType::XIA_SHU_BOOK_SITE);
             $dom = HtmlDomParser::str_get_html($html);
-            $content = "";
             $contentSelector = "div#chaptercontent";
             $items = $dom->find($contentSelector, 0);
             if ($items) {
@@ -59,9 +57,22 @@ class XiaShuPageContentParser
 //                $this->file_write($filePath, $fileName, $pageContent->getPageContent());
 //            }
             // 插入书页信息
+            $title = "未知标题";
+            $updateTime = 0;
+            $items = $dom->find("div.info span", 2);
+            if ($items) {
+                $updateTime = $items->innertext();
+                $updateTime = str_replace('更新时间：', '', $updateTime);
+                $updateTime = strtotime($updateTime);
+            }
 
-            return CallResultHelper::success($content);
-        } catch (ErrorException $exception) {
+            $items = $dom->find("div.title h1 a", 0);
+            if ($items) {
+                $title = $items->innertext();
+            }
+
+            return CallResultHelper::success(['update_time' => $updateTime, 'page_title' => $title, 'page_content' => $content]);
+        } catch (\Exception $exception) {
             return CallResultHelper::fail($exception->getMessage());
         }
     }
