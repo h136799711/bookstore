@@ -6,9 +6,12 @@ namespace app\index\controller;
 use app\component\bs\entity\BsBookEntity;
 use app\component\bs\entity\BsBookPageContentEntity;
 use app\component\bs\entity\BsBookPageEntity;
+use app\component\bs\entity\BsBookSourceEntity;
 use app\component\bs\factory\PageContentLogicFactory;
+use app\component\bs\factory\PageContentParserFactory;
 use app\component\bs\logic\BsBookLogic;
 use app\component\bs\logic\BsBookPageLogic;
+use app\component\bs\logic\BsBookSourceLogic;
 use app\component\spider\constants\BookSiteIntegerType;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\tp5\controller\BaseController;
@@ -64,21 +67,37 @@ class Book extends BaseController
         $prePageNo = $page_no - 1 > 0 ? $page_no - 1 : $page_no;
         $nextPageNo = $page_no + 1;
 
-        $bookPageEntity = (new BsBookPageLogic())->getInfo(['book_id' => $id, 'page_no' => $page_no, 'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE]);
+        $bookPageEntity = (new BsBookPageLogic())->getInfo(['book_id' => $id, 'page_no' => $page_no, 'source_type' => $sourceType]);
         if ($bookPageEntity instanceof BsBookPageEntity) {
             $this->assign('page', $bookPageEntity);
         } else {
-            $this->error('没有该章节信息', url('/' . $id));
+            $this->assign('page', new BsBookPageEntity());
+//            $this->error('没有该章节信息', url('/' . $id));
         }
 
-        $logic = PageContentLogicFactory::create(BookSiteIntegerType::XIA_SHU_BOOK_SITE);
+        // 从已保存内容的数据表中取数据
+        $logic = PageContentLogicFactory::create($sourceType);
         $bookPageContentEntity = $logic->getInfo(['book_id' => $id, 'page_no' => $page_no]);
         if ($bookPageContentEntity instanceof BsBookPageContentEntity) {
-            $this->assign('bpc', $bookPageContentEntity);
+            $this->assign('bpc', $bookPageContentEntity->getPageContent());
         } else {
-            $this->error('没有该章节内容信息', url('/' . $id));
-        }
+            // 向源网站读取
+            $bookSourceEntity = (new BsBookSourceLogic())->getInfo(['book_id' => $id, 'book_source_type' => $sourceType]);
 
+            if ($bookSourceEntity instanceof BsBookSourceEntity) {
+                $parser = PageContentParserFactory::create($sourceType);
+                $sourceBookId = $bookSourceEntity->getSourceBookId();
+                $this->assign('page_url', PageContentParserFactory::getBookPageReadUrl($sourceType, $sourceBookId, $page_no));
+                $callResult = $parser->parse($sourceBookId, $page_no);
+                if ($callResult->isSuccess()) {
+                    $this->assign('bpc', $callResult->getData());
+                } else {
+                    $this->error('没有该章节内容信息', url('/' . $id));
+                }
+            } else {
+                $this->error('没有该章节内容信息', url('/' . $id));
+            }
+        }
 
         $this->assign('book_id', $id);
         $this->assign('pre_page_no', $prePageNo);

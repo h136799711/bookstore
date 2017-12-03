@@ -17,9 +17,9 @@
 namespace app\command;
 
 
-use app\component\bs\entity\BsBookPageContentEntity;
 use app\component\bs\logic\BsStaticsLogic;
 use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
+use app\component\spider\xia_shu\parser\XiaShuPageContentParser;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\spider\xia_shu\XiaShuBookPageSpider;
 use app\component\spider\xia_shu\XiaShuCoverSpider;
@@ -54,15 +54,20 @@ class XiashuSpiderCommand extends Command
         $page = $input->getOption('page');
         $c = $input->getOption('cmd');
         if ($c == 9) {
-            $bookId = 13934;
             $sourceBookNo = 18636;
-            $entity = new BsBookPageContentEntity();
-            $entity->setPageNo(1);
-            $entity->setBookId($bookId);
-            $entity->setPageContent('');
+            $pageNo = 3;
+            $url = "https://www.xiashu.cc/176010/read_1.html";
+            $parser = new XiaShuPageContentParser();
+            var_dump(($parser->parse($sourceBookNo, $pageNo)));
 
-            $spider = new XiaShuBookPageSpider($bookId, $sourceBookNo);
-            $spider->start();
+//            $bookId = 13934;
+//            $entity = new BsBookPageContentEntity();
+//            $entity->setPageNo(1);
+//            $entity->setBookId($bookId);
+//            $entity->setPageContent('');
+//
+//            $spider = new XiaShuBookPageSpider($bookId, $sourceBookNo);
+//            $spider->start();
 //            $html = CurlHelper::getHtml('https://www.xiashu.cc/176010/read_1.html', BookSiteType::XIA_SHU_BOOK_SITE);
 //            $dom = HtmlDomParser::str_get_html($html);
 //            var_dump($dom);
