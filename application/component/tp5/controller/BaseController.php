@@ -54,6 +54,7 @@ class BaseController extends Controller
         if (!$callResult->isSuccess()) {
             $this->error($callResult->getMsg());
         }
+        return $callResult->getData();
     }
 
     public function _empty()

@@ -10,7 +10,9 @@ use app\component\bs\factory\PageContentLogicFactory;
 use app\component\bs\logic\BsBookLogic;
 use app\component\bs\logic\BsBookPageLogic;
 use app\component\spider\constants\BookSiteIntegerType;
+use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use app\component\tp5\controller\BaseController;
+use think\Exception;
 
 class Book extends BaseController
 {
@@ -85,5 +87,16 @@ class Book extends BaseController
         return $this->fetch();
     }
 
+    public function priority_up()
+    {
+        $id = $this->param('id', 0);
+        $repo = (new XiaShuSpiderBookPageUrlRepo());
+        try {
+            $result = $repo->where(['book_id' => $id])->fetchSql(false)->setInc('priority', 1);
+        } catch (Exception $e) {
+            $this->error($e->getMessage(), null, '操作成功');
+        }
+        $this->success('操作成功', null, '操作成功');
+    }
 
 }

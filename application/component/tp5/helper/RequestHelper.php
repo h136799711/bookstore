@@ -25,7 +25,7 @@ class RequestHelper
     public static function param($key, $default = '', $emptyErrMsg = '')
     {
         $request = Request::instance();
-        $value = $request->param($key, $default);
+        $value = $request->get($key, $default);
 
         if ($default == $value && !empty($emptyErrMsg)) {
             return CallResultHelper::fail($emptyErrMsg);

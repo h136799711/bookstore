@@ -4,6 +4,8 @@
 {extend name="template/base_index" /}
 
 {block name="area_header"}
+<link rel="stylesheet" type="text/css" href="__CDN__/sco1.0.2-8/css/scojs.css"/>
+<script type="text/javascript" src="__CDN__/sco1.0.2-8/js/sco.all.js"></script>
 <script type="text/javascript" src="__CDN__/jquery-lazyload/1.9.3/jquery.lazyload.js"></script>
 <style type="text/css">
     .book {
@@ -88,7 +90,7 @@
         {volist name="bs_book_list" id="vo"}
         <div class="book col-md-4 col-lg-3">
             <div class="inner-box">
-                <a href="{:url('index/book/priority_up', ['id'=>$vo['id']])}" class="ajax-get btn btn-primary">提高权重</a>
+                <a href="{:url('index/book/priority_up?id='.$vo['id'])}" class="no-refresh ajax-get btn btn-primary">提高权重</a>
                 <a href="{:url('/'.$vo['id'])}" target="_blank" title="查看书籍">
                     <div class="thumbnail">
                         <img class="lazy img-responsive" src="http://img1.8raw.com/cover/nocover.jpg" width="120px"

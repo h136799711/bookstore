@@ -273,7 +273,8 @@ window.console = window.console || (function(){
                     $(that).button("reset");
                 },1400);
             }).success(function(data) {
-                if (data.code == 1) {
+
+                if (data.code === 1) {
                     if (data.url) {
                         $.scojs_message(data.msg + ' 页面即将自动跳转~', $.scojs_message.TYPE_OK);
                     } else {
