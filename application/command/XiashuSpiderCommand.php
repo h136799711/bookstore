@@ -106,10 +106,10 @@ class XiashuSpiderCommand extends Command
             $save_text = $input->getOption('save_text');
             $size = 1;
             $breakFlag = true;
-
+            $noValidUrl = 0;//标记获取有效url失败的
             while ($breakFlag) {
                 $costTime = microtime(true) - $startTime;
-                if ($costTime > 1800) {
+                if ($costTime > 1800 && $noValidUrl > 50 ) {
                     // 超过 时间 则不执行
                     break;
                 }
@@ -135,6 +135,7 @@ class XiashuSpiderCommand extends Command
                     }
                 } else {
                     var_dump($ret->getMsg());
+                    $onValidUrl++;
                 }
 
                 sleep(1);
