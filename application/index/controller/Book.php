@@ -4,10 +4,8 @@ namespace app\index\controller;
 
 
 use app\component\bs\entity\BsBookEntity;
-use app\component\bs\entity\BsBookPageContentEntity;
 use app\component\bs\entity\BsBookPageEntity;
 use app\component\bs\entity\BsBookSourceEntity;
-use app\component\bs\factory\PageContentLogicFactory;
 use app\component\bs\factory\PageContentParserFactory;
 use app\component\bs\logic\BsBookLogic;
 use app\component\bs\logic\BsBookPageLogic;
@@ -80,11 +78,11 @@ class Book extends BaseController
         }
 
         // 从已保存内容的数据表中取数据
-        $logic = PageContentLogicFactory::create($sourceType);
-        $bookPageContentEntity = $logic->getInfo(['book_id' => $id, 'page_no' => $page_no]);
-        if ($bookPageContentEntity instanceof BsBookPageContentEntity) {
-            $this->assign('bpc', $bookPageContentEntity->getPageContent());
-        } else {
+//        $logic = PageContentLogicFactory::create($sourceType);
+//        $bookPageContentEntity = $logic->getInfo(['book_id' => $id, 'page_no' => $page_no]);
+//        if ($bookPageContentEntity instanceof BsBookPageContentEntity) {
+//            $this->assign('bpc', $bookPageContentEntity->getPageContent());
+//        } else {
             // 向源网站读取
             $bookSourceEntity = (new BsBookSourceLogic())->getInfo(['book_id' => $id, 'book_source_type' => $sourceType]);
 
@@ -96,9 +94,9 @@ class Book extends BaseController
                 if ($callResult->isSuccess()) {
                     $data = $callResult->getData();
                     $this->assign('bpc', $data['page_content']);
-                    $pageContentData = ['book_id' => $id, 'page_no' => $page_no, 'page_content' => $data['page_content']];
+//                    $pageContentData = ['book_id' => $id, 'page_no' => $page_no, 'page_content' => $data['page_content']];
                     // 插入到书籍内容
-                    $logic->add($pageContentData, false);
+//                    $logic->add($pageContentData, false);
                     // 插入到书籍内容
                     $pageInfoData = ['source_type' => $sourceType, 'page_title' => $data['page_title'], 'book_id' => $id, 'page_no' => $page_no, 'create_time' => time(), 'update_time' => $data['update_time']];
                     ((new BsBookPageLogic())->addIfNotExist($pageInfoData));
@@ -115,7 +113,7 @@ class Book extends BaseController
             } else {
                 $this->error('没有该章节内容信息', url('/' . $id));
             }
-        }
+//        }
 
         $this->assign('book_id', $id);
         $this->assign('pre_page_no', $prePageNo);
