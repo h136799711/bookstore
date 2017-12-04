@@ -7,7 +7,7 @@ $(function () {
         var match = url.match(/\/(\d*)\/(\d*)/);
         if (match.length > 2) {
             var bookId = match[1];
-            var pageNo = match[2];
+            var pageNo = match[2]++;
             var nextUrl = window.location.protocal + "//" + window.location.host + "/" + bookId + "/" + pageNo + ".html";
             $.get(nextUrl);
         }
