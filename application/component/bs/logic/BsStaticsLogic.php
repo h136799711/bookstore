@@ -57,7 +57,7 @@ class BsStaticsLogic extends BaseLogic
             $this->save($map, ['st_value' => $dayAdd, 'update_time' => time()]);
         } else {
             $entity = new BsStaticsEntity();
-            $entity->setStKey(BsStaticsParam::EVERY_DAY_ADD_BOOK_PAGE_COUNT);
+            $entity->setStKey(BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT);
             $entity->setStValue($dayAdd);
             $entity->setCreateTime($time);
             $entity->setUpdateTime(time());
