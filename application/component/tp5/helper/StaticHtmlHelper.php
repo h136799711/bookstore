@@ -22,11 +22,14 @@ class StaticHtmlHelper
         if (!is_dir($filePath)) {
             mkdir($filePath, 766, true);
         }
-        $datetime = date('Y-m-d H:i:s', time());
-        $timestamp = "<!-- STATIC CACHE " . $datetime . " -->";
-        $file = fopen($path, "w");
-        fwrite($file, $timestamp . $content);
-        fclose($file);
+
+        if (!file_exists($path)) {
+            $datetime = date('Y-m-d H:i:s', time());
+            $timestamp = "<!-- STATIC CACHE " . $datetime . " -->";
+            $file = fopen($path, "w");
+            fwrite($file, $timestamp . $content);
+            fclose($file);
+        }
 
         return true;
     }

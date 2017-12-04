@@ -19,6 +19,11 @@ return [
         'book/read',
         ['method' => 'get', 'ext' => 'html'],
         ['id' => '\d+', 'page_no' => '\d+']
+    ],
+    ':id/x/[:page_no]$' => [
+        'book/read',
+        ['method' => 'post', 'ext' => 'html'],
+        ['id' => '\d+', 'page_no' => '\d+']
     ]
 
 ];

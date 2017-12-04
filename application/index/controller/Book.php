@@ -20,6 +20,10 @@ use think\paginator\driver\Bootstrap;
 
 class Book extends BaseIndexController
 {
+    /**
+     * 页面版本
+     */
+    const READ_PAGE_VERSION = 2;
 
     /**
      * 搜索
@@ -85,6 +89,29 @@ class Book extends BaseIndexController
     }
 
     /**
+     * 检查静态页面版本
+     * @param $bookId
+     * @param $page_no
+     */
+    private function checkStaticHtmlVersion($bookId, $page_no)
+    {
+        $pageVersion = $this->param('page_version', 0);
+
+        if ($pageVersion < self::READ_PAGE_VERSION) {
+//            echo '当前版本不对';
+            // 当前的缓存版本
+            $fileName = $bookId.'/'.$page_no.'.html';
+            if (file_exists($fileName)) {
+//                echo('存在文件'.$fileName);
+                @unlink($fileName);
+//                var_dump('删除文件'.$fileName);
+            } else {
+//                echo('不存在文件'.$fileName);
+            }
+        }
+    }
+
+    /**
      * 阅读页面
      * @param $id
      * @param int $page_no
@@ -94,6 +121,14 @@ class Book extends BaseIndexController
      */
     public function read($id, $page_no = 1, $fail_read_cnt = 0)
     {
+        if ($fail_read_cnt === 0) {
+            // 只有第一次的时候进行检查
+            $this->checkStaticHtmlVersion($id, $page_no - 1);
+        }
+        $noReturn = $this->param('no_return', 0);
+
+        // 模板版本 涉及重新生成缓存页面
+        $this->assign('page_version', self::READ_PAGE_VERSION);
         set_time_limit(6*10);
         $sourceType = $this->param('source_type', BookSiteIntegerType::XIA_SHU_BOOK_SITE);
         $bookEntity = (new BsBookLogic())->getInfo(['id' => $id]);
@@ -157,9 +192,13 @@ class Book extends BaseIndexController
         $this->assign('book_id', $id);
         $this->assign('pre_page_no', $prePageNo);
         $this->assign('next_page_no', $nextPageNo);
-        $pathinfo = $this->request->pathinfo();
+        $pathInfo = $this->request->pathinfo();
+        $pathInfo = str_replace("x/","", $pathInfo);
         $fetch = $this->fetch();
-        StaticHtmlHelper::write($pathinfo, $fetch);
+        StaticHtmlHelper::write($pathInfo, $fetch);
+        if ($noReturn) {
+            return $this->display(json_encode($this->param()));
+        }
         return $fetch;
     }
 
