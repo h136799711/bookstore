@@ -195,7 +195,7 @@ class Book extends BaseIndexController
         $pathInfo = $this->request->pathinfo();
         $pathInfo = str_replace("x/","", $pathInfo);
         $fetch = $this->fetch();
-        StaticHtmlHelper::write($pathInfo, $fetch);
+        StaticHtmlHelper::write($pathInfo, '<!-- Version '.self::READ_PAGE_VERSION.' -->'.$fetch);
         if ($noReturn) {
             return $this->display(json_encode($this->param()));
         }
