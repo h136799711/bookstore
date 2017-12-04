@@ -29,6 +29,7 @@ class PictureDownloadHelper
 {
     /**
      * 下载文件并保存到指定目录
+     * 同时会保存相关信息到数据库中，所以需要数据表支持
      * @param $url
      * @param string $saveDir
      * @return CallResult

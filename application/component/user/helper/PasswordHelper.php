@@ -7,23 +7,21 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-11-27 16:41
+ * file created @ 2017-12-04 11:38
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace app\component\picture\entity;
+namespace app\component\user\helper;
 
 
-use by\component\picture\entity\PictureEntity;
-
-class test extends PictureEntity
+class PasswordHelper
 {
-    public function __construct()
+    public static function md5Sha1String($str, $key='123456')
     {
-        parent::__construct();
-        $this->setType('bs_picture');
+        return '' === $str ? '' : md5(sha1($str) . $key);
     }
+
 }

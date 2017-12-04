@@ -17,13 +17,14 @@
 namespace app\component\tp5\logic;
 
 
+use app\component\base\interfaces\BaseLogicInterface;
 use app\component\tp5\model\BaseModel;
 use by\component\paging\vo\PagingParams;
 use by\infrastructure\interfaces\ObjectToArrayInterface;
 use think\Exception;
 use think\Paginator;
 
-abstract class BaseLogic
+abstract class BaseLogic implements BaseLogicInterface
 {
     /**
      * @var BaseModel
@@ -254,7 +255,7 @@ abstract class BaseLogic
      * 支持 类传入
      * @param $entity
      * @param $pk string 主键
-     * @return bool
+     * @return bool | int
      * @throws Exception
      */
     public function add($entity, $pk = 'id')

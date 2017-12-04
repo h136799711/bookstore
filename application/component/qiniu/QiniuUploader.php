@@ -23,6 +23,11 @@ use Qiniu\Auth;
 use Qiniu\Http\Error;
 use Qiniu\Storage\UploadManager;
 
+/**
+ * Class QiniuUploader
+ * 七牛上传类
+ * @package app\component\qiniu
+ */
 class QiniuUploader
 {
     private $auth;
@@ -39,12 +44,12 @@ class QiniuUploader
     }
 
     /**
-     *
+     * 获取 token
      * @see https://developer.qiniu.com/kodo/sdk/1241/php#4
-     * @param $bucket
-     * @param null $key
-     * @param int $expires
-     * @param null $policy
+     * @param string $bucket bucket名称
+     * @param string|null $key 上传的文件名称
+     * @param int|null $expires
+     * @param array|null $policy
      * @param bool $strictPolicy
      * @return CallResult
      */
