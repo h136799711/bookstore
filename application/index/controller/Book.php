@@ -7,17 +7,55 @@ use app\component\bs\entity\BsBookEntity;
 use app\component\bs\entity\BsBookPageEntity;
 use app\component\bs\entity\BsBookSourceEntity;
 use app\component\bs\factory\PageContentParserFactory;
+use app\component\bs\logic\BsBookCategoryLogic;
 use app\component\bs\logic\BsBookLogic;
 use app\component\bs\logic\BsBookPageLogic;
 use app\component\bs\logic\BsBookSourceLogic;
+use app\component\bs\params\BsBookSearchParams;
 use app\component\spider\constants\BookSiteIntegerType;
 use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
-use app\component\tp5\controller\BaseController;
 use app\component\tp5\helper\StaticHtmlHelper;
 use think\Exception;
+use think\paginator\driver\Bootstrap;
 
-class Book extends BaseController
+class Book extends BaseIndexController
 {
+
+    /**
+     * 搜索
+     */
+    public function search()
+    {
+
+        $bookCount = (new BsBookPageLogic())->getValidBookCount();
+        $this->assign('book_count', $bookCount);
+
+        // 类目信息
+        $this->category();
+        // 查询参数
+        $params = new BsBookSearchParams();
+        $this->setParamsEntity($params);
+        // 分页信息
+        $pagingParams = $this->getPagingParams();
+        $pagingParams->setPageSize(20);
+        $map = $params->getMap();
+        $logic = new BsBookLogic();
+        $result = $logic->queryWithPagingHtml($map, $pagingParams, "id asc", $params->toArray());
+        if ($result instanceof Bootstrap) {
+            $this->assign('bs_book_list', $result);
+        }
+
+        $this->assign('book_category_id', $params->getBookCategoryId());
+        return $this->fetch();
+    }
+
+    public function category()
+    {
+        $logic = new BsBookCategoryLogic();
+        $result = $logic->queryNoPaging([], 'type desc, sort desc');
+        $this->assign('bs_cate', $result);
+    }
+
     /**
      * 书籍详情页面
      * @param $id
