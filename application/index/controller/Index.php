@@ -11,6 +11,7 @@ use app\component\bs\params\BsBookSearchParams;
 use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use app\component\spider\xia_shu\repo\XiaShuBookRepo;
 use app\component\tp5\controller\BaseController;
+use think\Cache;
 use think\paginator\driver\Bootstrap;
 
 class Index extends BaseController
@@ -23,8 +24,18 @@ class Index extends BaseController
 
     public function info()
     {
-        $bookCount = (new XiaShuBookRepo())->count();
-        $authorCount = (new XiaShuAuthorRepo())->count();
+        $bookCount = Cache::get('book_count');
+        $authorCount  = Cache::get('author_count');
+        if (empty($bookCount) || empty($authorCount)) {
+            echo 'not cache';
+            $bookCount = (new XiaShuBookRepo())->count();
+            $authorCount = (new XiaShuAuthorRepo())->count();
+
+            Cache::set('author_count', $authorCount, 1800);
+            Cache::set('book_count', $bookCount, 1800);
+        } else {
+            echo 'use cache';
+        }
 
         $this->assign('authorCount', $authorCount);
         $this->assign('bookCount', $bookCount);

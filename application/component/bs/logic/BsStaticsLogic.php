@@ -37,25 +37,28 @@ class BsStaticsLogic extends BaseLogic
 
         $logic = new BsBookPageLogic();
         $count = $logic->getValidBookCount();
+        echo 'valid book = '.$count,"\n";
         $time = strtotime(date("Y-m-d", time() - 24*3600));
         $map = ['st_key'=>BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT, 'create_time'=> $time];
         $result = $this->getInfo($map);
         if ($result instanceof BsStaticsEntity) {
-            echo 'update';
             $stValue = $result->getStValue();
+            echo 'last day book = '.$stValue,"\n";
             $dayAdd = $count - $stValue;
         } else {
-            echo 'insert';
             $dayAdd = $count;
         }
 
+        echo 'today book add  = '.$dayAdd,"\n";
         $time = strtotime(date("Y-m-d", time()));
         $map = ['st_key'=>BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT, 'create_time'=> $time];
 
         $result = $this->getInfo($map);
         if ($result instanceof BsStaticsEntity) {
+            echo 'update',"\n";
             $this->save($map, ['st_value' => $dayAdd, 'update_time' => time()]);
         } else {
+            echo 'insert',"\n";
             $entity = new BsStaticsEntity();
             $entity->setStKey(BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT);
             $entity->setStValue($dayAdd);
