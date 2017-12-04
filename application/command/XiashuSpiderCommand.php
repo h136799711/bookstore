@@ -39,9 +39,10 @@ class XiashuSpiderCommand extends Command
     protected function configure()
     {
         $this->setName('spider:xia_shu')
-            ->addOption('size', 's', Option::VALUE_OPTIONAL, 'total size', 1)
+            ->addOption('spider_type', 'type', Option::VALUE_OPTIONAL, 'total size', 1)
+            ->addOption('size', 'size', Option::VALUE_OPTIONAL, 'total size', 1)
             ->addOption('page', 'p', Option::VALUE_OPTIONAL, 'page', 1000)
-            ->addOption('save_text', 't', Option::VALUE_OPTIONAL, 'should save the content to  file, default is no. 0 for no or 1 for yes', 0)
+            ->addOption('save_text', 'st', Option::VALUE_OPTIONAL, 'should save the content to  file, default is no. 0 for no or 1 for yes', 0)
             ->addOption('cmd', 'c', Option::VALUE_OPTIONAL, 'command type -c 3: book spider 4: book page spider 5: book cover image download 6: statics ', 0)
             ->setDescription('xiashu.cc spider');
     }
@@ -53,6 +54,7 @@ class XiashuSpiderCommand extends Command
         $size = $input->getOption('size');
         $page = $input->getOption('page');
         $c = $input->getOption('cmd');
+        $type = $input->getOption('spider_type');
         if ($c == 9) {
             $sourceBookNo = 18636;
             $pageNo = 3;
@@ -113,7 +115,7 @@ class XiashuSpiderCommand extends Command
                 }
                 // 启动书页爬虫
                 $bookRepo = new XiaShuSpiderBookPageUrlRepo();
-                $ret = $bookRepo->getValidSpiderBookPageUrl($size);
+                $ret = $bookRepo->getValidSpiderBookPageUrl($size, $type);
                 if ($ret->isSuccess()) {
                     foreach ($ret->getData() as $book) {
                         $datetime = date('Y-m-d H:i:s', time());

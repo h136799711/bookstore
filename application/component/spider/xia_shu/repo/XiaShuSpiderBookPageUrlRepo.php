@@ -52,15 +52,22 @@ class XiaShuSpiderBookPageUrlRepo extends Model
     /**
      * 获取有效的
      * @param int $limit
+     * @param int $type
      * @return \by\infrastructure\base\CallResult
      */
-    public function getValidSpiderBookPageUrl($limit = 1)
+    public function getValidSpiderBookPageUrl($limit = 1, $type = 0)
     {
         $map = [
-            'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE
+            'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE,
         ];
+        if ($type == 0) {
+            $map['priority'] = $type;
+            $view = $this->view;
+        } else {
+            $view = 'v_priority_book';
+        }
         $limit = $limit > 100 ? 100 : $limit;
-        $result = Db::table($this->view)->order('priority', 'desc')->where($map)->limit(0, $limit)->fetchSql(false)->select();
+        $result = Db::table($view)->order('priority', 'desc')->where($map)->limit(0, $limit)->fetchSql(false)->select();
         if (empty($result)) {
             return CallResultHelper::fail('no valid url');
         } else {

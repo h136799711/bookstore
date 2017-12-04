@@ -33,6 +33,11 @@
         height: 180px;
         overflow: hidden;
     }
+    .book .title {
+        height: 72px;
+        overflow: hidden;
+        font-size: 18px;
+    }
 
     a:hover {
         text-decoration: none;
@@ -63,14 +68,17 @@
             <div class="col-lg-2 col-md-3">类别:</div>
             <div class="col-lg-10 col-md-9">
                 <ul class="cate_items list-unstyled">
+                    <li>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="book_category_id" value="0" {eq name="book_category_id" value="0" }checked{/eq} />不限</label>
+                        </div>
+                    </li>
                     {volist name="bs_cate" id="cate"}
                     <li>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="book_category_id" value="{$cate->getId()}" {eq
-                                       name="$cate->getId()" value="$book_category_id" }checked{/eq}
-                                />{$cate->getCateName()}
-                            </label>
+                                <input type="radio" name="book_category_id" value="{$cate->getId()}" {eq name="$cate->getId()" value="$book_category_id" }checked{/eq} />{$cate->getCateName()}</label>
                         </div>
                     </li>
                     {/volist}

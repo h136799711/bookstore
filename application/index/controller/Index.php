@@ -18,16 +18,16 @@ class Index extends BaseController
         if ($this->request->isPost()) {
             $username = $this->param('username', '');
             $password = $this->param('password', '');
-
-            if ($username === 'hebidu' && $password = '136799711') {
+            if ($username == 'hebidu' && $password == '136799711') {
                 session('user', $username);
                 $this->success('登录成功','index/book/search');
             } else {
                 $this->error('登录失败');
             }
-
         } else {
-
+            if (session('?user') && session('user') == 'hebidu') {
+                $this->redirect('index/book/search');
+            }
             return $this->fetch();
         }
     }
