@@ -33,7 +33,7 @@ class BaseController extends Controller
 
     public function getPagingParams()
     {
-        $p = $this->param('p', 0);
+        $p = $this->param('page', 0);
         $pagingParams = new PagingParams();
         $pagingParams->setPageIndex($p);
         return $pagingParams;
