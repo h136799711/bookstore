@@ -32,9 +32,9 @@ class BsStaticsEntity extends BaseEntity implements ObjectToArrayInterface
     public function getStKeyDesc()
     {
         if ($this->stKey == BsStaticsParam::EVERY_DAY_NEW_BOOK_COUNT) {
-            return "每日新增书籍数";
+            return "新增书籍";
         } elseif ($this->stKey == BsStaticsParam::EVERY_DAY_ADD_BOOK_PAGE_COUNT) {
-            return "每日新增章节数";
+            return "新增章节";
         }
         return "未知";
     }
