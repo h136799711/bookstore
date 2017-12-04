@@ -27,14 +27,11 @@ class Index extends BaseController
         $bookCount = Cache::get('book_count');
         $authorCount  = Cache::get('author_count');
         if (empty($bookCount) || empty($authorCount)) {
-            echo 'not cache';
             $bookCount = (new XiaShuBookRepo())->count();
             $authorCount = (new XiaShuAuthorRepo())->count();
 
             Cache::set('author_count', $authorCount, 1800);
             Cache::set('book_count', $bookCount, 1800);
-        } else {
-            echo 'use cache';
         }
 
         $this->assign('authorCount', $authorCount);
