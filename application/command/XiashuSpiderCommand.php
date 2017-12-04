@@ -135,7 +135,7 @@ class XiashuSpiderCommand extends Command
                     }
                 } else {
                     var_dump($ret->getMsg());
-                    $onValidUrl++;
+                    $noValidUrl++;
                 }
 
                 sleep(1);
