@@ -1,8 +1,17 @@
 $(function () {
     console.log("read js");
     // 预读下一章
-    // http://bs.qqav.club/42877/3.html
-    var url = window.location.pathname;
+    function loadNextPage(){
+        var url = window.location.pathname;
+        var match = url.match(/\/(\d*)\/(\d*)/);
+        if (match.length > 2) {
+            var bookId = match[1];
+            var pageNo = match[2];
+            var nextUrl = window.location.protocal + "//" + window.location.host + "/" + bookId + "/" + pageNo + ".html";
+            $.get(nextUrl);
+        }
+    }
+    // 2秒后自动进行加载下一章
+    setTimeout(loadNextPage, 2000);
 
-    $.get();
 })
