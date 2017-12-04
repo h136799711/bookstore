@@ -97,7 +97,7 @@ class XiaShuBookPageParser
             $callResult = $this->repo->add($bookPageEntity);
             if ($callResult->isSuccess()) {
                 // 插入书籍内容
-                $this->logic->add($pageContent, '');
+//                $this->logic->add($pageContent, '');
                 return CallResultHelper::success('0');
             }
             return $callResult;
