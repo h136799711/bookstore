@@ -109,7 +109,7 @@ class XiashuSpiderCommand extends Command
             $noValidUrl = 0;//标记获取有效url失败的
             while ($breakFlag) {
                 $costTime = microtime(true) - $startTime;
-                if ($costTime > 1800 && $noValidUrl > 50 ) {
+                if ($costTime > 1800 && $noValidUrl > 10 ) {
                     // 超过 时间 则不执行
                     break;
                 }
