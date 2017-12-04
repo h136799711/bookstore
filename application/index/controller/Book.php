@@ -56,6 +56,7 @@ class Book extends BaseController
      */
     public function read($id, $page_no = 1, $fail_read_cnt = 0)
     {
+        set_time_limit(6*10);
         $sourceType = $this->param('source_type', BookSiteIntegerType::XIA_SHU_BOOK_SITE);
         $bookEntity = (new BsBookLogic())->getInfo(['id' => $id]);
         if ($bookEntity instanceof BsBookEntity) {
@@ -102,7 +103,7 @@ class Book extends BaseController
                     ((new BsBookPageLogic())->addIfNotExist($pageInfoData));
                 } else {
 
-                    if ($fail_read_cnt < 5) {
+                    if ($fail_read_cnt < 3) {
                         $fail_read_cnt++;
                         $page_no++;
                         return $this->read($id, $page_no, $fail_read_cnt);

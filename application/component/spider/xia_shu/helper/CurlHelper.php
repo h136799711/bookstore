@@ -9,6 +9,8 @@
 namespace app\component\spider\xia_shu\helper;
 
 
+use think\exception\ErrorException;
+
 class CurlHelper
 {
     public static function getHtml($url, $reffer = "", $post = '', $cookie = '', $returnCookie = 0)
@@ -38,8 +40,11 @@ class CurlHelper
         curl_setopt($curl, CURLOPT_HEADER, $returnCookie);
         curl_setopt($curl, CURLOPT_TIMEOUT, 10);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        $data = curl_exec($curl);
-
+        try{
+        $data = @curl_exec($curl);
+        }catch (ErrorException $errorException) {
+            return null;
+        }
         if (curl_errno($curl)) {
             return curl_error($curl);
         }

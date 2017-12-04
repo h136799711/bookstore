@@ -21,6 +21,7 @@ use app\component\spider\constants\BookSiteType;
 use app\component\spider\xia_shu\helper\CurlHelper;
 use by\infrastructure\helper\CallResultHelper;
 use Sunra\PhpSimple\HtmlDomParser;
+use think\exception\ErrorException;
 
 class XiaShuPageContentParser
 {
@@ -72,6 +73,8 @@ class XiaShuPageContentParser
             }
 
             return CallResultHelper::success(['update_time' => $updateTime, 'page_title' => $title, 'page_content' => $content]);
+        } catch (ErrorException $exception) {
+            return CallResultHelper::fail($exception->getMessage());
         } catch (\Exception $exception) {
             return CallResultHelper::fail($exception->getMessage());
         }
