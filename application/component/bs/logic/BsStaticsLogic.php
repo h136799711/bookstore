@@ -42,6 +42,7 @@ class BsStaticsLogic extends BaseLogic
         $result = $this->getInfo($map);
         if ($result instanceof BsStaticsEntity) {
             echo 'update';
+            $stValue = $result->getStValue();
             $dayAdd = $count - $stValue;
         } else {
             echo 'insert';
