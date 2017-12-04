@@ -16,6 +16,14 @@
 
 namespace app\domain;
 
+use app\api\constants\ErrorCode;
+use app\component\encrypt\algorithm\IAlgorithm;
+use app\component\encrypt\response\ResponseHelper;
+use app\component\helper\ValidateHelper;
+use app\src\base\exception\ApiException;
+use by\component\paging\vo\PagingParams;
+use think\Response;
+
 
 /**
  * 基础领域模型
@@ -49,37 +57,37 @@ class BaseDomain {
         $this->origin_data = $data;
 
         if(!isset($this->origin_data['client_secret'])){
-            $this->apiReturnErr(L('param-need', ['client_secret']), ErrorCode::Lack_Parameter);
+            $this->apiReturnErr(lang('param-need', ['client_secret']), ErrorCode::Lack_Parameter);
         }
         $this->client_secret =  $this->origin_data['client_secret'];
 
         if(!isset($this->origin_data['notify_id'])){
-            $this->apiReturnErr(L('param-need', ['notify_id']), ErrorCode::Lack_Parameter);
+            $this->apiReturnErr(lang('param-need', ['notify_id']), ErrorCode::Lack_Parameter);
         }
         $this->notify_id = $this->origin_data['notify_id'];
 
         if(!isset($this->origin_data['time'])){
-            $this->apiReturnErr(L('param-need', ['time']), ErrorCode::Lack_Parameter);
+            $this->apiReturnErr(lang('param-need', ['time']), ErrorCode::Lack_Parameter);
         }
         $this->time = $this->origin_data['time'];
 
         if(!isset($this->origin_data['client_id'])){
-            $this->apiReturnErr(L('param-need', ['client_id']), ErrorCode::Lack_Parameter);
+            $this->apiReturnErr(lang('param-need', ['client_id']), ErrorCode::Lack_Parameter);
         }
         $this->client_id = $this->origin_data['client_id'];
 
         if(!isset($this->origin_data['domain_class'])){
-            $this->apiReturnErr(L('param-need', ['domain_class']), ErrorCode::Lack_Parameter);
+            $this->apiReturnErr(lang('param-need', ['domain_class']), ErrorCode::Lack_Parameter);
         }
         $this->domain_class = $this->origin_data['domain_class'];
         if(!isset($this->origin_data['api_ver'])){
-            $this->apiReturnErr(L('param-need', ['api_ver']), ErrorCode::Lack_Parameter);
+            $this->apiReturnErr(lang('param-need', ['api_ver']), ErrorCode::Lack_Parameter);
         }
 
         $this->request_api_ver = $this->origin_data['api_ver'];
 
         if(!isset($this->origin_data['lang'])){
-            $this->apiReturnErr(L('param-need', ['lang']), ErrorCode::Lack_Parameter);
+            $this->apiReturnErr(lang('param-need', ['lang']), ErrorCode::Lack_Parameter);
         }
         $this->lang      = $this->origin_data['lang'];
     }
@@ -108,7 +116,7 @@ class BaseDomain {
     protected function ajaxReturn($data) {
 
         if(!($this->algInstance instanceof IAlgorithm)){
-            return ;
+            throw new ApiException('error algorithm');
         }
 
         //接口         $this->domain_class
@@ -119,7 +127,7 @@ class BaseDomain {
         //param
         //内存占用     debug('begin','end','m').'kb';
         //请求头       $_SERVER['HTTP_USER_AGENT']
-
+// TODO: 改成只记录慢的接口
 //        $api_end = microtime(true);
 //        $app_time = $this->time;
 //
@@ -188,13 +196,12 @@ class BaseDomain {
         return $value;
     }
 
+
     /**
-     * 放到utils中，作为工具类
-     * @brief 干掉emoji
-     * @autho chenjinya@baidu.com
-     * @param {String} $strText
-     * @return {String} removeEmoji
-     **/
+     * @param $strText
+     * @param bool $bool
+     * @return int|mixed|string
+     */
     protected function escapeEmoji($strText, $bool = false) {
         $preg = '/\\\ud([8-9a-f][0-9a-z]{2})/i';
         if ($bool == true) {
@@ -214,13 +221,13 @@ class BaseDomain {
 
     /**
      * 获取分页参数信息
-     * @return PageHelper
+     * @return PagingParams
      */
     public function getPageParams(){
-        return new PageHelper([
-            'page_index'=>$this->_post('page_index',1),
-            'page_size'=>$this->_post('page_size',10)
-        ]);
+        $pagingParams = new PagingParams();
+        $pagingParams->setPageSize($this->_post('page_size',10));
+        $pagingParams->setPageIndex($this->_post('page_index',1));
+        return $pagingParams;
     }
 
     /**
@@ -230,7 +237,7 @@ class BaseDomain {
      * @return mixed
      */
     public function _get($key, $default = '', $emptyErrMsg = '') {
-        $this->_post($key,$default,$emptyErrMsg);
+        return $this->_post($key,$default,$emptyErrMsg);
     }
 
     /**
@@ -242,25 +249,10 @@ class BaseDomain {
      * @internal param $ [type]  $key       [description]
      * @internal param $ [type]  $data      [description]
      */
-    protected function cache($key, $data, $time = 300, $returnSuc = true) {
-        cache($key, json_encode($data), $time);
-        if ($returnSuc) $this->apiReturnSuc($data);
-    }
-
-    /**
-     * ajax返回
-     * @param $data
-     * @param bool $cache
-     * @internal param string $msg
-     * @internal param $i
-     */
-    protected function apiReturnSuc($data ,  $cache = false) {
-        if($this->apiVersionIsDeprecated){
-            $this->ajaxReturn(['code' => ErrorCode::Api_Service_Is_Deprecated, 'data' => $data,'cache' => $cache]);
-        }else{
-            $this->ajaxReturn(['code' => 0, 'data' => $data,'cache' => $cache]);
-        }
-    }
+//    protected function cache($key, $data, $time = 300, $returnSuc = true) {
+//        cache($key, json_encode($data), $time);
+//        if ($returnSuc) $this->apiReturnSuc($data);
+//    }
 
     /**
      * 获取缓存
@@ -273,6 +265,21 @@ class BaseDomain {
         $cache = cache($key);
         if (false == $fresh && $page && $maxpage && $page <= $maxpage && $cache) {
             $this->apiReturnSuc(json_decode($cache, true), true);
+        }
+    }
+
+    /**
+     * ajax返回
+     * @param $data
+     * @param bool $cache
+     * @internal param string $msg
+     * @internal param $i
+     */
+    protected function apiReturnSuc($data ,  $cache = false) {
+        if($this->apiVersionIsDeprecated){
+            $this->ajaxReturn(['code' => ErrorCode::Api_Service_Is_Deprecated, 'data' => $data,'cache' => $cache]);
+        } else {
+            $this->ajaxReturn(['code' => 0, 'data' => $data,'cache' => $cache]);
         }
     }
 
@@ -373,8 +380,9 @@ class BaseDomain {
 
     /**
      * 合并必选和可选post参数并返回
-     * $str: 需要检查的post参数
-     * $oth_str: 不需检查的post参数
+     * @param string $str 需要检查的post参数
+     * @param string $oth_str 不需检查的post参数
+     * @return array
      */
     protected function parsePost($str='',$oth_str=''){
         return array_merge($this->getPost($str,true),$this->getPost($oth_str,false));
@@ -388,8 +396,8 @@ class BaseDomain {
      * a|p      默认'p'
      * @DateTime 2016-12-13T10:25:17+0800
      * @param    [type]                   $str  [description]
-     * @param    boolean                  $need [description]
-     * @return   [type]                         [description]
+     * @param    boolean $need [description]
+     * @return array
      */
     protected function getPost($str,$need=false){
         if(empty($str) || !is_string($str)) return [];
@@ -398,17 +406,13 @@ class BaseDomain {
         $data = $this->origin_data;
         foreach ($arr as $v) {
             $p = explode('|', $v);
-            isset($p[1]) ? '':$p[1]='';   //默认值空字符串
-            isset($p[2]) ? '':$p[2]='str';//默认类型字符串
+            if(!isset($p[1])) $p[1] = '';   //默认值空字符串
+            if(!isset($p[2])) $p[2] = 'str';//默认类型字符串
 
-            //_post number bug
-            // if($need) $post = $this->_post($p[0],$p[1],Llack($p[0]));
-            // else  $post = $this->_post($p[0],$p[1]);
-            // fix bug
             $data['_data_'.$p[0]] = isset($data['_data_'.$p[0]]) ? $data['_data_'.$p[0]] : '';
             $post = $data['_data_'.$p[0]]==='' ? $p[1] : $data['_data_'.$p[0]];
             if($need && $post === ''){
-                $this->apiReturnErr(Llack($p[0]), ErrorCode::Lack_Parameter);
+                $this->apiReturnErr(lang('lack_parameter',["param"=>$p[0]]), ErrorCode::Lack_Parameter);
             }
             if($p[2] === 'int'){
                 $post = intval($post);
@@ -417,8 +421,8 @@ class BaseDomain {
             }elseif($p[2] === 'mulint'){
                 $post = array_unique(explode(',', $post));
                 $temp = [];
-                foreach ($post as $v) {
-                    if(is_numeric($v)) $temp[] = $v;
+                foreach ($post as $v1) {
+                    if(is_numeric($v1)) $temp[] = $v1;
                 }
                 $post = implode(',', $temp);
             }

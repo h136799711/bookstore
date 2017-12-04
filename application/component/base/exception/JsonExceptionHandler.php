@@ -6,7 +6,7 @@
  * Time: 15:05
  */
 
-namespace app\src\base\exception;
+namespace app\component\base\exception;
 
 
 use think\exception\Handle;

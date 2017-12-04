@@ -17,6 +17,7 @@
 namespace app\component\base\interfaces;
 
 
+use app\component\tp5\model\BaseModel;
 use by\component\paging\vo\PagingParams;
 use think\Exception;
 
