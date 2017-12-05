@@ -8,9 +8,9 @@
 
 namespace app\component\oauth2\model;
 
-use think\Model;
+use app\component\tp5\model\BaseModel;
 
-class OauthClients extends Model
+class OauthClientsModel extends BaseModel
 {
     // 设置当前模型对应的完整数据表名称
     protected $table = 'oauth_clients';

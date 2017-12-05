@@ -12,6 +12,8 @@
 
 namespace app\component\hook;
 
+use app\component\base\helper\SessionHelper;
+
 
 /**
  * Class LoginAuthHook

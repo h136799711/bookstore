@@ -151,6 +151,7 @@ abstract class BaseLogic implements BaseLogicInterface
      * @param $field string 更改字段
      * @param float|int $cnt float 增加的值
      * @return integer 返回影响记录数 或 错误信息
+     * @throws Exception
      */
     public function setInc($map, $field, $cnt = 1)
     {
@@ -164,6 +165,10 @@ abstract class BaseLogic implements BaseLogicInterface
      * @param $field string 更改字段
      * @param $cnt int 减少的值
      * @return integer 返回影响记录数 或 错误信息
+     * @throws Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function setDecCantZero($map, $field, $cnt = 1)
     {
@@ -184,6 +189,7 @@ abstract class BaseLogic implements BaseLogicInterface
      * @param $field string 更改字段
      * @param $cnt int 减少的值 减少的值
      * @return integer|string 返回影响记录数 或 错误信息
+     * @throws Exception
      */
     public function setDec($map, $field, $cnt = 1)
     {
@@ -194,6 +200,7 @@ abstract class BaseLogic implements BaseLogicInterface
      * 批量更新，仅根据主键来
      * @param $entity
      * @return array
+     * @throws \Exception
      */
     public function saveAll($entity)
     {
@@ -206,6 +213,9 @@ abstract class BaseLogic implements BaseLogicInterface
      * @param bool $order
      * @param bool $field
      * @return array|false|null|object|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function getInfo($map, $order = false, $field = false)
     {
@@ -284,6 +294,7 @@ abstract class BaseLogic implements BaseLogicInterface
      * 批量插入
      * @param array $list 数组
      * @return array
+     * @throws \Exception
      */
     public function addAll($list)
     {
@@ -296,6 +307,9 @@ abstract class BaseLogic implements BaseLogicInterface
      * @param $order boolean|string 排序条件
      * @param $fields boolean|string 只获取指定字段
      * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function queryNoPaging($map = null, $order = false, $fields = false)
     {
@@ -321,6 +335,9 @@ abstract class BaseLogic implements BaseLogicInterface
      * @param bool $order 排序参数
      * @param bool $fields
      * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function query($map, PagingParams $page, $order = false, $fields = false)
     {
@@ -351,6 +368,7 @@ abstract class BaseLogic implements BaseLogicInterface
      * @param bool|array $params
      * @param bool $fields
      * @return Paginator
+     * @throws \think\exception\DbException
      */
     public function queryWithPagingHtml($map, PagingParams $page, $order = false, $params = [], $fields = false)
     {
