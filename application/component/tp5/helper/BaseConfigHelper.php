@@ -12,6 +12,9 @@ use by\component\tp5\entity\ConfigEntity;
 use by\component\tp5\logic\ConfigLogic;
 use think\Cache;
 use think\Config;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 
 class BaseConfigHelper
 {
@@ -30,6 +33,9 @@ class BaseConfigHelper
      * 获取配置信息，不存在则返回false
      * @param $key
      * @return false
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public static function getValue($key)
     {
@@ -37,9 +43,12 @@ class BaseConfigHelper
     }
 
     /**
-     *
+     * 读取配置值
      * @param $name
      * @return false 或 object
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     static public function getConfig($name)
     {
@@ -55,6 +64,9 @@ class BaseConfigHelper
      * 初始化全局配置信息
      * @param int $cacheTime
      * @return array|bool|mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     static public function initGlobalConfig($cacheTime = 86400)
     {
@@ -108,6 +120,10 @@ class BaseConfigHelper
 
     /**
      * 配置初始化
+     *
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public static function init()
     {

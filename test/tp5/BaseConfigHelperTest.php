@@ -22,6 +22,11 @@ use byTest\base\BaseTestCase;
 class BaseConfigHelperTest extends BaseTestCase
 {
 
+    /**
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function testConfig()
     {
         $config = BaseConfigHelper::initGlobalConfig(3);
