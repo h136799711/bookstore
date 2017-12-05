@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace appTest\tp5;
+namespace byTest\tp5;
 
-use app\component\tp5\helper\BaseConfigHelper;
-use appTest\base\BaseTestCase;
+use by\component\tp5\helper\BaseConfigHelper;
+use byTest\base\BaseTestCase;
 
 class BaseConfigHelperTest extends BaseTestCase
 {

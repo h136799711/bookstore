@@ -14,15 +14,15 @@
  *********************************
  */
 
-namespace appTest\component\picture\helper;
+namespace byTest\component\picture\helper;
 
-use app\component\picture\helper\PictureDownloadHelper;
-use appTest\base\BaseTestCase;
+use by\component\picture\helper\PictureDownloadHelper;
+use byTest\base\BaseTestCase;
 
 /**
  * Class PicDownloadHelper
  * @covers PictureDownloadHelper
- * @package appTest\component\picture\helper
+ * @package byTest\component\picture\helper
  */
 class PicDownloadHelperTest extends BaseTestCase
 {

@@ -14,16 +14,16 @@
  *********************************
  */
 
-namespace appTest\component\picture\logic;
+namespace byTest\component\picture\logic;
 
 
-use app\component\picture\logic\BsPictureLogic;
+use by\component\picture\logic\BsPictureLogic;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class BsPictureLogicTest
  * @covers BsPictureLogic
- * @package appTest\component\picture\logic
+ * @package byTest\component\picture\logic
  */
 class BsPictureLogicTest extends TestCase
 {

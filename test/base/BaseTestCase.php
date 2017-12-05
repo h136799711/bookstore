@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace appTest\base;
+namespace byTest\base;
 
 use PHPUnit\Framework\TestCase;
 

@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace appTest\spider;
+namespace byTest\spider;
 
 
-use app\component\spider\xia_shu\XiaShuCoverSpider;
-use appTest\base\BaseTestCase;
+use by\component\spider\xia_shu\XiaShuCoverSpider;
+use byTest\base\BaseTestCase;
 
 class XiaShuCoverSpiderTest extends BaseTestCase
 {

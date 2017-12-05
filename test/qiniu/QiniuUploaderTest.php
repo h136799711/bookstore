@@ -14,12 +14,12 @@
  *********************************
  */
 
-namespace appTest\qiniu;
+namespace byTest\qiniu;
 
 
-use app\component\picture\config\QiniuDefaultConfig;
-use app\component\qiniu\QiniuUploader;
-use appTest\base\BaseTestCase;
+use by\component\picture\config\QiniuDefaultConfig;
+use by\component\qiniu\QiniuUploader;
+use byTest\base\BaseTestCase;
 
 
 class QiniuUploaderTest extends BaseTestCase
