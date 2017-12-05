@@ -18,25 +18,68 @@ namespace app\component\oauth2\entity;
 
 
 use by\infrastructure\base\BaseEntity;
-use by\infrastructure\helper\Object2DataArrayHelper;
-use by\infrastructure\interfaces\ObjectToArrayInterface;
 
-class OauthClientsEntity extends BaseEntity implements ObjectToArrayInterface
+class OauthClientsEntity extends BaseEntity
 {
-    private $clientId;
-    private $clientName;
-    private $clientSecret;
-    private $redirectUri;
-    private $grantTypes;
-    private $scope;
-    private $userId;
-    private $publicKey;
-    private $apiAlg;
+    /**
+     * 项目ID 一个项目包含多个应用
+     * @var string
+     */
+    private $projectId;
 
-    public function toArray()
-    {
-        return Object2DataArrayHelper::getDataArrayFrom($this);
-    }
+    /**
+     * 应用id
+     * @var string
+     */
+    private $clientId;
+
+    /**
+     * 应用名称
+     * @var string
+     */
+    private $clientName;
+
+    /**
+     * 应用名称
+     * @var string
+     */
+    private $clientSecret;
+
+    /**
+     * oauth跳转客户端uri
+     * @var string
+     */
+    private $redirectUri;
+
+    /**
+     * 授权类型
+     * @var string
+     */
+    private $grantTypes;
+
+    /**
+     * 范围
+     * @var string
+     */
+    private $scope;
+
+    /**
+     * 用户id
+     * @var string
+     */
+    private $userId;
+
+    /**
+     *
+     * @var string
+     */
+    private $publicKey;
+
+    /**
+     * 通信算法
+     * @var string
+     */
+    private $apiAlg;
 
     /**
      * @return mixed
