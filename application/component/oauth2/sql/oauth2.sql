@@ -61,6 +61,7 @@ ALTER TABLE `oauth_clients`
 ALTER TABLE `oauth_clients`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
+ALTER TABLE `oauth_clients` ADD `project_id` BIGINT(20) NOT NULL DEFAULT '0' ;
 ALTER TABLE `oauth_clients` ADD `create_time` BIGINT(20) NOT NULL DEFAULT '0' AFTER `api_alg`, ADD `update_time` BIGINT(20) NOT NULL DEFAULT '0' AFTER `create_time`;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -6,11 +6,13 @@
  * Time: 20:22
  */
 
-namespace by\api\index\controller;
+namespace by\api\controller;
 
 
+use by\api\config\ApiConfigHelper;
 use by\api\constants\ErrorCode;
 use by\api\controller\entity\ApiCommonEntity;
+use by\component\base\exception\BusinessException;
 use by\component\encrypt\factory\TransportFactory;
 use by\component\encrypt\interfaces\TransportInterface;
 use by\component\oauth2\entity\OauthClientsEntity;
@@ -47,6 +49,7 @@ abstract class Base extends Rest{
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
+     * @throws BusinessException
      */
     public function __construct(){
         $this->allData = new ApiCommonEntity();
@@ -55,14 +58,39 @@ abstract class Base extends Rest{
     }
 
     /**
+     * @return string
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function _initialize(){
-        // 1. 设置语言参数, 默认简体中文 zh-cn
+    private function getLang()
+    {
         $lang = Request::instance()->get("lang","zh-cn");
-        $this->allData->setLang(strtolower($lang));
+        // 检查语言是否支持
+        $lang_support = ApiConfigHelper::getConfig('lang_support');
+        $is_support = false;
+        if (is_array($lang_support)) {
+            $is_support = in_array($lang, $lang_support);
+        }
+
+        if (!$is_support) {
+            //对于不支持的语言都使用zh-cn
+            $lang = "zh-cn";
+        }
+        return strtolower($lang);
+    }
+
+    /**
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws BusinessException
+     */
+    public function _initialize(){
+        // 1. 请求客服端版本、类型信息
+        $appType = Request::instance()->param("app_type","");
+        $appVersion = Request::instance()->param("app_version","");
+
         // 2. 获取应用id
         $client_id = $this->_param("client_id","", lang('lack_parameter',['param'=>'client_id']));
         $logic = new OauthClientsLogic();
@@ -70,12 +98,45 @@ abstract class Base extends Rest{
         if(!($result instanceof OauthClientsEntity)){
             $this->apiReturnErr(lang('err_client_id_not_exists', ['client_id'=>$client_id]),ErrorCode::Invalid_Parameter);
         }
+        // 3. 获取传输算法类型
         $alg = $result->getApiAlg();
         $data = Request::instance()->param();
-        $data['by_client_id'] = $result->getClientId();
-        $data['by_client_secret'] = $result->getClientSecret();
+        $data['client_id'] = $result->getClientId();
+        $data['client_secret'] = $result->getClientSecret();
         $this->transport = TransportFactory::getAlg($alg, $data);
-        $this->allData->setData($this->transport->decrypt());
+        // 4. 解密数据并转换成 ApiCommonEntity
+        $requestParams = $this->transport->decrypt([]);
+
+        if (!array_key_exists('by_api_ver', $requestParams)) {
+            throw new BusinessException(lang('lack_parameter', ['param'=>'by_api_ver']));
+        }
+
+        if (!array_key_exists('by_type', $requestParams)) {
+            throw new BusinessException(lang('lack_parameter', ['param'=>'by_type']));
+        }
+        if (!array_key_exists('by_notify_id', $requestParams)) {
+            throw new BusinessException(lang('lack_parameter', ['param'=>'by_notify_id']));
+        }
+        if (!array_key_exists('by_time', $requestParams)) {
+            throw new BusinessException(lang('lack_parameter', ['param'=>'by_time']));
+        }
+
+        // 5. 先初始化
+        $this->allData->setClientId($result->getClientId());
+        $this->allData->setClientSecret($result->getClientSecret());
+        $this->allData->setProjectId($result->getProjectId());
+        $this->allData->setLang($this->getLang());
+        $this->allData->setAppType(strtolower($appType));
+        $this->allData->setAppVersion(strtolower($appVersion));
+        $this->allData->setAppRequestTime($requestParams['by_time']);
+        $this->allData->setNotifyId($requestParams['by_notify_id']);
+        $this->allData->setServiceVersion($requestParams['by_api_ver']);
+        $this->allData->setServiceType($requestParams['by_type']);
+        unset($requestParams['by_time']);
+        unset($requestParams['by_notify_id']);
+        unset($requestParams['by_api_ver']);
+        unset($requestParams['by_type']);
+        $this->allData->setData($requestParams);
     }
 
     public function _param($key, $default='',$emptyErrMsg=''){
@@ -100,7 +161,7 @@ abstract class Base extends Rest{
             $obj = $obj->getMsg();
         }
 
-        $this->ajaxReturn(['msg'=>$obj, 'code'=>$code,'data'=>$data,'notify_id'=>$this->allData->getId()]);
+        $this->ajaxReturn(['msg'=>$obj, 'code'=>$code,'data'=>$data,'notify_id'=>$this->allData->getNotifyId()]);
     }
 
 
@@ -111,7 +172,7 @@ abstract class Base extends Rest{
     protected function ajaxReturn($data) {
 
         if($this->transport instanceof TransportInterface){
-            $data = $this->transport->encrypt();
+            $data = $this->transport->encrypt($data);
         }
 
         $response = $this->response($data, "json",200);
@@ -119,7 +180,7 @@ abstract class Base extends Rest{
         if (empty($siteUrl)) {
             $siteUrl = "www.itboye.com";
         }
-        $response->header("X-Powered-By", $siteUrl)->header("X-BY-Notify-ID",$this->allData->getId())->send();
+        $response->header("X-Powered-By", $siteUrl)->header("X-BY-Notify-ID",$this->allData->getNotifyId())->send();
         exit(0);
     }
 
@@ -197,7 +258,7 @@ abstract class Base extends Rest{
             $data = $data->getData();
         }
 
-        $this->ajaxReturn(['code'=>$code, 'data'=>$data, 'msg'=>$msg, 'notify_id'=>$this->allData->getId()]);
+        $this->ajaxReturn(['code'=>$code, 'data'=>$data, 'msg'=>$msg, 'notify_id'=>$this->allData->getNotifyId()]);
     }
 
 }

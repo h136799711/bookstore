@@ -1,8 +1,8 @@
 <?php
 
-namespace by\api\index\controller;
+namespace by\api\controller;
 
-use app\api\config\ApiConfigHelper;
+use by\api\config\ApiConfigHelper;
 use by\api\constants\ErrorCode;
 use by\component\base\exception\BusinessException;
 use by\component\helper\ExceptionHelper;
@@ -13,10 +13,6 @@ use think\Exception;
 class Index extends Base
 {
 
-    private $appVersion;  //当前软件的版本
-    private $appType;     //当前软件的类型 ，ios，android，pc ,by_test
-
-
     /**
      * 接口入口
      */
@@ -24,10 +20,9 @@ class Index extends Base
     {
         try {
 
-            //1. 公共参数初始化
-            $this->_initParameter();
-            //3. 配置信息读取 并缓存8小时
+            //1. 配置信息读取 并缓存8小时
             ApiConfigHelper::initApiConfig();
+
             //已登录会话ID
             $login_s_id = $this->getLoginSId();
             $module = $this->getModuleName();
@@ -61,8 +56,8 @@ class Index extends Base
             $LoginAuthHook = new LoginAuthHook();
             $result = $LoginAuthHook->check($uid, $login_s_id, $auth_value, "", ApiConfigHelper::getConfig('login_session_expire_time'));
 
-            if (!$result['status']) {
-                $this->apiReturnErr($result['info'], ErrorCode::Api_Need_Login);
+            if (!$result->isSuccess()) {
+                $this->apiReturnErr($result->getMsg(), ErrorCode::Api_Need_Login);
             }
 
             //2.  TODO 授权判定
@@ -73,14 +68,14 @@ class Index extends Base
 //            }
 
             //3. 初始化业务类
-            $class = new  $cls_name($this->transport, $this->allData);
+            $class = new $cls_name($this->transport, $this->allData);
+
             if (!method_exists($class, $action_name)) {
                 $this->apiReturnErr('api-' . lang('err_404'), ErrorCode::Not_Found_Resource);
             }
 
             //4. 调用方法
             $callResult = $class->$action_name();
-
             if ($callResult instanceof CallResult) {
                 if ($callResult->isSuccess()) {
                     $this->apiReturnSuc($callResult);
@@ -98,49 +93,13 @@ class Index extends Base
     }
 
     /**
-     *
-    /**
-     * 初始化公共参数
-     * time:必须 | 请求时间戳
-     * sign:必须 | 签名
-     * data:必须 | 数据
-     * type:必须 | 调用接口
-     * notify_id:必须 | 通知id
-     * api_ver:必须   |
-     *
-     * app_version: 否 | APP版本
-     * app_type: 否    | ios or android
-     * lang: 否 | 默认 zh-cn ，语言参数
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    private function _initParameter()
-    {
-
-        $this->appVersion = array_key_exists('by_app_version', $this->decryptData) ? $this->decryptData['by_app_version'] : -1;
-        $this->appType = array_key_exists('by_app_type', $this->decryptData) ? $this->decryptData['by_app_type'] : -1;
-
-        //检查语言是否支持
-        $lang_support = ApiConfigHelper::getConfig('lang_support');
-        $is_support = false;
-        if (is_array($lang_support)) {
-            $is_support = in_array($this->lang, $lang_support);
-        }
-
-        if (!$is_support) {
-            //对于不支持的语言都使用zh-cn
-            $this->lang = "zh-cn";
-        }
-    }
-
-    /**
      * 获取登录会话id
      * @return string
      */
     private function getLoginSId()
     {
-        $login_s_id = isset($this->decryptData['s_id']) ? ($this->decryptData['s_id']) : "";
+        $data = $this->allData->getData();
+        $login_s_id = isset($data['s_id']) ? ($data['s_id']) : "";
         return $login_s_id;
     }
 
@@ -151,7 +110,8 @@ class Index extends Base
      */
     private function getModuleName()
     {
-        $module_name = isset($this->decryptData['by_m']) ? ($this->decryptData['by_m']) : "";
+        $data = $this->allData->getData();
+        $module_name = isset($data['by_m']) ? ($data['by_m']) : "";
         if (empty($module_name)) $module_name = "default";
         return $module_name;
     }
@@ -162,7 +122,8 @@ class Index extends Base
      */
     private function getUid()
     {
-        $uid = array_key_exists('uid', $this->decryptData) ? $this->decryptData['uid'] : 0;
+        $data = $this->allData->getData();
+        $uid = array_key_exists('uid', $data) ? $data['uid'] : 0;
         return intval($uid);
     }
 }

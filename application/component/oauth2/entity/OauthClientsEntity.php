@@ -82,6 +82,23 @@ class OauthClientsEntity extends BaseEntity
     private $apiAlg;
 
     /**
+     * @return string
+     */
+    public function getProjectId()
+    {
+        return $this->projectId;
+    }
+
+    /**
+     * @param string $projectId
+     */
+    public function setProjectId($projectId)
+    {
+        $this->projectId = $projectId;
+    }
+
+
+    /**
      * @return mixed
      */
     public function getClientId()
@@ -92,7 +109,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $clientId
      */
-    public function setClientId($clientId): void
+    public function setClientId($clientId)
     {
         $this->clientId = $clientId;
     }
@@ -108,7 +125,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $clientName
      */
-    public function setClientName($clientName): void
+    public function setClientName($clientName)
     {
         $this->clientName = $clientName;
     }
@@ -124,7 +141,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $clientSecret
      */
-    public function setClientSecret($clientSecret): void
+    public function setClientSecret($clientSecret)
     {
         $this->clientSecret = $clientSecret;
     }
@@ -140,7 +157,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $redirectUri
      */
-    public function setRedirectUri($redirectUri): void
+    public function setRedirectUri($redirectUri)
     {
         $this->redirectUri = $redirectUri;
     }
@@ -156,7 +173,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $grantTypes
      */
-    public function setGrantTypes($grantTypes): void
+    public function setGrantTypes($grantTypes)
     {
         $this->grantTypes = $grantTypes;
     }
@@ -172,7 +189,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $scope
      */
-    public function setScope($scope): void
+    public function setScope($scope)
     {
         $this->scope = $scope;
     }
@@ -188,7 +205,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $userId
      */
-    public function setUserId($userId): void
+    public function setUserId($userId)
     {
         $this->userId = $userId;
     }
@@ -204,7 +221,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $publicKey
      */
-    public function setPublicKey($publicKey): void
+    public function setPublicKey($publicKey)
     {
         $this->publicKey = $publicKey;
     }
@@ -220,7 +237,7 @@ class OauthClientsEntity extends BaseEntity
     /**
      * @param mixed $apiAlg
      */
-    public function setApiAlg($apiAlg): void
+    public function setApiAlg($apiAlg)
     {
         $this->apiAlg = $apiAlg;
     }

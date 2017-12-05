@@ -1,7 +1,8 @@
 {
   "project_name": "新版本",
-  "client_id": "",
-  "client_secret": "",
+  "alg": "md5_v3",
+  "client_id": "byTest123456",
+  "client_secret": "byTestSecret123456",
   "url_list":[
     {"desc":"测试地址","url":"http://bs.api.qqav.club/api.php"}
   ],
@@ -12,16 +13,94 @@
   ],
   "api_list": [
     {
-      "desc": "测试服务接口",
-      "type": "By_Test_index",
-      "version": "102",
-      "params": [
-        {"key":"username","desc":"登录用户名（限手机号）", "value":"test"},
-        {"key":"password","desc":"登录密码（6-64位）" , "value":"test"}
-      ],
-      "authors": [
+      "desc": "测试接口",
+      "list": [
         {
-          "name": "hebidu", "email": "hebiduhebi@126.com"
+          "desc": "测试从数据库查询返回",
+          "type": "By_Test_db_array",
+          "version": ["100", "102"],
+          "params": [
+            {
+              "key": "name",
+              "desc": "配置名称(配置表)",
+              "value": "test"
+            }
+          ],
+          "authors": [
+            {
+              "name": "hebidu",
+              "email": "hebiduhebi@126.com"
+            }
+          ]
+        },
+        {
+          "desc": "测试服务接口",
+          "type": "By_Test_index",
+          "version": ["100", "102"],
+          "params": [
+            {
+              "key": "username",
+              "desc": "登录用户名",
+              "value": "test"
+            },
+            {
+              "key": "password",
+              "desc": "登录密码",
+              "value": "test"
+            }
+          ],
+          "authors": [
+            {
+              "name": "hebidu",
+              "email": "hebiduhebi@126.com"
+            }
+          ]
+        },
+        {
+          "desc": "测试服务接口",
+          "type": "By_Test_array_data",
+          "version": ["100", "102"],
+          "params": [
+            {
+              "key": "username",
+              "desc": "登录用户名",
+              "value": "test"
+            },
+            {
+              "key": "password",
+              "desc": "登录密码",
+              "value": "test"
+            }
+          ],
+          "authors": [
+            {
+              "name": "hebidu",
+              "email": "hebiduhebi@126.com"
+            }
+          ]
+        },
+        {
+          "desc": "测试失败接口",
+          "type": "By_Test_fail",
+          "version": ["100", "102"],
+          "params": [
+            {
+              "key": "username",
+              "desc": "登录用户名",
+              "value": "test"
+            },
+            {
+              "key": "password",
+              "desc": "登录密码",
+              "value": "test"
+            }
+          ],
+          "authors": [
+            {
+              "name": "hebidu",
+              "email": "hebiduhebi@126.com"
+            }
+          ]
         }
       ]
     }

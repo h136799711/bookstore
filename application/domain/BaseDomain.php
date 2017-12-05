@@ -21,7 +21,8 @@ use by\api\controller\entity\ApiCommonEntity;
 use by\component\base\exception\BusinessException;
 use by\component\helper\ValidateHelper;
 use by\component\paging\vo\PagingParams;
-use by\src\base\exception\ApiException;
+use by\infrastructure\base\CallResult;
+use by\infrastructure\helper\CallResultHelper;
 
 
 /**
@@ -29,7 +30,8 @@ use by\src\base\exception\ApiException;
  * Class BaseDomain
  * @package by\src\domain
  */
-class BaseDomain {
+class BaseDomain
+{
 
     protected $notify_id;
     protected $client_id;
@@ -38,58 +40,27 @@ class BaseDomain {
 
     //服务端允许的默认api版本
     protected $lang;
-    protected $api_ver       = 100;
-    protected $allowType     = ["json", "rss", "html"];
+    protected $api_ver = 100;
+    protected $allowType = ["json", "rss", "html"];
     protected $business_code = '';
     protected $cur_api_ver;  //服务端当前api_ver
-    protected $domain_class;
     protected $origin_data;
     protected $request_api_ver;//请求的api_ver
     protected $algInstance;
     protected $apiVersionIsDeprecated;//接口已过期
 
 
-    public function __construct($algInstance,ApiCommonEntity $apiCommonEntity) {
-//        debug('begin');
+    public function __construct($transport, ApiCommonEntity $apiCommonEntity)
+    {
         $this->apiVersionIsDeprecated = false;
-        $this->algInstance = $algInstance;
-        $this->origin_data = $data;
-
-        if(!isset($this->origin_data['client_secret'])){
-            $this->apiReturnErr(lang('param-need', ['client_secret']), ErrorCode::Lack_Parameter);
-        }
-
-        $this->client_secret =  $this->origin_data['client_secret'];
-
-        if(!isset($this->origin_data['notify_id'])){
-            $this->apiReturnErr(lang('param-need', ['notify_id']), ErrorCode::Lack_Parameter);
-        }
-        $this->notify_id = $this->origin_data['notify_id'];
-
-        if(!isset($this->origin_data['time'])){
-            $this->apiReturnErr(lang('param-need', ['time']), ErrorCode::Lack_Parameter);
-        }
-        $this->time = $this->origin_data['time'];
-
-        if(!isset($this->origin_data['client_id'])){
-            $this->apiReturnErr(lang('param-need', ['client_id']), ErrorCode::Lack_Parameter);
-        }
-        $this->client_id = $this->origin_data['client_id'];
-
-        if(!isset($this->origin_data['domain_class'])){
-            $this->apiReturnErr(lang('param-need', ['domain_class']), ErrorCode::Lack_Parameter);
-        }
-        $this->domain_class = $this->origin_data['domain_class'];
-        if(!isset($this->origin_data['api_ver'])){
-            $this->apiReturnErr(lang('param-need', ['api_ver']), ErrorCode::Lack_Parameter);
-        }
-
-        $this->request_api_ver = $this->origin_data['api_ver'];
-
-        if(!isset($this->origin_data['lang'])){
-            $this->apiReturnErr(lang('param-need', ['lang']), ErrorCode::Lack_Parameter);
-        }
-        $this->lang      = $this->origin_data['lang'];
+        $this->algInstance = $transport;
+        $this->origin_data = $apiCommonEntity->getData();
+        $this->client_secret = $apiCommonEntity->getClientSecret();
+        $this->notify_id = $apiCommonEntity->getNotifyId();
+        $this->time = $apiCommonEntity->getAppRequestTime();
+        $this->client_id = $apiCommonEntity->getClientId();
+        $this->request_api_ver = $apiCommonEntity->getAppVersion();
+        $this->lang = $apiCommonEntity->getLang();
     }
 
     /**
@@ -97,10 +68,18 @@ class BaseDomain {
      * @param int $code
      * @throws BusinessException
      */
-    protected function apiReturnErr($msg, $code = -1){
+    protected function apiReturnErr($msg, $code = -1)
+    {
         throw new BusinessException($msg, $code);
     }
 
+    /**
+     * @param $param
+     * @param $scope
+     * @param string $default
+     * @param string $emptyErrMsg
+     * @throws BusinessException
+     */
     public function getValueFromPost(&$param, $scope, $default = '', $emptyErrMsg = '')
     {
         if (NULL == $scope) {
@@ -112,25 +91,28 @@ class BaseDomain {
         $param = self::_post($name, $default, $emptyErrMsg);
     }
 
+
     /**
      * @param $key
      * @param string $default
-     * @param string $emptyErrMsg 为空时的报错
-     * @return mixed
+     * @param string $emptyErrMsg
+     * @return int|mixed|string
+     * @throws BusinessException
      */
-    public function _post($key, $default = '', $emptyErrMsg = '') {
+    public function _post($key, $default = '', $emptyErrMsg = '')
+    {
 
-        $value = isset($this->origin_data["_data_" . $key]) ? $this->origin_data["_data_" . $key]:$default;
+        $value = isset($this->origin_data[$key]) ? $this->origin_data[$key] : $default;
 
         if ($default == $value && !empty($emptyErrMsg)) {
-            $emptyErrMsg = lang('lack_parameter',['param'=>$key]);
+            $emptyErrMsg = lang('lack_parameter', ['param' => $key]);
             $this->apiReturnErr($emptyErrMsg, ErrorCode::Lack_Parameter);
         }
 
         $value = $this->escapeEmoji($value);
 
         if ($default == $value && !empty($emptyErrMsg)) {
-            $emptyErrMsg = lang('lack_parameter',['param'=>$key]);
+            $emptyErrMsg = lang('lack_parameter', ['param' => $key]);
             $this->apiReturnErr($emptyErrMsg, ErrorCode::Lack_Parameter);
         }
 
@@ -143,7 +125,8 @@ class BaseDomain {
      * @param bool $bool
      * @return int|mixed|string
      */
-    protected function escapeEmoji($strText, $bool = false) {
+    protected function escapeEmoji($strText, $bool = false)
+    {
         $preg = '/\\\ud([8-9a-f][0-9a-z]{2})/i';
         if ($bool == true) {
             $boolPregRes = (preg_match($preg, json_encode($strText, true)));
@@ -152,7 +135,7 @@ class BaseDomain {
             $strPregRes = (preg_replace($preg, '', json_encode($strText, true)));
             $strRet = json_decode($strPregRes, JSON_OBJECT_AS_ARRAY);
 
-            if ( is_string($strRet) && strlen($strRet) == 0) {
+            if (is_string($strRet) && strlen($strRet) == 0) {
                 return "";
             }
 
@@ -160,88 +143,67 @@ class BaseDomain {
         }
     }
 
+
     /**
-     * 获取分页参数信息
      * @return PagingParams
+     * @throws BusinessException
      */
-    public function getPageParams(){
+    public function getPageParams()
+    {
         $pagingParams = new PagingParams();
-        $pagingParams->setPageSize($this->_post('page_size',10));
-        $pagingParams->setPageIndex($this->_post('page_index',1));
+        $pagingParams->setPageSize($this->_post('page_size', 10));
+        $pagingParams->setPageIndex($this->_post('page_index', 1));
         return $pagingParams;
     }
 
-    /**
-     * @param $key
-     * @param string $default
-     * @param string $emptyErrMsg 为空时的报错
-     * @return mixed
-     */
-    public function _get($key, $default = '', $emptyErrMsg = '') {
-        return $this->_post($key,$default,$emptyErrMsg);
-    }
 
-    /**
-     * 缓存 api结果 并返回
-     * @param $key
-     * @param $data
-     * @param  integer $time [description]
-     * @param  boolean $returnSuc [是否返回成功,否则不操作]
-     * @internal param $ [type]  $key       [description]
-     * @internal param $ [type]  $data      [description]
-     */
 //    protected function cache($key, $data, $time = 300, $returnSuc = true) {
 //        cache($key, json_encode($data), $time);
 //        if ($returnSuc) $this->apiReturnSuc($data);
 //    }
 
-    /**
-     * 获取缓存
-     * @param  [type]  $key     [description]
-     * @param bool|int $page [当前页]
-     * @param bool|int $maxpage [最大缓存页]
-     * @param bool|int $fresh [description]
-     */
-    protected function checkCache($key, $page = false, $maxpage = false, $fresh = false) {
-        $cache = cache($key);
-        if (false == $fresh && $page && $maxpage && $page <= $maxpage && $cache) {
-            $this->apiReturnSuc(json_decode($cache, true), true);
-        }
-    }
+
+//    protected function checkCache($key, $page = false, $maxpage = false, $fresh = false)
+//    {
+//        $cache = cache($key);
+//        if (false == $fresh && $page && $maxpage && $page <= $maxpage && $cache) {
+//            $this->apiReturnSuc(json_decode($cache, true), true);
+//        }
+//    }
 
     /**
-     * ajax返回
      * @param $data
      * @param bool $cache
-     * @internal param string $msg
-     * @internal param $i
+     * @return CallResult
      */
-    protected function apiReturnSuc($data ,  $cache = false) {
-        if($this->apiVersionIsDeprecated){
-            $this->ajaxReturn(['code' => ErrorCode::Api_Service_Is_Deprecated, 'data' => $data,'cache' => $cache]);
+    protected function apiReturnSuc($data, $cache = false)
+    {
+        if ($this->apiVersionIsDeprecated) {
+            // TODO 缓存
+            return CallResultHelper::success($data, 'success',ErrorCode::Api_Service_Is_Deprecated);
         } else {
-            $this->ajaxReturn(['code' => 0, 'data' => $data,'cache' => $cache]);
+            return CallResultHelper::success($data);
         }
     }
 
     /**
-     * 服务端允许的api版本/列表
      * @param string $version
-     * @param string $updateMsg  string [更新的说明]
-     * @internal param $ [int|array]     $version
+     * @param string $updateMsg
+     * @throws BusinessException
      */
-    protected function checkVersion($version = '',$updateMsg='') {
+    protected function checkVersion($version = '', $updateMsg = '')
+    {
         if (!$version) $version = $this->api_ver;
         if (is_array($version)) {
             $legal = false;
 
             foreach ($version as $item) {
-                if (is_array($item)){
+                if (is_array($item)) {
                     $ver = $item[0];
                     if ($ver == intval($this->request_api_ver)) {
                         $this->apiVersionIsDeprecated = true;
                     }
-                }elseif ($item == intval($this->request_api_ver)) {
+                } elseif ($item == intval($this->request_api_ver)) {
                     $legal = true;
                     break;
                 }
@@ -250,10 +212,10 @@ class BaseDomain {
             if ($legal == false) {
 
 
-                if(count($version) > 0){
-                    $updateMsg .= lang('tip_update_api_version',['version'=>$version[0]]);
-                }else{
-                    $updateMsg .= lang('tip_update_api_version',['version'=>'-1']);
+                if (count($version) > 0) {
+                    $updateMsg .= lang('tip_update_api_version', ['version' => $version[0]]);
+                } else {
+                    $updateMsg .= lang('tip_update_api_version', ['version' => '-1']);
                 }
 
                 $this->apiReturnErr($updateMsg, ErrorCode::Api_Need_Update);
@@ -262,7 +224,7 @@ class BaseDomain {
         } else {
 
             if ($version != $this->request_api_ver) {
-                $updateMsg .= lang('tip_update_api_version',['version'=>$version]);
+                $updateMsg .= lang('tip_update_api_version', ['version' => $version]);
 
                 $this->apiReturnErr($updateMsg, ErrorCode::Api_Need_Update);
             }
@@ -273,48 +235,52 @@ class BaseDomain {
     /**
      * 退出应用
      * @param $result
-     * @internal param bool $retSuc
+     * @throws BusinessException
      */
-    protected function returnResult($result){
-        $this->exitWhenError($result,true);
+    protected function returnResult($result)
+    {
+        $this->exitWhenError($result, true);
     }
 
     /**
-     * 退出应用当发生错误的时候
      * @param $result
      * @param bool $retSuc
+     * @throws BusinessException
      */
-    protected function exitWhenError($result,$retSuc=false) {
+    protected function exitWhenError($result, $retSuc = false)
+    {
+        if ($result instanceof CallResult) {
+            if (!$result->isSuccess()) {
+                $this->apiReturnErr($result->getMsg());
+            } elseif ($retSuc) {
+                $data = $result->getData();
+                if (!is_int($data) && !ValidateHelper::isNumberStr($data)) {
+                    $this->apiReturnSuc($data);
+                }
 
-        if($result['status'] == false){
-            $this->apiReturnErr($result['info']);
-        }elseif ($retSuc){
-            $info = $result['info'];
-
-            if(!is_int($info) && !ValidateHelper::isNumberStr($info)){
-                $this->apiReturnSuc($info);
+                $id = intval($data);
+                //如果是数字，则应该是添加或修改操作
+                //对于这种情况，如果大于0 则默认成功 否则 失败
+                if ($id > 0) {
+                    $this->apiReturnSuc(lang("success"));
+                } else {
+                    $this->apiReturnErr(lang("fail"));
+                }
             }
-            $id = intval($info);
-            //如果是数字，则应该是添加或修改操作
-            //对于这种情况，如果大于0 则默认成功 否则 失败
-            if($id > 0){
-                $this->apiReturnSuc(lang("success"));
-            }else{
-                $this->apiReturnErr(lang("fail"));
-            }
-
         }
+
     }
 
     /**
-     * 根据key数组来获取参数
      * @param $keys
      * @return array
+     * @throws BusinessException
      */
-    protected function getParams($keys){
+    protected function getParams($keys)
+    {
         $params = [];
-        foreach ($keys as $key){
-            $params[$key] = $this->_post($key,'');
+        foreach ($keys as $key) {
+            $params[$key] = $this->_post($key, '');
         }
         return $params;
     }
@@ -324,46 +290,51 @@ class BaseDomain {
      * @param string $str 需要检查的post参数
      * @param string $oth_str 不需检查的post参数
      * @return array
+     * @throws BusinessException
      */
-    protected function parsePost($str='',$oth_str=''){
-        return array_merge($this->getPost($str,true),$this->getPost($oth_str,false));
+    protected function parsePost($str = '', $oth_str = '')
+    {
+        return array_merge($this->getPost($str, true), $this->getPost($oth_str, false));
     }
 
     /**
+     *
      * 获取post参数并返回
      * $need:是否必选
      * a|0|int  默认0
      * a        默认''
      * a|p      默认'p'
      * @DateTime 2016-12-13T10:25:17+0800
-     * @param    [type]                   $str  [description]
-     * @param    boolean $need [description]
+     * @param $str
+     * @param bool $need
      * @return array
+     * @throws BusinessException
      */
-    protected function getPost($str,$need=false){
-        if(empty($str) || !is_string($str)) return [];
+    protected function getPost($str, $need = false)
+    {
+        if (empty($str) || !is_string($str)) return [];
         $r = [];
         $arr = explode(',', $str);
         $data = $this->origin_data;
         foreach ($arr as $v) {
             $p = explode('|', $v);
-            if(!isset($p[1])) $p[1] = '';   //默认值空字符串
-            if(!isset($p[2])) $p[2] = 'str';//默认类型字符串
+            if (!isset($p[1])) $p[1] = '';   //默认值空字符串
+            if (!isset($p[2])) $p[2] = 'str';//默认类型字符串
 
-            $data['_data_'.$p[0]] = isset($data['_data_'.$p[0]]) ? $data['_data_'.$p[0]] : '';
-            $post = $data['_data_'.$p[0]]==='' ? $p[1] : $data['_data_'.$p[0]];
-            if($need && $post === ''){
-                $this->apiReturnErr(lang('lack_parameter',["param"=>$p[0]]), ErrorCode::Lack_Parameter);
+            $data['' . $p[0]] = isset($data['' . $p[0]]) ? $data['' . $p[0]] : '';
+            $post = $data['' . $p[0]] === '' ? $p[1] : $data['' . $p[0]];
+            if ($need && $post === '') {
+                $this->apiReturnErr(lang('lack_parameter', ["param" => $p[0]]), ErrorCode::Lack_Parameter);
             }
-            if($p[2] === 'int'){
+            if ($p[2] === 'int') {
                 $post = intval($post);
-            }elseif($p[2] === 'float'){
+            } elseif ($p[2] === 'float') {
                 $post = floatval($post);
-            }elseif($p[2] === 'mulint'){
+            } elseif ($p[2] === 'mulint') {
                 $post = array_unique(explode(',', $post));
                 $temp = [];
                 foreach ($post as $v1) {
-                    if(is_numeric($v1)) $temp[] = $v1;
+                    if (is_numeric($v1)) $temp[] = $v1;
                 }
                 $post = implode(',', $temp);
             }
@@ -376,13 +347,9 @@ class BaseDomain {
      * 获取原始数据
      * @return array
      */
-    protected function getOriginData(){
-        $tmp = [];
-        foreach ($this->origin_data as $key=>$vo){
-            $k = str_replace("_data_","",$key);
-            $tmp[$k] = $vo;
-        }
-        return $tmp;
+    protected function getOriginData()
+    {
+        return $this->origin_data;
     }
 
 }

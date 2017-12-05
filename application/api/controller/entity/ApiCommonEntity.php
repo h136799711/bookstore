@@ -27,10 +27,45 @@ use by\infrastructure\base\BaseEntity;
 class ApiCommonEntity extends BaseEntity
 {
     /**
+     * 请求的项目id
+     * @var string
+     */
+    private $projectId;
+    /**
+     * 请求编号
+     * @var string
+     */
+    private $notifyId;
+    /**
+     * 客户端密钥
+     * @var string
+     */
+    private $clientSecret;
+    /**
+     * 客户端编号
+     * @var string
+     */
+    private $clientId;
+
+
+    /**
+     * 客户端发起请求的时间（基于客户端时间）
+     * @var string
+     */
+    private $appRequestTime;
+
+    /**
+     * 请求服务的版本号
+     * @var string
+     */
+    private $serviceVersion;
+
+    /**
      * 请求的语言
      * @var string
      */
     private $lang;
+
     /**
      * 请求服务
      * @var string
@@ -54,6 +89,103 @@ class ApiCommonEntity extends BaseEntity
      * @var array
      */
     private $data;
+
+    /**
+     * @return string
+     */
+    public function getProjectId()
+    {
+        return $this->projectId;
+    }
+
+    /**
+     * @param string $projectId
+     */
+    public function setProjectId($projectId)
+    {
+        $this->projectId = $projectId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotifyId()
+    {
+        return $this->notifyId;
+    }
+
+    /**
+     * @param string $notifyId
+     */
+    public function setNotifyId($notifyId)
+    {
+        $this->notifyId = $notifyId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientSecret()
+    {
+        return $this->clientSecret;
+    }
+
+    /**
+     * @param string $clientSecret
+     */
+    public function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @param string $clientId
+     */
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppRequestTime()
+    {
+        return $this->appRequestTime;
+    }
+
+    /**
+     * @param string $appRequestTime
+     */
+    public function setAppRequestTime($appRequestTime)
+    {
+        $this->appRequestTime = $appRequestTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceVersion()
+    {
+        return $this->serviceVersion;
+    }
+
+    /**
+     * @param string $serviceVersion
+     */
+    public function setServiceVersion($serviceVersion)
+    {
+        $this->serviceVersion = $serviceVersion;
+    }
+
 
     /**
      *

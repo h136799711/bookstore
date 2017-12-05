@@ -18,6 +18,7 @@ namespace byTest\encrypt;
 
 
 use by\component\encrypt\md5v3\DataStructEntity;
+use by\infrastructure\helper\Object2DataArrayHelper;
 use byTest\base\BaseTestCase;
 
 class DataStructEntityTest extends BaseTestCase
@@ -36,6 +37,21 @@ class DataStructEntityTest extends BaseTestCase
         $this->assertArrayHasKey('api_ver', $data);
 
         $this->assertEquals(100, $data['api_ver']);
+    }
+
+    public function testSetEntity()
+    {
+        $data = [
+            "api_ver"=>"100",
+            "notify_id"=>1512472536,
+            "time"=>"1512472536"
+        ];
+
+        $entity = new DataStructEntity();
+        Object2DataArrayHelper::setData($entity, $data);
+
+        $this->assertEquals("100", $data['api_ver']);
+
     }
 
 }

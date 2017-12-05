@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\api\config;
+namespace by\api\config;
 
 
 use by\component\tp5\entity\ConfigEntity;

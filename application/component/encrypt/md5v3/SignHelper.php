@@ -7,29 +7,27 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * Revision History Version
  ********1.0.0********************
- * file created @ 2017-12-05 16:29
+ * file created @ 2017-12-05 20:15
  *********************************
  ********1.0.1********************
  *
  *********************************
  */
 
-namespace by\component\encrypt\interfaces;
+namespace by\component\encrypt\md5v3;
 
 
-interface TransportInterface
+/**
+ * Class SignHelper
+ * 签名工具
+ * @package app\component\encrypt\md5v3
+ */
+class SignHelper
 {
-    /**
-     * 加密传输数据
-     * @param $data
-     * @return mixed
-     */
-    function encrypt($data);
 
-    /**
-     * 解密传输数据
-     * @param $data
-     * @return mixed
-     */
-    function decrypt($data);
+    public static function sign($time, $type, $data, $secret, $notifyId)
+    {
+        $sign = $time.$type.$data.$secret.$notifyId;
+        return md5($sign);
+    }
 }

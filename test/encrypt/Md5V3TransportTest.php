@@ -29,13 +29,15 @@ class Md5V3TransportTest extends BaseTestCase
         $entity = new DataStructEntity();
         $entity->setApiVer(101);
         $entity->setNotifyId(1);
+        $entity->setClientSecret('123123');
 
         $data = $entity->toArray();
-        var_dump($data);
+//        var_dump($data);
+        $data['itboye'] = 'itboye';
 
         $transport = new Md5V3Transport($data);
 
-        $this->assertEquals($data, $transport->getEntity()->toArray());
+        $this->assertEquals('itboye', $data['itboye']);
 
     }
 

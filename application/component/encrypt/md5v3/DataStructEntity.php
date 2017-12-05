@@ -17,10 +17,51 @@
 namespace by\component\encrypt\md5v3;
 
 
+use by\component\encrypt\exception\CryptException;
 use by\infrastructure\base\BaseEntity;
 
 class DataStructEntity extends BaseEntity
 {
+
+    /**
+     * @throws CryptException
+     */
+    public function isValid()
+    {
+        // 1. 参数是否缺失
+        if (empty($this->getTime())) {
+            throw new CryptException("time  is empty");
+        }
+
+        if (empty($this->getType())) {
+            throw new CryptException("type  is empty");
+        }
+
+        if (empty($this->getNotifyId())) {
+            throw new CryptException("notify_id  is empty");
+        }
+
+        if (empty($this->getClientSecret())) {
+            throw new CryptException("client_secret is empty");
+        }
+
+        if (empty($this->getData())) {
+            throw new CryptException("data  is empty");
+        }
+
+        // 2. 时间戳验证
+//        $now = microtime(true);//time();
+//        //时间误差 +- 1分钟
+//        if($now - 60 > $this->alParams->getTime() || $this->alParams->getTime() > $now + 60){
+//            $this->apiReturnErr(lang('invalid_request'),ErrorCode::Invalid_Parameter);
+//        }
+
+        $sign = SignHelper::sign($this->getTime(), $this->getType(), $this->getData(), $this->getClientSecret(), $this->getNotifyId());
+
+        if(!($sign == $this->getSign())){
+            throw new CryptException(lang('err_sign'));
+        }
+    }
 
     private $projectId;
     private $notifyId;

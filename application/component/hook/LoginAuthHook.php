@@ -12,6 +12,7 @@
 
 namespace by\component\hook;
 use by\business\session\action\LoginSessionCheckAction;
+use by\infrastructure\helper\CallResultHelper;
 
 
 /**
@@ -41,13 +42,16 @@ class LoginAuthHook
      * @param string $api
      * @param $device_type
      * @param $session_expire_time
-     * @return array
+     * @return array|bool|\by\infrastructure\base\CallResult|false|null|object|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function check($uid = 0, $s_id = '', $api = '', $device_type, $session_expire_time)
     {
 
         if ($s_id == 'itboye') {
-            return ['status' => true, 'info' => 'test api'];
+            return CallResultHelper::success('test api');
         }
         $api = strtolower($api);
         foreach ($this->needCheckApiList as $item) {
@@ -57,16 +61,16 @@ class LoginAuthHook
                     return $this->checkUidSessionId($uid, $s_id, $device_type, $session_expire_time);
                 } else {
                     if ($uid <= 0) {
-                        return ['status' => false, 'info' => 'uid is missing'];
+                        return CallResultHelper::fail('[10UID] 请重新登录');
                     } else {
-                        return ['status' => false, 'info' => 's_id is missing'];
+                        return CallResultHelper::fail('[10SID] 请重新登录');
                     }
                 }
 
             }
         }
 
-        return ['status' => true, 'info' => 'not need check'];
+        return CallResultHelper::success('not need check');
     }
 
     /**
