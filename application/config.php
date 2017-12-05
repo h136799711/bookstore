@@ -31,6 +31,7 @@ return [
         404 => APP_PATH . 'html/404/web.html'
     ],
     'oauth_db'=>[
+        'break_connect'=>true,
         // 数据库类型
         'type' => 'mysql',
         // 服务器地址
@@ -72,6 +73,7 @@ return [
         'sql_explain' => false
     ],
     'book_page_db' => [
+        'break_connect'=>true,
         // 数据库类型
         'type' => 'mysql',
         // 服务器地址
@@ -113,6 +115,7 @@ return [
         'sql_explain' => false
     ],
     'cli_database' => [
+        'break_connect'=>true,
         // 数据库类型
         'type' => 'mysql',
         // 服务器地址
