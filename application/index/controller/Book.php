@@ -26,7 +26,9 @@ class Book extends BaseIndexController
     const READ_PAGE_VERSION = 2;
 
     /**
-     * 搜索
+     * @return mixed
+     * @throws Exception
+     * @throws \think\exception\DbException
      */
     public function search()
     {
@@ -53,6 +55,11 @@ class Book extends BaseIndexController
         return $this->fetch();
     }
 
+    /**
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function category()
     {
         $logic = new BsBookCategoryLogic();
@@ -64,6 +71,9 @@ class Book extends BaseIndexController
      * 书籍详情页面
      * @param $id
      * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function detail($id)
     {
@@ -182,10 +192,12 @@ class Book extends BaseIndexController
                         return $this->read($id, $page_no, $fail_read_cnt);
                     }
 
-                    $this->error('没有该章节内容信息', url('/' . $id));
+                    $this->error('很抱歉！
+此章节已经失效，系统无法匹配正确章节，稍后将自动跳到书籍信息页面。', url('/' . $id));
                 }
             } else {
-                $this->error('没有该章节内容信息', url('/' . $id));
+                $this->error('很抱歉！
+此章节已经失效，系统无法匹配正确章节，稍后将自动跳到书籍信息页面。', url('/' . $id));
             }
 //        }
 
@@ -210,6 +222,19 @@ class Book extends BaseIndexController
             $result = $repo->where(['book_id' => $id])->fetchSql(false)->setInc('priority', 1);
         } catch (Exception $e) {
             $this->error($e->getMessage(), null, '操作成功');
+        }
+        $this->success('操作成功', null, '操作失败');
+    }
+
+    public function set_over()
+    {
+        $id = $this->param('id', 0);
+        $repo = (new XiaShuSpiderBookPageUrlRepo());
+        try {
+            $result = $repo->save(['is_spider_over'=>1], ['book_id' => $id]);
+            (new BsBookLogic())->save(['id' => $id],['state'=>BsBookEntity::STATE_END, 'update_time'=>time()]);
+        } catch (Exception $e) {
+            $this->error($e->getMessage(), null, '操作失败');
         }
         $this->success('操作成功', null, '操作成功');
     }

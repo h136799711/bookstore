@@ -96,7 +96,10 @@
         {volist name="bs_book_list" id="vo"}
         <div class="book col-md-4 col-lg-3">
             <div class="inner-box">
-                <a href="{:url('index/book/priority_up?id='.$vo['id'])}" class="no-refresh ajax-get btn btn-primary">提高权重</a>
+                <div class="control-function">
+                <a href="{:url('index/book/priority_up?id='.$vo['id'])}" class="no-refresh ajax-get btn btn-primary">权重+1</a>
+                <a href="{:url('index/book/set_over?id='.$vo['id'])}" class="no-refresh ajax-get btn btn-primary">完结且爬取完成</a>
+                </div>
                 <a href="{:url('/'.$vo['id'])}" target="_blank" title="查看书籍">
                     <div class="thumbnail">
                         <img class="lazy img-responsive" src="http://img1.8raw.com/cover/nocover.jpg" width="120px"
@@ -104,6 +107,7 @@
                              data-original="{$vo->getData('thumbnail')}" alt="封面"/></div>
                     <div class="title text-center"><h3>{$vo->getData('title')}</h3></div>
                     <div class="author  text-center">{$vo->getData('author_name')}</div>
+                    <div class="state  text-center">{$vo->getData('state') == 0?"连载中":"已完结"}</div>
                     <div class="summary">{:htmlspecialchars_decode($vo->getData('summary'))}</div>
                 </a>
             </div>

@@ -22,6 +22,7 @@ use by\component\spider\xia_shu\entity\XiaShuAuthorEntity;
 use by\component\spider\xia_shu\entity\XiaShuBookEntity;
 use by\component\spider\xia_shu\entity\XiaShuBookSourceEntity;
 use by\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
+use by\component\spider\xia_shu\helper\CurlHelper;
 use by\component\spider\xia_shu\repo\XiaShuAuthorRepo;
 use by\component\spider\xia_shu\repo\XiaShuBookRepo;
 use by\component\spider\xia_shu\repo\XiaShuBookSourceRepo;
@@ -70,7 +71,8 @@ class XiaShuBookParser
     public function parse()
     {
         try {
-            $dom = HtmlDomParser::file_get_html($this->url);
+            $html = CurlHelper::getHtml($this->url, BookSiteType::XIA_SHU_BOOK_SITE);
+            $dom = HtmlDomParser::str_get_html($html);
             $entity = new XiaShuBookEntity();
             // 设置书本概述
             $summary = $this->getBookSummary($dom);

@@ -19,11 +19,11 @@ namespace by\command;
 
 use by\component\bs\logic\BsStaticsLogic;
 use by\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
-use by\component\spider\xia_shu\parser\XiaShuPageContentParser;
 use by\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use by\component\spider\xia_shu\XiaShuBookPageSpider;
 use by\component\spider\xia_shu\XiaShuCoverSpider;
 use by\component\spider\xia_shu\XiaShuNewBookSpider;
+use by\component\spider\xia_shu\XiaShuSecondBookSpider;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
@@ -56,11 +56,13 @@ class XiashuSpiderCommand extends Command
         $c = $input->getOption('cmd');
         $type = $input->getOption('spider_type');
         if ($c == 9) {
-            $sourceBookNo = 18636;
-            $pageNo = 3;
-            $url = "https://www.xiashu.cc/176010/read_1.html";
-            $parser = new XiaShuPageContentParser();
-            var_dump(($parser->parse($sourceBookNo, $pageNo)));
+            $parse = new XiaShuSecondBookSpider($size);
+            $parse->start();
+//            $sourceBookNo = 18636;
+//            $pageNo = 3;
+//            $url = "https://www.xiashu.cc/176010/read_1.html";
+//            $parser = new XiaShuPageContentParser();
+//            var_dump(($parser->parse($sourceBookNo, $pageNo)));
 
 //            $bookId = 13934;
 //            $entity = new BsBookPageContentEntity();
@@ -100,7 +102,9 @@ class XiashuSpiderCommand extends Command
             exit(0);
         }
         $startTime = microtime(true);
-        if ($c == 6) {
+        if ($c == 7) {
+            (new XiaShuSecondBookSpider($size))->start();
+        } elseif ($c == 6) {
             (new BsStaticsLogic())->statics();
         } elseif ($c == 3) {
             $save_text = $input->getOption('save_text');
