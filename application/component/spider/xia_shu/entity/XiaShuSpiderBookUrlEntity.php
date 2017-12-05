@@ -14,17 +14,17 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\entity;
+namespace by\component\spider\xia_shu\entity;
 
 
-use app\component\spider\base\entity\SpiderUrlEntity;
-use app\component\spider\base\interfaces\ToArrayInterface;
+use by\component\spider\base\entity\SpiderUrlEntity;
+use by\component\spider\base\interfaces\ToArrayInterface;
 use by\infrastructure\helper\Object2DataArrayHelper;
 
 /**
  * Class XiaShuSpiderBookUrlEntity
  * 书籍爬取url
- * @package app\component\spider\xia_shu\entity
+ * @package by\component\spider\xia_shu\entity
  */
 class XiaShuSpiderBookUrlEntity extends SpiderUrlEntity implements ToArrayInterface
 {

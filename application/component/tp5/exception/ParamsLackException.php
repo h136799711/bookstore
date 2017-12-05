@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\tp5\exception;
+namespace by\component\tp5\exception;
 
 
 use think\Exception;

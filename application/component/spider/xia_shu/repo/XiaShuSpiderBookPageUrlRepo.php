@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\repo;
+namespace by\component\spider\xia_shu\repo;
 
 
-use app\component\spider\constants\BookSiteIntegerType;
-use app\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
+use by\component\spider\constants\BookSiteIntegerType;
+use by\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
 use by\infrastructure\helper\CallResultHelper;
 use think\Db;
 use think\Model;

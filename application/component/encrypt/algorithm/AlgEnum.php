@@ -6,13 +6,13 @@
  * Time: 9:41
  */
 
-namespace app\component\encrypt\algorithm;
+namespace by\component\encrypt\algorithm;
 
 /**
  * 算法规则
  * Class AlgEnum
  * @author hebidu <email:346551990@qq.com>
- * @package app\component\encrypt\algorithm
+ * @package by\component\encrypt\algorithm
  */
 class AlgEnum
 {

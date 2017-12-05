@@ -6,11 +6,11 @@
  * Time: 11:10
  */
 
-namespace app\component\session\action;
+namespace by\business\session\action;
 
 
-use app\component\base\action\BaseAction;
-use app\component\session\logic\LoginSessionLogic;
+use by\component\base\action\BaseAction;
+use by\component\session\logic\LoginSessionLogic;
 
 class LoginSessionLogoutAction extends BaseAction
 {

@@ -14,9 +14,9 @@
  *********************************
  */
 
-namespace app\component\qiniu;
+namespace by\component\qiniu;
 
-use app\component\qiniu\interfaces\QiniuConfigInterface;
+use by\component\qiniu\interfaces\QiniuConfigInterface;
 use by\infrastructure\base\CallResult;
 use by\infrastructure\helper\CallResultHelper;
 use Qiniu\Auth;
@@ -26,7 +26,7 @@ use Qiniu\Storage\UploadManager;
 /**
  * Class QiniuUploader
  * 七牛上传类
- * @package app\component\qiniu
+ * @package by\component\qiniu
  */
 class QiniuUploader
 {

@@ -6,11 +6,11 @@
  * Time: 17:02
  */
 
-namespace app\component\bs\factory;
+namespace by\component\bs\factory;
 
 
-use app\component\bs\model\BsBookPageContentModel;
-use app\component\spider\constants\BookSiteIntegerType;
+use by\component\bs\model\BsBookPageContentModel;
+use by\component\spider\constants\BookSiteIntegerType;
 
 class PageContentModelFactory
 {

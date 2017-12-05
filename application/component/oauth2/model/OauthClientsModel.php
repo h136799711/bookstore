@@ -6,9 +6,9 @@
  * Time: 11:25
  */
 
-namespace app\component\oauth2\model;
+namespace by\component\oauth2\model;
 
-use app\component\tp5\model\BaseModel;
+use by\component\tp5\model\BaseModel;
 
 class OauthClientsModel extends BaseModel
 {

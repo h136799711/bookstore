@@ -14,14 +14,14 @@
  *********************************
  */
 
-namespace app\component\spider\base\entity;
+namespace by\component\spider\base\entity;
 
 use by\infrastructure\base\BaseEntity;
 
 /**
  * Class SpiderUrl
  * 待爬的URL
- * @package app\component\spider\base\entity
+ * @package by\component\spider\base\entity
  */
 class SpiderUrlEntity extends BaseEntity
 {

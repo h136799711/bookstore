@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\spider\constants;
+namespace by\component\spider\constants;
 
 
 class UrlType

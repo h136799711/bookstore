@@ -14,16 +14,16 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\parser;
+namespace by\component\spider\xia_shu\parser;
 
 
-use app\component\bs\entity\BsBookPageContentEntity;
-use app\component\bs\logic\BsBookPageContentLogic;
-use app\component\spider\constants\BookSiteIntegerType;
-use app\component\spider\constants\BookSiteType;
-use app\component\spider\xia_shu\entity\XiaShuBookPageEntity;
-use app\component\spider\xia_shu\helper\CurlHelper;
-use app\component\spider\xia_shu\repo\XiaShuBookPageRepo;
+use by\component\bs\entity\BsBookPageContentEntity;
+use by\component\bs\logic\BsBookPageContentLogic;
+use by\component\spider\constants\BookSiteIntegerType;
+use by\component\spider\constants\BookSiteType;
+use by\component\spider\xia_shu\entity\XiaShuBookPageEntity;
+use by\component\spider\xia_shu\helper\CurlHelper;
+use by\component\spider\xia_shu\repo\XiaShuBookPageRepo;
 use by\infrastructure\helper\CallResultHelper;
 use Sunra\PhpSimple\HtmlDomParser;
 use think\exception\ErrorException;

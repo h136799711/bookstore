@@ -6,11 +6,11 @@
  * Time: 11:47
  */
 
-namespace app\component\oauth2\logic;
+namespace by\component\oauth2\logic;
 
 
-use app\component\oauth2\entity\OauthClientsEntity;
-use app\component\tp5\logic\BaseLogic;
+use by\component\oauth2\entity\OauthClientsEntity;
+use by\component\tp5\logic\BaseLogic;
 use by\infrastructure\helper\CallResultHelper;
 
 class OauthClientsLogic extends BaseLogic

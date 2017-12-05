@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\entity;
+namespace by\component\spider\xia_shu\entity;
 
 
-use app\component\spider\base\interfaces\ToArrayInterface;
 use by\component\bookstore\v1\entity\AuthorEntity;
+use by\component\spider\base\interfaces\ToArrayInterface;
 use by\infrastructure\helper\Object2DataArrayHelper;
 
 class XiaShuAuthorEntity extends AuthorEntity implements ToArrayInterface

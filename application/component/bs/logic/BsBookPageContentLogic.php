@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace app\component\bs\logic;
+namespace by\component\bs\logic;
 
 
-use app\component\bs\factory\PageContentModelFactory;
-use app\component\tp5\logic\BaseLogic;
+use by\component\bs\factory\PageContentModelFactory;
+use by\component\tp5\logic\BaseLogic;
 
 class BsBookPageContentLogic extends BaseLogic
 {

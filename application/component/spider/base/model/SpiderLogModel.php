@@ -14,9 +14,9 @@
  *********************************
  */
 
-namespace app\component\spider\base\model;
+namespace by\component\spider\base\model;
 
-use app\component\tp5\model\BaseModel;
+use by\component\tp5\model\BaseModel;
 
 class SpiderLogModel extends BaseModel
 {

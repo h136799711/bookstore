@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\parser;
+namespace by\component\spider\xia_shu\parser;
 
 
-use app\component\spider\constants\BookSiteType;
-use app\component\spider\xia_shu\helper\CurlHelper;
+use by\component\spider\constants\BookSiteType;
+use by\component\spider\xia_shu\helper\CurlHelper;
 use by\infrastructure\helper\CallResultHelper;
 use Sunra\PhpSimple\HtmlDomParser;
 use think\exception\ErrorException;

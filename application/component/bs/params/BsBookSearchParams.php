@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\bs\params;
+namespace by\component\bs\params;
 
 use by\component\bookstore\v1\entity\BookEntity;
 use by\infrastructure\helper\Object2DataArrayHelper;
@@ -23,7 +23,7 @@ use by\infrastructure\interfaces\ObjectToArrayInterface;
 /**
  * Class BsBookSearchParams
  * 书籍查询参数
- * @package app\component\bs\params
+ * @package by\component\bs\params
  */
 class BsBookSearchParams implements ObjectToArrayInterface
 {

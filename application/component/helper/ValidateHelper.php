@@ -6,7 +6,7 @@
  * Time: 11:09
  */
 
-namespace app\component\helper;
+namespace by\component\helper;
 
 
 class ValidateHelper

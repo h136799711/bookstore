@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace app\component\tp5\controller;
+namespace by\component\tp5\controller;
 
 
-use app\component\tp5\helper\RequestHelper;
 use by\component\paging\vo\PagingParams;
+use by\component\tp5\helper\RequestHelper;
 use by\infrastructure\helper\Object2DataArrayHelper;
 use think\Controller;
 use think\Request;

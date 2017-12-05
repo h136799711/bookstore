@@ -6,12 +6,12 @@
  * Time: 17:10
  */
 
-namespace app\component\user\logic;
+namespace by\component\user\logic;
 
-use app\component\tp5\logic\BaseLogic;
-use app\component\user\entity\UcenterMemberEntity;
-use app\component\user\helper\PasswordHelper;
-use app\component\user\model\UcenterMember;
+use by\component\tp5\logic\BaseLogic;
+use by\component\user\entity\UcenterMemberEntity;
+use by\component\user\helper\PasswordHelper;
+use by\component\user\model\UcenterMember;
 use by\infrastructure\helper\CallResultHelper;
 
 class UcenterMemberLogic extends BaseLogic

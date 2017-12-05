@@ -6,13 +6,13 @@
  * Time: 9:42
  */
 
-namespace app\component\encrypt\algorithm;
+namespace by\component\encrypt\algorithm;
 
 /**
  * Class IAlgorithm
  * 数据传输算法
  * @author hebidu <email:346551990@qq.com>
- * @package app\component\encrypt\algorithm
+ * @package by\component\encrypt\algorithm
  */
 abstract class IAlgorithm
 {

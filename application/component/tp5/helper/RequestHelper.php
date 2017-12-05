@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\tp5\helper;
+namespace by\component\tp5\helper;
 
 
 use by\infrastructure\helper\CallResultHelper;

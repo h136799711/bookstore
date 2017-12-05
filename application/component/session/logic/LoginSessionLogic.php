@@ -6,10 +6,10 @@
  * Time: 10:47
  */
 
-namespace app\component\session\logic;
+namespace by\component\session\logic;
 
 
-use app\component\tp5\logic\BaseLogic;
+use by\component\tp5\logic\BaseLogic;
 
 class LoginSessionLogic extends BaseLogic
 {

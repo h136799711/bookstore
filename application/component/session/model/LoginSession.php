@@ -6,10 +6,10 @@
  * Time: 10:46
  */
 
-namespace app\component\session\model;
+namespace by\component\session\model;
 
 
-use app\component\tp5\model\BaseModel;
+use by\component\tp5\model\BaseModel;
 
 class LoginSession extends BaseModel
 {

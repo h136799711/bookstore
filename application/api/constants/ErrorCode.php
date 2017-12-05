@@ -6,7 +6,7 @@
  * Time: 10:30
  */
 
-namespace app\api\constants;
+namespace by\api\constants;
 
 
 class ErrorCode

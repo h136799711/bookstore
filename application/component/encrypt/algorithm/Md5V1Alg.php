@@ -6,17 +6,17 @@
  * Time: 9:45
  */
 
-namespace app\component\encrypt\algorithm;
+namespace by\component\encrypt\algorithm;
 
 
-use app\component\encrypt\des\Des;
-use app\component\encrypt\exception\CryptException;
+use by\component\encrypt\des\Des;
+use by\component\encrypt\exception\CryptException;
 
 /**
  * Class Md5V1Alg
  * 目前使用于 java
  * @author hebidu <email:346551990@qq.com>
- * @package app\component\encrypt\algorithm
+ * @package by\component\encrypt\algorithm
  */
 class Md5V1Alg extends IAlgorithm
 {

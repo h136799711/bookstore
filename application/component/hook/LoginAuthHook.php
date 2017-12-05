@@ -10,9 +10,9 @@
  * Time: 01:54
  */
 
-namespace app\component\hook;
+namespace by\component\hook;
 
-use app\component\base\helper\SessionHelper;
+use by\component\base\helper\SessionHelper;
 
 
 /**
@@ -21,7 +21,7 @@ use app\component\base\helper\SessionHelper;
  * 对于某些接口检测是否已登录
  * 1. 即是否有会话id传过来
  * 2. 检查会话id是否合法
- * @package app\component\hook
+ * @package by\component\hook
  */
 class LoginAuthHook
 {

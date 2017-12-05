@@ -6,11 +6,11 @@
  * Time: 17:10
  */
 
-namespace app\component\user\logic;
+namespace by\component\user\logic;
 
 
-use app\component\tp5\logic\BaseLogic;
-use app\component\user\interfaces\MemberConfigInterface;
+use by\component\tp5\logic\BaseLogic;
+use by\component\user\interfaces\MemberConfigInterface;
 
 class MemberConfigLogic extends BaseLogic implements MemberConfigInterface
 {

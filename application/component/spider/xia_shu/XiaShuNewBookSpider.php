@@ -14,15 +14,15 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu;
+namespace by\component\spider\xia_shu;
 
 
-use app\component\spider\base\AbstractSpider;
-use app\component\spider\constants\BookSiteType;
-use app\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
-use app\component\spider\xia_shu\parser\XiaShuBookParser;
-use app\component\spider\xia_shu\repo\XiaShuBookSourceRepo;
-use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
+use by\component\spider\base\AbstractSpider;
+use by\component\spider\constants\BookSiteType;
+use by\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
+use by\component\spider\xia_shu\parser\XiaShuBookParser;
+use by\component\spider\xia_shu\repo\XiaShuBookSourceRepo;
+use by\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 
 class XiaShuNewBookSpider extends AbstractSpider
 {

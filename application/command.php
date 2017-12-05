@@ -10,5 +10,5 @@
 // +----------------------------------------------------------------------
 
 return [
-    'app\command\XiashuSpiderCommand',
+    'by\command\XiashuSpiderCommand',
 ];

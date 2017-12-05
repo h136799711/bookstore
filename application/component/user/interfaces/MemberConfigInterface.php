@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\component\user\interfaces;
+namespace by\component\user\interfaces;
 
 
-use app\component\base\interfaces\BaseLogicInterface;
+use by\component\base\interfaces\BaseLogicInterface;
 
 interface MemberConfigInterface extends BaseLogicInterface
 {

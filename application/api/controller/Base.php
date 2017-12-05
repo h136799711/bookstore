@@ -6,18 +6,18 @@
  * Time: 20:22
  */
 
-namespace app\index\controller;
+namespace by\index\controller;
 
 
-use app\api\constants\ErrorCode;
-use app\src\encrypt\algorithm\AlgFactory;
-use app\src\encrypt\algorithm\AlgParams;
-use app\src\encrypt\algorithm\IAlgorithm;
-use app\src\encrypt\exception\CryptException;
-use app\src\encrypt\response\ResponseHelper;
-use app\src\helper\ExceptionHelper;
-use app\src\oauth2\logic\OauthClientsLogic;
+use by\api\constants\ErrorCode;
 use by\infrastructure\base\CallResult;
+use by\src\encrypt\algorithm\AlgFactory;
+use by\src\encrypt\algorithm\AlgParams;
+use by\src\encrypt\algorithm\IAlgorithm;
+use by\src\encrypt\exception\CryptException;
+use by\src\encrypt\response\ResponseHelper;
+use by\src\helper\ExceptionHelper;
+use by\src\oauth2\logic\OauthClientsLogic;
 use think\controller\Rest;
 use think\Exception;
 use think\Request;
@@ -28,7 +28,7 @@ use think\Request;
  * Class Base
  *
  * @author 老胖子-何必都 <hebiduhebi@126.com>
- * @package app\index\Controller
+ * @package by\index\Controller
  */
 abstract class Base extends Rest{
 

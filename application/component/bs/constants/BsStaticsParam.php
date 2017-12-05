@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\bs\constants;
+namespace by\component\bs\constants;
 
 
 class BsStaticsParam

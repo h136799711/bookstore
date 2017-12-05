@@ -14,13 +14,13 @@
  *********************************
  */
 
-namespace app\component\picture\helper;
+namespace by\component\picture\helper;
 
 
-use app\component\picture\config\QiniuDefaultConfig;
-use app\component\picture\entity\BsPictureEntity;
-use app\component\picture\logic\BsPictureLogic;
-use app\component\qiniu\QiniuUploader;
+use by\component\picture\config\QiniuDefaultConfig;
+use by\component\picture\entity\BsPictureEntity;
+use by\component\picture\logic\BsPictureLogic;
+use by\component\qiniu\QiniuUploader;
 use by\infrastructure\base\CallResult;
 use by\infrastructure\constants\StatusEnum;
 use by\infrastructure\helper\CallResultHelper;

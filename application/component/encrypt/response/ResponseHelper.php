@@ -6,10 +6,10 @@
  * Time: 10:53
  */
 
-namespace app\component\encrypt\response;
+namespace by\component\encrypt\response;
 
-use app\component\encrypt\algorithm\AlgParams;
-use app\component\encrypt\algorithm\IAlgorithm;
+use by\component\encrypt\algorithm\AlgParams;
+use by\component\encrypt\algorithm\IAlgorithm;
 use think\Exception;
 
 class ResponseHelper

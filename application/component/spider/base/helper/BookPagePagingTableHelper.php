@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\spider\base\helper;
+namespace by\component\spider\base\helper;
 
 
 use think\Db;

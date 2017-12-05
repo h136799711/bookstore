@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\component\picture\model;
+namespace by\component\picture\model;
 
 
-use app\component\tp5\model\BaseModel;
+use by\component\tp5\model\BaseModel;
 
 class BsPictureModel extends BaseModel
 {

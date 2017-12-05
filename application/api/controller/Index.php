@@ -1,9 +1,9 @@
 <?php
-namespace app\index\controller;
+namespace by\index\controller;
 
-use app\src\encrypt\algorithm\IAlgorithm;
-use app\src\hook\DomainAuthHook;
-use app\src\hook\LoginAuthHook;
+use by\src\encrypt\algorithm\IAlgorithm;
+use by\src\hook\DomainAuthHook;
+use by\src\hook\LoginAuthHook;
 use think\Exception;
 
 class Index extends Base
@@ -55,7 +55,7 @@ class Index extends Base
                 $module = $module . "_domain";
             }
 
-            $cls_name = "app\\$module\\".$controller_name.'Domain';
+            $cls_name = "by\\$module\\".$controller_name.'Domain';
             if(!class_exists($cls_name,true)){
                 $this->apiReturnErr(lang('err_404'),ErrorCode::Not_Found_Resource);
             }

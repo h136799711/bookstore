@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\user\interfaces;
+namespace by\component\user\interfaces;
 
 
 interface AccountInterface

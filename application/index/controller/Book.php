@@ -1,20 +1,20 @@
 <?php
 
-namespace app\index\controller;
+namespace by\index\controller;
 
 
-use app\component\bs\entity\BsBookEntity;
-use app\component\bs\entity\BsBookPageEntity;
-use app\component\bs\entity\BsBookSourceEntity;
-use app\component\bs\factory\PageContentParserFactory;
-use app\component\bs\logic\BsBookCategoryLogic;
-use app\component\bs\logic\BsBookLogic;
-use app\component\bs\logic\BsBookPageLogic;
-use app\component\bs\logic\BsBookSourceLogic;
-use app\component\bs\params\BsBookSearchParams;
-use app\component\spider\constants\BookSiteIntegerType;
-use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
-use app\component\tp5\helper\StaticHtmlHelper;
+use by\component\bs\entity\BsBookEntity;
+use by\component\bs\entity\BsBookPageEntity;
+use by\component\bs\entity\BsBookSourceEntity;
+use by\component\bs\factory\PageContentParserFactory;
+use by\component\bs\logic\BsBookCategoryLogic;
+use by\component\bs\logic\BsBookLogic;
+use by\component\bs\logic\BsBookPageLogic;
+use by\component\bs\logic\BsBookSourceLogic;
+use by\component\bs\params\BsBookSearchParams;
+use by\component\spider\constants\BookSiteIntegerType;
+use by\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
+use by\component\tp5\helper\StaticHtmlHelper;
 use think\Exception;
 use think\paginator\driver\Bootstrap;
 

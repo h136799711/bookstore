@@ -6,7 +6,7 @@
  * Time: 9:35
  */
 
-namespace app\component\helper;
+namespace by\component\helper;
 
 
 use think\Exception;

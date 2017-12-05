@@ -6,13 +6,13 @@
  * Time: 15:19
  */
 
-namespace app\component\encrypt\exception;
+namespace by\component\encrypt\exception;
 
 /**
  * Class CryptException
  * 加密解密相关的异常类
  * @author hebidu <email:346551990@qq.com>
- * @package app\component\encrypt\exception
+ * @package by\component\encrypt\exception
  */
 class CryptException extends \Exception
 {

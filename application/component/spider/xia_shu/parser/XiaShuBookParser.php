@@ -14,18 +14,18 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\parser;
+namespace by\component\spider\xia_shu\parser;
 
 
-use app\component\spider\constants\BookSiteType;
-use app\component\spider\xia_shu\entity\XiaShuAuthorEntity;
-use app\component\spider\xia_shu\entity\XiaShuBookEntity;
-use app\component\spider\xia_shu\entity\XiaShuBookSourceEntity;
-use app\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
-use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
-use app\component\spider\xia_shu\repo\XiaShuBookRepo;
-use app\component\spider\xia_shu\repo\XiaShuBookSourceRepo;
-use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
+use by\component\spider\constants\BookSiteType;
+use by\component\spider\xia_shu\entity\XiaShuAuthorEntity;
+use by\component\spider\xia_shu\entity\XiaShuBookEntity;
+use by\component\spider\xia_shu\entity\XiaShuBookSourceEntity;
+use by\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
+use by\component\spider\xia_shu\repo\XiaShuAuthorRepo;
+use by\component\spider\xia_shu\repo\XiaShuBookRepo;
+use by\component\spider\xia_shu\repo\XiaShuBookSourceRepo;
+use by\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use by\infrastructure\helper\CallResultHelper;
 use simplehtmldom_1_5\simple_html_dom;
 use Sunra\PhpSimple\HtmlDomParser;

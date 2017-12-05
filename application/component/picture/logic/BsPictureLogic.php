@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\component\picture\logic;
+namespace by\component\picture\logic;
 
 
-use app\component\tp5\logic\BaseLogic;
+use by\component\tp5\logic\BaseLogic;
 
 class BsPictureLogic extends BaseLogic
 {

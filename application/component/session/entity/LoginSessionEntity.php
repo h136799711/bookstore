@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\session\entity;
+namespace by\component\session\entity;
 
 
 use by\infrastructure\base\BaseEntity;
@@ -22,7 +22,7 @@ use by\infrastructure\base\BaseEntity;
 /**
  * Class LoginSessionEntity
  * 登录会话
- * @package app\component\session\entity
+ * @package by\component\session\entity
  */
 class LoginSessionEntity extends BaseEntity
 {

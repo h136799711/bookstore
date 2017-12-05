@@ -6,7 +6,7 @@
  * Time: 20:09
  */
 
-namespace app\component\base\exception;
+namespace by\component\base\exception;
 
 
 use think\Exception;
@@ -15,7 +15,7 @@ use think\Exception;
  * Class BusinessException
  * 任何业务异常的基类
  * @author  hebidu <email:346551990@qq.com>
- * @package app\src\base\exception
+ * @package by\src\base\exception
  */
 class BusinessException extends Exception
 {

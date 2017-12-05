@@ -14,21 +14,21 @@
  *********************************
  */
 
-namespace app\domain;
+namespace by\domain;
 
-use app\api\constants\ErrorCode;
-use app\component\encrypt\algorithm\IAlgorithm;
-use app\component\encrypt\response\ResponseHelper;
-use app\component\helper\ValidateHelper;
-use app\src\base\exception\ApiException;
+use by\api\constants\ErrorCode;
+use by\component\encrypt\algorithm\IAlgorithm;
+use by\component\encrypt\response\ResponseHelper;
+use by\component\helper\ValidateHelper;
 use by\component\paging\vo\PagingParams;
+use by\src\base\exception\ApiException;
 use think\Response;
 
 
 /**
  * 基础领域模型
  * Class BaseDomain
- * @package app\src\domain
+ * @package by\src\domain
  */
 class BaseDomain {
 
@@ -109,7 +109,7 @@ class BaseDomain {
      * @param mixed $data 要返回的数据
      * @return array
      * @throws \Exception
-     * @throws \app\src\base\exception\ApiException
+     * @throws \by\src\base\exception\ApiException
      * @internal param String $type AJAX返回数据格式
      * @internal param int $json_option 传递给json_encode的option参数
      */

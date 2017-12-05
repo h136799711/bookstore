@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\tp5\constants;
+namespace by\component\tp5\constants;
 
 
 class ConfigKeys

@@ -14,16 +14,16 @@
  *********************************
  */
 
-namespace app\component\picture\config;
+namespace by\component\picture\config;
 
 
-use app\component\qiniu\interfaces\QiniuConfigInterface;
+use by\component\qiniu\interfaces\QiniuConfigInterface;
 
 /**
  * Class QiniuDefaultConfig
  * 七牛配置信息 - 由于目前图片下载类需要所有放在picture组件下
  * TODO: 移到 picture 外
- * @package app\component\picture\config
+ * @package by\component\picture\config
  */
 class QiniuDefaultConfig implements QiniuConfigInterface
 {

@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace app\component\bs\logic;
+namespace by\component\bs\logic;
 
-use app\component\bs\constants\BsStaticsParam;
-use app\component\bs\entity\BsStaticsEntity;
-use app\component\tp5\logic\BaseLogic;
+use by\component\bs\constants\BsStaticsParam;
+use by\component\bs\entity\BsStaticsEntity;
+use by\component\tp5\logic\BaseLogic;
 use think\Db;
 
 class BsStaticsLogic extends BaseLogic

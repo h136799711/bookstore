@@ -6,7 +6,7 @@
  * Time: 9:18
  */
 
-namespace app\component\user\enum;
+namespace by\component\user\enum;
 
 
 class RegFromEnum

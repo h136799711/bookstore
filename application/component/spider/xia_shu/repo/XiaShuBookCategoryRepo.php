@@ -14,12 +14,12 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\repo;
+namespace by\component\spider\xia_shu\repo;
 
 /**
  * Class XiaShuBookCategoryRepo
  * 书籍分类
- * @package app\component\spider\xia_shu\repo
+ * @package by\component\spider\xia_shu\repo
  */
 class XiaShuBookCategoryRepo
 {

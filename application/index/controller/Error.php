@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\index\controller;
+namespace by\index\controller;
 
 
-use app\component\tp5\controller\BaseController;
+use by\component\tp5\controller\BaseController;
 
 class Error extends BaseController
 {

@@ -14,20 +14,20 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu;
+namespace by\component\spider\xia_shu;
 
-use app\component\bs\entity\BsBookEntity;
-use app\component\bs\logic\BsBookLogic;
-use app\component\picture\entity\BsPictureEntity;
-use app\component\picture\helper\PictureDownloadHelper;
-use app\component\string_extend\StringHelper;
+use by\component\bs\entity\BsBookEntity;
+use by\component\bs\logic\BsBookLogic;
 use by\component\paging\vo\PagingParams;
+use by\component\picture\entity\BsPictureEntity;
+use by\component\picture\helper\PictureDownloadHelper;
+use by\component\string_extend\helper\StringHelper;
 use think\Exception;
 
 /**
  * Class XiaShuCoverSpider
  * 图片下载爬虫
- * @package app\component\spider\xia_shu
+ * @package by\component\spider\xia_shu
  */
 class XiaShuCoverSpider
 {

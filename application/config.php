@@ -11,8 +11,13 @@
 
 
 return [
+    // 应用命名空间
+    'app_namespace' => 'by',
+
     'url_common_param' => true,
+
     'site_url' => 'http://bs.qqav.club',
+
     // 覆盖tp5的默认配置
     'dispatch_success_tmpl' => APP_PATH . 'html/tpl' . DS . 'dispatch_jump.tpl',
     'dispatch_error_tmpl' => APP_PATH . 'html/tpl' . DS . 'dispatch_jump.tpl',
@@ -115,8 +120,6 @@ return [
     // | 应用设置
     // +----------------------------------------------------------------------
 
-    // 应用命名空间
-    'app_namespace' => 'app',
     // 应用Trace
     'app_trace' => false,
     // 应用模式状态

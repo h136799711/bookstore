@@ -10,7 +10,7 @@
  * Time: 16:02
  */
 
-namespace app\component\hook;
+namespace by\component\hook;
 
 use by\infrastructure\helper\CallResultHelper;
 
@@ -18,7 +18,7 @@ use by\infrastructure\helper\CallResultHelper;
 /**
  * 业务层权限验证
  * Class DomainAuthHook
- * @package app\component\hook
+ * @package by\component\hook
  */
 class DomainAuthHook
 {

@@ -14,12 +14,12 @@
  *********************************
  */
 
-namespace app\component\spider\constants;
+namespace by\component\spider\constants;
 
 /**
  * Class BookSiteType
  * 书籍站点类型
- * @package app\component\spider\constants
+ * @package by\component\spider\constants
  */
 class BookSiteType
 {

@@ -14,12 +14,12 @@
  *********************************
  */
 
-namespace app\component\spider\base\entity;
+namespace by\component\spider\base\entity;
 
 /**
  * Class UrlTypeEntity
  * 链接类型
- * @package app\component\spider\base\entity
+ * @package by\component\spider\base\entity
  */
 class UrlTypeEntity
 {

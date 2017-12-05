@@ -14,13 +14,11 @@
  *********************************
  */
 
-namespace app\component\picture\entity;
-
-use by\component\picture\entity\PictureEntity;
+namespace by\component\picture\entity;
 
 /**
  * Class BsPictureEntity
- * @package app\component\picture
+ * @package by\component\picture
  */
 class BsPictureEntity extends PictureEntity
 {

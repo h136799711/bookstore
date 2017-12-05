@@ -1,13 +1,13 @@
 <?php
 
-namespace app\index\controller;
+namespace by\index\controller;
 
 
-use app\component\bs\logic\BsBookPageLogic;
-use app\component\bs\logic\BsStaticsLogic;
-use app\component\spider\xia_shu\repo\XiaShuAuthorRepo;
-use app\component\spider\xia_shu\repo\XiaShuBookRepo;
-use app\component\tp5\controller\BaseController;
+use by\component\bs\logic\BsBookPageLogic;
+use by\component\bs\logic\BsStaticsLogic;
+use by\component\spider\xia_shu\repo\XiaShuAuthorRepo;
+use by\component\spider\xia_shu\repo\XiaShuBookRepo;
+use by\component\tp5\controller\BaseController;
 use think\Cache;
 
 class Index extends BaseController

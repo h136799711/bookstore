@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\bs\entity;
+namespace by\component\bs\entity;
 
 
 use by\component\bookstore\v1\entity\BookSourceEntity;

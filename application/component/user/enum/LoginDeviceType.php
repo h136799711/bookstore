@@ -10,12 +10,12 @@
  * Time: 16:14
  */
 
-namespace app\component\user\enum;
+namespace by\component\user\enum;
 
 /**
  * 登录设备类型
  * Class LoginDeviceType
- * @package app\component\user\enum
+ * @package by\component\user\enum
  */
 class LoginDeviceType
 {

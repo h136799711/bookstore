@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\tp5\logic;
+namespace by\component\tp5\logic;
 
 
 class ConfigLogic extends BaseLogic

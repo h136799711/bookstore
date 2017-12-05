@@ -6,18 +6,18 @@
  * Time: 17:24
  */
 
-namespace app\domain;
-use app\src\banners\logic\BannersLogic;
-use app\src\banners\model\Banners;
-use app\src\base\helper\PageHelper;
-use app\src\base\helper\ValidateHelper;
-use app\src\index\action\IndexAction;
+namespace by\domain;
+use by\src\banners\logic\BannersLogic;
+use by\src\banners\model\Banners;
+use by\src\base\helper\PageHelper;
+use by\src\base\helper\ValidateHelper;
+use by\src\index\action\IndexAction;
 
 /**
  * app首页
  * Class IndexDomain
  * @author hebidu <email:346551990@qq.com>
- * @package app\src\domain
+ * @package by\src\domain
  */
 class IndexDomain extends BaseDomain
 {

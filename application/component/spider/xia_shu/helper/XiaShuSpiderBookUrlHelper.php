@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\helper;
+namespace by\component\spider\xia_shu\helper;
 
 
-use app\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
-use app\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
+use by\component\spider\xia_shu\entity\XiaShuSpiderBookUrlEntity;
+use by\component\spider\xia_shu\repo\XiaShuSpiderUrlRepo;
 use by\infrastructure\helper\Object2DataArrayHelper;
 
 class XiaShuSpiderBookUrlHelper

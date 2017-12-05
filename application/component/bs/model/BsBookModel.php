@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\component\bs\model;
+namespace by\component\bs\model;
 
 
-use app\component\tp5\model\BaseModel;
+use by\component\tp5\model\BaseModel;
 
 class BsBookModel extends BaseModel
 {

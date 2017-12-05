@@ -6,9 +6,9 @@
  * Time: 10:19
  */
 
-namespace app\component\encrypt\algorithm;
+namespace by\component\encrypt\algorithm;
 
-use app\component\encrypt\exception\CryptException;
+use by\component\encrypt\exception\CryptException;
 
 class  AlgParams
 {

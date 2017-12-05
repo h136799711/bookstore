@@ -14,16 +14,16 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu;
+namespace by\component\spider\xia_shu;
 
 
-use app\component\spider\base\AbstractSpider;
-use app\component\spider\constants\BookSiteIntegerType;
-use app\component\spider\constants\BookSiteType;
-use app\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
-use app\component\spider\xia_shu\parser\XiaShuBookPageParser;
-use app\component\spider\xia_shu\repo\XiaShuBookPageRepo;
-use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
+use by\component\spider\base\AbstractSpider;
+use by\component\spider\constants\BookSiteIntegerType;
+use by\component\spider\constants\BookSiteType;
+use by\component\spider\xia_shu\entity\XiaShuSpiderBookPageUrlEntity;
+use by\component\spider\xia_shu\parser\XiaShuBookPageParser;
+use by\component\spider\xia_shu\repo\XiaShuBookPageRepo;
+use by\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
 use by\infrastructure\helper\CallResultHelper;
 use think\Exception;
 use think\Model;
@@ -31,7 +31,7 @@ use think\Model;
 /**
  * Class XiaShuBookPageSpider
  * 一本书爬取
- * @package app\component\spider\xia_shu
+ * @package by\component\spider\xia_shu
  */
 class XiaShuBookPageSpider extends AbstractSpider
 {

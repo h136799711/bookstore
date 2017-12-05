@@ -6,12 +6,12 @@
  * Time: 14:08
  */
 
-namespace app\component\encrypt\des;
+namespace by\component\encrypt\des;
 
 /**
  * DES
  * Class DesCrypt
- * @package app\vendor\Crypt
+ * @package by\vendor\Crypt
  */
 class Des
 {

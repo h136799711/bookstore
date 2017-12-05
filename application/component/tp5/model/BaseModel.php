@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\tp5\model;
+namespace by\component\tp5\model;
 
 use by\infrastructure\helper\Object2DataArrayHelper;
 use think\Model;

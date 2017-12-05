@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\user\helper;
+namespace by\component\user\helper;
 
 
 class PasswordHelper

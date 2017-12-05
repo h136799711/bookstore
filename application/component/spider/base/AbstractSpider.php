@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\spider\base;
+namespace by\component\spider\base;
 
 
 use by\infrastructure\base\CallResult;

@@ -6,11 +6,11 @@
  * Time: 17:46
  */
 
-namespace app\component\bs\factory;
+namespace by\component\bs\factory;
 
 
-use app\component\spider\constants\BookSiteIntegerType;
-use app\component\spider\xia_shu\logic\XiaShuBookPageContentLogic;
+use by\component\spider\constants\BookSiteIntegerType;
+use by\component\spider\xia_shu\logic\XiaShuBookPageContentLogic;
 
 class PageContentLogicFactory
 {

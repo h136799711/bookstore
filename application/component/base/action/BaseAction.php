@@ -6,11 +6,11 @@
  * Time: 16:49
  */
 
-namespace app\component\base\action;
+namespace by\component\base\action;
 
 
-use app\component\base\exception\BusinessException;
-use app\component\helper\ExceptionHelper;
+use by\component\base\exception\BusinessException;
+use by\component\helper\ExceptionHelper;
 use think\Exception;
 
 class BaseAction

@@ -6,10 +6,10 @@
  * Time: 17:17
  */
 
-namespace app\component\tp5\helper;
+namespace by\component\tp5\helper;
 
-use app\component\tp5\entity\ConfigEntity;
-use app\component\tp5\logic\ConfigLogic;
+use by\component\tp5\entity\ConfigEntity;
+use by\component\tp5\logic\ConfigLogic;
 use think\Cache;
 use think\Config;
 

@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\oauth2\entity;
+namespace by\component\oauth2\entity;
 
 
 use by\infrastructure\base\BaseEntity;

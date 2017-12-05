@@ -6,11 +6,11 @@
  * Time: 17:34
  */
 
-namespace app\component\spider\xia_shu\logic;
+namespace by\component\spider\xia_shu\logic;
 
 
-use app\component\bs\logic\BsBookPageContentLogic;
-use app\component\spider\constants\BookSiteIntegerType;
+use by\component\bs\logic\BsBookPageContentLogic;
+use by\component\spider\constants\BookSiteIntegerType;
 
 class XiaShuBookPageContentLogic extends BsBookPageContentLogic
 {

@@ -14,9 +14,9 @@
  *********************************
  */
 
-namespace app\component\spider\base\logic;
+namespace by\component\spider\base\logic;
 
-use app\component\tp5\logic\BaseLogic;
+use by\component\tp5\logic\BaseLogic;
 
 class SpiderLogLogic extends BaseLogic
 {

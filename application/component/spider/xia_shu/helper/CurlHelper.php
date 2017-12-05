@@ -6,7 +6,7 @@
  * Time: 16:35
  */
 
-namespace app\component\spider\xia_shu\helper;
+namespace by\component\spider\xia_shu\helper;
 
 
 use think\exception\ErrorException;

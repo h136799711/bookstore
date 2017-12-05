@@ -6,11 +6,11 @@
  * Time: 20:17
  */
 
-namespace app\component\bs\factory;
+namespace by\component\bs\factory;
 
 
-use app\component\spider\constants\BookSiteIntegerType;
-use app\component\spider\xia_shu\parser\XiaShuPageContentParser;
+use by\component\spider\constants\BookSiteIntegerType;
+use by\component\spider\xia_shu\parser\XiaShuPageContentParser;
 
 class PageContentParserFactory
 {

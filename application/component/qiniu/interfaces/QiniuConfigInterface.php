@@ -14,12 +14,12 @@
  *********************************
  */
 
-namespace app\component\qiniu\interfaces;
+namespace by\component\qiniu\interfaces;
 
 /**
  * qiniu 配置接口
  * Interface QiniuConfigInterface
- * @package app\component\qiniu\interfaces
+ * @package by\component\qiniu\interfaces
  */
 interface QiniuConfigInterface
 {

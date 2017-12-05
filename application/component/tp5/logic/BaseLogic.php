@@ -14,12 +14,12 @@
  *********************************
  */
 
-namespace app\component\tp5\logic;
+namespace by\component\tp5\logic;
 
 
-use app\component\base\interfaces\BaseLogicInterface;
-use app\component\tp5\model\BaseModel;
+use by\component\base\interfaces\BaseLogicInterface;
 use by\component\paging\vo\PagingParams;
+use by\component\tp5\model\BaseModel;
 use by\infrastructure\interfaces\ObjectToArrayInterface;
 use think\Exception;
 use think\Paginator;

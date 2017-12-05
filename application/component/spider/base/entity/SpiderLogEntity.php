@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\spider\base\entity;
+namespace by\component\spider\base\entity;
 
 
 use by\infrastructure\base\BaseEntity;

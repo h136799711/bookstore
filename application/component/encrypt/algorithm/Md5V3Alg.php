@@ -6,13 +6,13 @@
  * Time: 9:45
  */
 
-namespace app\component\encrypt\algorithm;
+namespace by\component\encrypt\algorithm;
 
 /**
  * Class Md5V3Alg
  * 使用了openssl扩展
  * @author hebidu <email:346551990@qq.com>
- * @package app\component\encrypt\algorithm
+ * @package by\component\encrypt\algorithm
  */
 class Md5V3Alg extends IAlgorithm
 {

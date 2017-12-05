@@ -14,16 +14,16 @@
  *********************************
  */
 
-namespace app\command;
+namespace by\command;
 
 
-use app\component\bs\logic\BsStaticsLogic;
-use app\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
-use app\component\spider\xia_shu\parser\XiaShuPageContentParser;
-use app\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
-use app\component\spider\xia_shu\XiaShuBookPageSpider;
-use app\component\spider\xia_shu\XiaShuCoverSpider;
-use app\component\spider\xia_shu\XiaShuNewBookSpider;
+use by\component\bs\logic\BsStaticsLogic;
+use by\component\spider\xia_shu\helper\XiaShuSpiderBookUrlHelper;
+use by\component\spider\xia_shu\parser\XiaShuPageContentParser;
+use by\component\spider\xia_shu\repo\XiaShuSpiderBookPageUrlRepo;
+use by\component\spider\xia_shu\XiaShuBookPageSpider;
+use by\component\spider\xia_shu\XiaShuCoverSpider;
+use by\component\spider\xia_shu\XiaShuNewBookSpider;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;

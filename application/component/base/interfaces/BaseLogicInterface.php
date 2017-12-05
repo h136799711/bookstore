@@ -14,11 +14,11 @@
  *********************************
  */
 
-namespace app\component\base\interfaces;
+namespace by\component\base\interfaces;
 
 
-use app\component\tp5\model\BaseModel;
 use by\component\paging\vo\PagingParams;
+use by\component\tp5\model\BaseModel;
 use think\Exception;
 
 interface BaseLogicInterface

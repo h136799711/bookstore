@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\repo;
+namespace by\component\spider\xia_shu\repo;
 
 
-use app\component\spider\xia_shu\entity\XiaShuBookEntity;
+use by\component\spider\xia_shu\entity\XiaShuBookEntity;
 use by\infrastructure\helper\CallResultHelper;
 use think\Db;
 use think\Model;

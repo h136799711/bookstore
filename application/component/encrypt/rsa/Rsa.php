@@ -6,10 +6,10 @@
  * Time: 9:50
  */
 
-namespace app\component\encrypt\rsa;
+namespace by\component\encrypt\rsa;
 
 
-use app\component\encrypt\exception\CryptException;
+use by\component\encrypt\exception\CryptException;
 
 class Rsa
 {

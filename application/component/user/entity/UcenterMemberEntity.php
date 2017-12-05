@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\user\entity;
+namespace by\component\user\entity;
 
 
 use by\infrastructure\base\BaseEntity;

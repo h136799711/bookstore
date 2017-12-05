@@ -6,14 +6,14 @@
  * Time: 20:09
  */
 
-namespace app\component\base\exception;
+namespace by\component\base\exception;
 
 use think\Exception;
 
 /**
  * 接口异常抛出基类
  * Class ApiException
- * @package app\src\base\exception
+ * @package by\src\base\exception
  */
 class ApiException extends Exception
 {

@@ -14,12 +14,12 @@
  *********************************
  */
 
-namespace app\component\spider\base\interfaces;
+namespace by\component\spider\base\interfaces;
 
 /**
  * Interface ToArrayInterface
  * 类转换成数组数据
- * @package app\component\spider\base\interfaces
+ * @package by\component\spider\base\interfaces
  */
 interface ToArrayInterface
 {

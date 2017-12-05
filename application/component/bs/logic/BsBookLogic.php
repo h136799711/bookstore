@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\component\bs\logic;
+namespace by\component\bs\logic;
 
 
-use app\component\tp5\logic\BaseLogic;
+use by\component\tp5\logic\BaseLogic;
 
 class BsBookLogic extends BaseLogic
 {

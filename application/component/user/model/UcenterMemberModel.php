@@ -6,10 +6,10 @@
  * Time: 17:10
  */
 
-namespace app\component\user\model;
+namespace by\component\user\model;
 
 
-use app\component\tp5\model\BaseModel;
+use by\component\tp5\model\BaseModel;
 
 class UcenterMemberModel extends BaseModel
 {

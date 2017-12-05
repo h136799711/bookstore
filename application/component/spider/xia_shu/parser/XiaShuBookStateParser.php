@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\component\spider\xia_shu\parser;
+namespace by\component\spider\xia_shu\parser;
 
 
-use app\component\spider\xia_shu\entity\XiaShuBookEntity;
+use by\component\spider\xia_shu\entity\XiaShuBookEntity;
 use by\infrastructure\helper\CallResultHelper;
 use Sunra\PhpSimple\HtmlDomParser;
 use think\exception\ErrorException;

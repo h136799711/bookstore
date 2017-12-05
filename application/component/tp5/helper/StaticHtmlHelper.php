@@ -6,7 +6,7 @@
  * Time: 21:37
  */
 
-namespace app\component\tp5\helper;
+namespace by\component\tp5\helper;
 
 
 class StaticHtmlHelper

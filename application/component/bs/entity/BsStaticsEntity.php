@@ -14,10 +14,10 @@
  *********************************
  */
 
-namespace app\component\bs\entity;
+namespace by\component\bs\entity;
 
 
-use app\component\bs\constants\BsStaticsParam;
+use by\component\bs\constants\BsStaticsParam;
 use by\infrastructure\base\BaseEntity;
 use by\infrastructure\helper\Object2DataArrayHelper;
 use by\infrastructure\interfaces\ObjectToArrayInterface;

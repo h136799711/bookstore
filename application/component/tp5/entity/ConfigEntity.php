@@ -14,7 +14,7 @@
  *********************************
  */
 
-namespace app\component\tp5\entity;
+namespace by\component\tp5\entity;
 
 
 use by\infrastructure\base\BaseEntity;
