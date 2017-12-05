@@ -10,6 +10,7 @@ namespace by\component\base\exception;
 
 
 use think\Exception;
+use Throwable;
 
 /**
  * Class BusinessException
@@ -19,5 +20,8 @@ use think\Exception;
  */
 class BusinessException extends Exception
 {
-
+    public function __construct($message = "", $code = -1, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
 }

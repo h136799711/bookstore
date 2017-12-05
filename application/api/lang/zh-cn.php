@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'err_client_id_not_exists'=>'[10014] Client ID({:client_id}) 不存在',
     'err_uid_not_exists' => '[10013] 用户ID({:uid}) 不存在',
     'err_retry'=>'[10009] 服务正忙,请重试',
     'err_invalid_country'=>'[10010] 设备仅支持({:country})地区使用',

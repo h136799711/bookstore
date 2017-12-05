@@ -31,6 +31,8 @@ class AlgFactory
                 return new Md5V2Alg();
             case AlgEnum::MD5_V3:
                 return new Md5V3Alg();
+            case AlgEnum::EMPTY:
+                return new EmptyAlg();
             default:
                 return false;
         }

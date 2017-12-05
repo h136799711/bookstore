@@ -12,15 +12,31 @@ use by\component\encrypt\exception\CryptException;
 
 class  AlgParams
 {
-
-    private $client_secret;
-    private $client_id;
+    private $appId;
+    private $clientSecret;
+    private $clientId;
     private $data;
-    private $notify_id;
+    private $notifyId;
     private $time;
     private $type;
     private $sign;
     private $apiVer;
+
+    /**
+     * @return mixed
+     */
+    public function getAppId()
+    {
+        return $this->appId;
+    }
+
+    /**
+     * @param mixed $appId
+     */
+    public function setAppId($appId): void
+    {
+        $this->appId = $appId;
+    }
 
     public function initFromArray($data)
     {
@@ -46,6 +62,9 @@ class  AlgParams
         if (isset($data['api_ver'])) {
             $this->setApiVer($data['api_ver']);
         }
+        if (isset($data['app_id'])) {
+            $this->setAppId($data['app_id']);
+        }
     }
 
     /**
@@ -69,15 +88,15 @@ class  AlgParams
      */
     public function getClientId()
     {
-        return $this->client_id;
+        return $this->clientId;
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $clientId
      */
-    public function setClientId($client_id)
+    public function setClientId($clientId)
     {
-        $this->client_id = $client_id;
+        $this->clientId = $clientId;
     }
 
     /**
@@ -117,15 +136,12 @@ class  AlgParams
      */
     public function getNotifyId()
     {
-        return $this->notify_id;
+        return $this->notifyId;
     }
 
-    /**
-     * @param mixed $notify_id
-     */
-    public function setNotifyId($notify_id)
+    public function setNotifyId($notifyId)
     {
-        $this->notify_id = empty($notify_id) ? time() : $notify_id;
+        $this->notifyId = empty($notifyId) ? time() : $notifyId;
     }
 
     /**
@@ -159,15 +175,15 @@ class  AlgParams
      */
     public function getClientSecret()
     {
-        return $this->client_secret;
+        return $this->clientSecret;
     }
 
     /**
-     * @param mixed $client_secret
+     * @param mixed $clientSecret
      */
-    public function setClientSecret($client_secret)
+    public function setClientSecret($clientSecret)
     {
-        $this->client_secret = $client_secret;
+        $this->clientSecret = $clientSecret;
     }
 
     /**
@@ -186,6 +202,9 @@ class  AlgParams
         $this->apiVer = $apiVer;
     }
 
+    /**
+     * @throws CryptException
+     */
     public function isValid()
     {
         if (empty($this->getTime())) {
@@ -208,6 +227,5 @@ class  AlgParams
             throw new CryptException("data invalid");
         }
     }
-
 
 }

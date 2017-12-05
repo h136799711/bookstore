@@ -6,20 +6,17 @@
  * Time: 20:22
  */
 
-namespace by\index\controller;
+namespace by\api\index\controller;
 
 
 use by\api\constants\ErrorCode;
+use by\api\controller\entity\ApiCommonEntity;
+use by\component\encrypt\factory\TransportFactory;
+use by\component\encrypt\interfaces\TransportInterface;
+use by\component\oauth2\entity\OauthClientsEntity;
+use by\component\oauth2\logic\OauthClientsLogic;
 use by\infrastructure\base\CallResult;
-use by\src\encrypt\algorithm\AlgFactory;
-use by\src\encrypt\algorithm\AlgParams;
-use by\src\encrypt\algorithm\IAlgorithm;
-use by\src\encrypt\exception\CryptException;
-use by\src\encrypt\response\ResponseHelper;
-use by\src\helper\ExceptionHelper;
-use by\src\oauth2\logic\OauthClientsLogic;
 use think\controller\Rest;
-use think\Exception;
 use think\Request;
 
 
@@ -32,71 +29,53 @@ use think\Request;
  */
 abstract class Base extends Rest{
 
-    protected $lang;//当前请求的语言版本
-//    protected $alg;//当前请求通信算法
-    protected $algInstance;//当前请求通信算法
-    protected $encrypt_key = "";
-    protected $alParams ;
-
-    protected $allow_controller = array( );
+    /**
+     * 所有请求的数据
+     * 以及可能的全局配置变量
+     * @var ApiCommonEntity
+     */
+    protected $allData;
 
     /**
-     * 构造函数
+     *
+     * @var TransportInterface
+     */
+    protected $transport;
+
+    /**
+     * Base constructor.
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function __construct(){
-        $this->alParams = new AlgParams();
-        try{
-            parent::__construct();
-
-            if(method_exists($this,"_initialize")){
-                $this->_initialize();
-            }
-        }catch (CryptException $ex){
-            $this->apiReturnErr($ex->getMessage());
-        }catch (Exception $ex){
-            $this->apiReturnErr(ExceptionHelper::getErrorString($ex));
-        }
+        $this->allData = new ApiCommonEntity();
+        parent::__construct();
+        $this->_initialize();
     }
 
+    /**
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function _initialize(){
-        $this->_decodePost();
-        $this->lang = Request::instance()->get("lang","zh-cn");
-        $this->lang = strtolower($this->lang);
-//        $this->lang = "en";
-    }
-
-    protected function _decodePost(){
+        // 1. 设置语言参数, 默认简体中文 zh-cn
+        $lang = Request::instance()->get("lang","zh-cn");
+        $this->allData->setLang(strtolower($lang));
+        // 2. 获取应用id
         $client_id = $this->_param("client_id","", lang('lack_parameter',['param'=>'client_id']));
-        //1. 获取client_id参数
-        $this->alParams->setClientId($client_id);
-
-        $api = new OauthClientsLogic();
-
-        $result = $api->getInfo(['client_id'=>$this->alParams->getClientId()]);
-        
-        if(!$result['status']){
-            $this->apiReturnErr($result['info'],ErrorCode::Invalid_Parameter);
+        $logic = new OauthClientsLogic();
+        $result = $logic->getInfo(['client_id'=>$client_id]);
+        if(!($result instanceof OauthClientsEntity)){
+            $this->apiReturnErr(lang('err_client_id_not_exists', ['client_id'=>$client_id]),ErrorCode::Invalid_Parameter);
         }
-        $clientInfo = $result['info'];
-        $alg = $clientInfo['api_alg'];
-
-        $this->alParams->setClientSecret($clientInfo['client_secret']);
-
-        //读取传输过来的加密参数
-        $post = $this->_post('itboye','');
-
-        $algFactory = new AlgFactory();
-        $this->algInstance = $algFactory->getAlg($alg);
-        $data = $this->algInstance->decryptTransmissionData($post,$this->alParams->getClientSecret());
-        $data = $this->filter_post($data);
-        $obj = json_decode($data,JSON_OBJECT_AS_ARRAY);
-
-        $data = empty($obj) ? [] : $obj;
-        $data = array_merge($data,empty($_GET) ? [] : $_GET);
-
-        $this->alParams->initFromArray($data);
-
-        $this->alParams->isValid();
+        $alg = $result->getApiAlg();
+        $data = Request::instance()->param();
+        $data['by_client_id'] = $result->getClientId();
+        $data['by_client_secret'] = $result->getClientSecret();
+        $this->transport = TransportFactory::getAlg($alg, $data);
+        $this->allData->setData($this->transport->decrypt());
     }
 
     public function _param($key, $default='',$emptyErrMsg=''){
@@ -112,12 +91,7 @@ abstract class Base extends Rest{
         return $value;
     }
 
-    /**
-     * ajax返回，并自动写入notify_id返回
-     * @param string|CallResult $obj
-     * @param int $code
-     * @param array $data
-     */
+
     protected function apiReturnErr($obj, $code = -1, $data = [])
     {
         if ($obj instanceof CallResult) {
@@ -126,19 +100,18 @@ abstract class Base extends Rest{
             $obj = $obj->getMsg();
         }
 
-        $this->ajaxReturn(['msg'=>$obj, 'code'=>$code,'data'=>$data,'notify_id'=>$this->alParams->getNotifyId()]);
+        $this->ajaxReturn(['msg'=>$obj, 'code'=>$code,'data'=>$data,'notify_id'=>$this->allData->getId()]);
     }
 
+
     /**
-     * 返回加密后的数据
-     * @access protected
-     * @param mixed $data 要返回的数据，未加密
-     * @return array
+     * 返回数据
+     * @param $data
      */
     protected function ajaxReturn($data) {
 
-        if($this->algInstance instanceof IAlgorithm){
-            $data = ResponseHelper::getResponseParams($this->algInstance,$data,$this->alParams->getClientId(),$this->alParams->getClientSecret(),$this->alParams->getNotifyId());
+        if($this->transport instanceof TransportInterface){
+            $data = $this->transport->encrypt();
         }
 
         $response = $this->response($data, "json",200);
@@ -146,7 +119,7 @@ abstract class Base extends Rest{
         if (empty($siteUrl)) {
             $siteUrl = "www.itboye.com";
         }
-        $response->header("X-Powered-By", $siteUrl)->header("X-BY-Notify-ID",$this->alParams->getNotifyId())->send();
+        $response->header("X-Powered-By", $siteUrl)->header("X-BY-Notify-ID",$this->allData->getId())->send();
         exit(0);
     }
 
@@ -215,11 +188,6 @@ abstract class Base extends Rest{
         return $value;
     }
 
-    /**
-     * ajax返回
-     * @param $data
-     * @internal param $i
-     */
     protected function apiReturnSuc($data){
         $msg = 'success';
         $code = 0;
@@ -229,9 +197,7 @@ abstract class Base extends Rest{
             $data = $data->getData();
         }
 
-        $this->ajaxReturn(['code'=>$code, 'data'=>$data, 'msg'=>$msg, 'notify_id'=>$this->alParams->getNotifyId()]);
+        $this->ajaxReturn(['code'=>$code, 'data'=>$data, 'msg'=>$msg, 'notify_id'=>$this->allData->getId()]);
     }
-
-
 
 }

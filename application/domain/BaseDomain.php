@@ -17,12 +17,11 @@
 namespace by\domain;
 
 use by\api\constants\ErrorCode;
-use by\component\encrypt\algorithm\IAlgorithm;
-use by\component\encrypt\response\ResponseHelper;
+use by\api\controller\entity\ApiCommonEntity;
+use by\component\base\exception\BusinessException;
 use by\component\helper\ValidateHelper;
 use by\component\paging\vo\PagingParams;
 use by\src\base\exception\ApiException;
-use think\Response;
 
 
 /**
@@ -50,7 +49,7 @@ class BaseDomain {
     protected $apiVersionIsDeprecated;//接口已过期
 
 
-    public function __construct($algInstance,$data) {
+    public function __construct($algInstance,ApiCommonEntity $apiCommonEntity) {
 //        debug('begin');
         $this->apiVersionIsDeprecated = false;
         $this->algInstance = $algInstance;
@@ -59,6 +58,7 @@ class BaseDomain {
         if(!isset($this->origin_data['client_secret'])){
             $this->apiReturnErr(lang('param-need', ['client_secret']), ErrorCode::Lack_Parameter);
         }
+
         $this->client_secret =  $this->origin_data['client_secret'];
 
         if(!isset($this->origin_data['notify_id'])){
@@ -93,71 +93,12 @@ class BaseDomain {
     }
 
     /**
-     * ajax返回，并自动写入token返回
-     * @param $data
+     * @param $msg
      * @param int $code
-     * @internal param $i
+     * @throws BusinessException
      */
-    protected function apiReturnErr($data, $code = -1){
-        //TODO: 异步收集错误信息
-        $this->ajaxReturn(['code' => $code, 'data' => $data,'cache' => false]);
-    }
-
-    /**
-     * Ajax方式返回数据到客户端
-     * @access protected
-     * @param mixed $data 要返回的数据
-     * @return array
-     * @throws \Exception
-     * @throws \by\src\base\exception\ApiException
-     * @internal param String $type AJAX返回数据格式
-     * @internal param int $json_option 传递给json_encode的option参数
-     */
-    protected function ajaxReturn($data) {
-
-        if(!($this->algInstance instanceof IAlgorithm)){
-            throw new ApiException('error algorithm');
-        }
-
-        //接口         $this->domain_class
-        //创建时间     START_TIME
-        //请求开始时间 app_send APP传过来
-        //网络传输时间 START_TIME - app_send
-        //接口执行耗时 debug('begin','end',4).'s'
-        //param
-        //内存占用     debug('begin','end','m').'kb';
-        //请求头       $_SERVER['HTTP_USER_AGENT']
-// TODO: 改成只记录慢的接口
-//        $api_end = microtime(true);
-//        $app_time = $this->time;
-//
-//        $cache = (isset($data['cache']) && $data['cache']) ? 1 : 0;
-//        if(!empty($this->domain_class)) {
-//
-//            try {
-//                $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? " unknown userAgent" : $_SERVER['HTTP_USER_AGENT'];
-//                $map = [
-//                    'api_uri' => $this->domain_class,
-//                    'create_time' => START_TIME,
-//                    'start_time' => $app_time,
-//                    'request_time' => (float)START_TIME - (float)$app_time,
-//                    'cost_time' => (float)($api_end - START_TIME),
-//                ];
-//
-//                $map['request_time'] = $map['request_time'] > 0 ? $map['request_time'] : 0.0;
-//                $model = new ApiHistory();
-//                $model->isUpdate(false)->save($map);
-//
-//            }catch(DbException $ex) {
-//                $data['code'] = ErrorCode::Api_EXCEPTION;
-//                $data['data'] = $ex->getMessage();
-//            }
-//        }
-
-        $respData = ResponseHelper::getResponseParams($this->algInstance,$data,$this->client_id,$this->client_secret,$this->notify_id);
-
-        Response::create($respData, 'json')->header("X-Powered-By","WWW.ITBOYE.COM")->send();
-        exit();
+    protected function apiReturnErr($msg, $code = -1){
+        throw new BusinessException($msg, $code);
     }
 
     public function getValueFromPost(&$param, $scope, $default = '', $emptyErrMsg = '')

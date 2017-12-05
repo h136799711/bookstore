@@ -1,0 +1,29 @@
+{
+  "project_name": "新版本",
+  "client_id": "",
+  "client_secret": "",
+  "url_list":[
+    {"desc":"测试地址","url":"http://bs.api.qqav.club/api.php"}
+  ],
+  "meta_list":[
+    {"title":"接口文档地址","value":"https://doc.oschina.net/itboyeapi"},
+    {"title":"测试工具地址","value":"http://api.itboye.com/public/bookstore.html"},
+    {"title":"参与人","value":"张三、李四" }
+  ],
+  "api_list": [
+    {
+      "desc": "测试服务接口",
+      "type": "By_Test_index",
+      "version": "102",
+      "params": [
+        {"key":"username","desc":"登录用户名（限手机号）", "value":"test"},
+        {"key":"password","desc":"登录密码（6-64位）" , "value":"test"}
+      ],
+      "authors": [
+        {
+          "name": "hebidu", "email": "hebiduhebi@126.com"
+        }
+      ]
+    }
+  ]
+}

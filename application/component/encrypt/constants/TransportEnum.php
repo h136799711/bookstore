@@ -6,16 +6,17 @@
  * Time: 9:41
  */
 
-namespace by\component\encrypt\algorithm;
+namespace by\component\encrypt\constants;
 
 /**
- * 算法规则
+ * 算法类型
  * Class AlgEnum
  * @author hebidu <email:346551990@qq.com>
  * @package by\component\encrypt\algorithm
  */
-class AlgEnum
+class TransportEnum
 {
+    const EMPTY = "empty";
     /**
      * md5 version 1 传输算法
      * des    作为传输数据加解密

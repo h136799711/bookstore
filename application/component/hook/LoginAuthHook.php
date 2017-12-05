@@ -11,8 +11,7 @@
  */
 
 namespace by\component\hook;
-
-use by\component\base\helper\SessionHelper;
+use by\business\session\action\LoginSessionCheckAction;
 
 
 /**
@@ -70,9 +69,20 @@ class LoginAuthHook
         return ['status' => true, 'info' => 'not need check'];
     }
 
+    /**
+     * 检查
+     * @param $uid
+     * @param $s_id
+     * @param $device_type
+     * @param $session_expire_time
+     * @return array|bool|false|null|object|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     private function checkUidSessionId($uid, $s_id, $device_type, $session_expire_time)
     {
-        $result = SessionHelper::checkLoginSession($uid, $s_id, $device_type, $session_expire_time);
+        $result = (new LoginSessionCheckAction())->check($uid, $s_id, $device_type, $session_expire_time);
         return $result;
     }
 }
