@@ -15,5 +15,9 @@
 define('APP_PATH', __DIR__ . '/../application/');
 
 define('BIND_MODULE', 'index');
+
+// v5.0.8 以上
+define('APP_NAMESPACE', 'by');
+
 // 加载框架引导文件
 require __DIR__ . '/../thinkphp/start.php';
