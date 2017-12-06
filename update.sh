@@ -1,2 +1,2 @@
-#!/bin/sh
-git reset --hard origin/master && git fetch origin master:refs/remotes/origin/master
+#!/bin/sh && git fetch origin master:refs/remotes/origin/master
+git reset --hard origin/master
