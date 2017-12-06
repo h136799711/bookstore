@@ -11,6 +11,8 @@
 
 return [
 
+    'site_url' => 'http://bs.qqav.club',
+
     'template' => [
         // 模板引擎类型 支持 php think 支持扩展
         'type' => 'Think',
@@ -28,8 +30,8 @@ return [
         'taglib_begin' => '{',
         // 标签库标签结束标记
         'taglib_end' => '}',
-        // 预先加载的标签库
-        'taglib_pre_load' => 'by\component\taglib\Demo',
+        // 预先加载的标签库 - add by hebidu
+        'taglib_pre_load' => 'by\component\tp5\taglib\Datetime',
     ],
 
     // +----------------------------------------------------------------------
@@ -38,13 +40,19 @@ return [
 
     'cache' => [
         // 驱动方式
-        'type' => 'File',
-        // 缓存保存目录
-        'path' => CACHE_PATH,
-        // 缓存前缀
-        'prefix' => '',
-        // 缓存有效期 0表示永久缓存
-        'expire' => 0,
+        'type' => 'redis',
+        // 服务器地址
+        'host' => '47.88.216.242',
+        'expire' => 24 * 3600,//24小时
+        'select' => 0, //选择数据库 0
+//        // 驱动方式
+//        'type' => 'File',
+//        // 缓存保存目录
+//        'path' => CACHE_PATH,
+//        // 缓存前缀
+//        'prefix' => '',
+//        // 缓存有效期 0表示永久缓存
+//        'expire' => 0,
     ],
 
     // +----------------------------------------------------------------------
@@ -52,10 +60,8 @@ return [
     // +----------------------------------------------------------------------
      // 语言支持
     'lang_support'=>['zh-cn'],
-
+    // add by hebidu - 为了生产url带? 而不是pathinfo形式的url
     'url_common_param' => true,
-
-    'site_url' => 'http://bs.qqav.club',
 
     // 覆盖tp5的默认配置
     'dispatch_success_tmpl' => APP_PATH . 'html/tpl' . DS . 'dispatch_jump.tpl',

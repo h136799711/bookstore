@@ -15,6 +15,8 @@ class Index extends BaseController
 
     public function index()
     {
+        //给模版给以一个当前时间戳的值
+        $this->assign('demo_time', $this->request->time());
         if ($this->request->isPost()) {
             $username = $this->param('username', '');
             $password = $this->param('password', '');
@@ -25,9 +27,9 @@ class Index extends BaseController
                 $this->error('登录失败');
             }
         } else {
-            if (session('?user') && session('user') == 'hebidu') {
-                $this->redirect('index/book/search');
-            }
+//            if (session('?user') && session('user') == 'hebidu') {
+//                $this->redirect('index/book/search');
+//            }
             return $this->fetch();
         }
     }

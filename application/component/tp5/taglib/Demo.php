@@ -14,13 +14,18 @@
  *********************************
  */
 
-namespace by\component\taglib;
+namespace by\component\tp5\taglib;
 
 use think\template\TagLib;
 
+/**
+ * Class Demo
+ * tp5 手册的demo 略微改造
+ * @package by\component\tp5\taglib
+ */
 class Demo extends TagLib
 {
-    
+
     /**
      * 定义标签列表
      */
@@ -33,13 +38,16 @@ class Demo extends TagLib
 
     /**
      * 这是一个闭合标签的简单演示
+     * @param $tag
+     * @return string
      */
     public function tagClose($tag)
     {
         $format = empty($tag['format']) ? 'Y-m-d H:i:s' : $tag['format'];
         $time = empty($tag['time']) ? time() : $tag['time'];
+
         $parse = '<?php ';
-        $parse .= 'echo date("' . $format . '",' . $time . ');';
+        $parse .= 'echo toDatetime(' . $time . ',"' . $format . '");';
         $parse .= ' ?>';
         return $parse;
     }

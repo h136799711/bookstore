@@ -22,7 +22,7 @@ function toDatetime($time, $format = 'Y-m-d H:i:s')
 
     $timezone = intval(cookie('timezone'));
     if ($timezone >= -12 && $timezone <= 12) {
-        $time = $timezone * 3600 + $time;
+        $time = $timezone * 3600 + intval($time);
     }
     return date($format, $time);
 }
