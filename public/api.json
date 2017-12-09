@@ -103,6 +103,110 @@
           ]
         }
       ]
+    },
+    {
+      "desc": "书分类接口",
+      "list": [
+        {
+          "desc": "测试从数据库查询返回",
+          "type": "By_Test_db_array",
+          "version": [
+            "100",
+            "102"
+          ],
+          "params": [
+            {
+              "key": "name",
+              "desc": "配置名称(配置表)",
+              "value": "test"
+            }
+          ],
+          "authors": [
+            {
+              "name": "hebidu",
+              "email": "hebiduhebi@126.com"
+            }
+          ]
+        },
+        {
+          "desc": "测试服务接口",
+          "type": "By_Test_index",
+          "version": [
+            "100",
+            "102"
+          ],
+          "params": [
+            {
+              "key": "username",
+              "desc": "登录用户名",
+              "value": "test"
+            },
+            {
+              "key": "password",
+              "desc": "登录密码",
+              "value": "test"
+            }
+          ],
+          "authors": [
+            {
+              "name": "hebidu",
+              "email": "hebiduhebi@126.com"
+            }
+          ]
+        },
+        {
+          "desc": "测试服务接口",
+          "type": "By_Test_array_data",
+          "version": [
+            "100",
+            "102"
+          ],
+          "params": [
+            {
+              "key": "username",
+              "desc": "登录用户名",
+              "value": "test"
+            },
+            {
+              "key": "password",
+              "desc": "登录密码",
+              "value": "test"
+            }
+          ],
+          "authors": [
+            {
+              "name": "hebidu",
+              "email": "hebiduhebi@126.com"
+            }
+          ]
+        },
+        {
+          "desc": "测试失败接口",
+          "type": "By_Test_fail",
+          "version": [
+            "100",
+            "102"
+          ],
+          "params": [
+            {
+              "key": "username",
+              "desc": "登录用户名",
+              "value": "test"
+            },
+            {
+              "key": "password",
+              "desc": "登录密码",
+              "value": "test"
+            }
+          ],
+          "authors": [
+            {
+              "name": "hebidu",
+              "email": "hebiduhebi@126.com"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
