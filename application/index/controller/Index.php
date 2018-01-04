@@ -22,11 +22,16 @@ class Index extends BaseController
             $password = $this->param('password', '');
             if ($username == 'hebidu' && $password == '136799711') {
                 session('user', $username);
+                cookie('user', $username);
                 $this->success('登录成功','index/book/search');
             } else {
                 $this->error('登录失败');
             }
         } else {
+            if (cookie('?user') && cookie('user') == 'hebidu') {
+                session('user', cookie('user'));
+                $this->redirect('index/book/search');
+            }
             if (session('?user') && session('user') == 'hebidu') {
                 $this->redirect('index/book/search');
             }
