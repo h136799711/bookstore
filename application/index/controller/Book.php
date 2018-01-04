@@ -23,7 +23,7 @@ class Book extends BaseIndexController
     /**
      * 页面版本
      */
-    const READ_PAGE_VERSION = 2;
+    const READ_PAGE_VERSION = 3;
 
     /**
      * @return mixed
