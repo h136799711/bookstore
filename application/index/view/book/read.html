@@ -118,6 +118,14 @@
                 console.log('right');
                 window.location.href = "{:url($book_id.'/'.$next_page_no)}";
             }
+            if (key === 68) {
+                console.log('d');
+                window.location.href = "{:url($book_id.'/'.$next_page_no)}";
+            }
+            if (key === 65) {
+                console.log('a');
+                window.location.href = "{:url($book_id.'/'.$pre_page_no)}";
+            }
         }
     });
 </script>
