@@ -27,9 +27,9 @@ class Index extends BaseController
                 $this->error('登录失败');
             }
         } else {
-//            if (session('?user') && session('user') == 'hebidu') {
-//                $this->redirect('index/book/search');
-//            }
+            if (session('?user') && session('user') == 'hebidu') {
+                $this->redirect('index/book/search');
+            }
             return $this->fetch();
         }
     }
