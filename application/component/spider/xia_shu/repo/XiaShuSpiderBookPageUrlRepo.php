@@ -61,7 +61,6 @@ class XiaShuSpiderBookPageUrlRepo extends Model
             'source_type' => BookSiteIntegerType::XIA_SHU_BOOK_SITE,
         ];
         if ($type == 0) {
-            $map['priority'] = $type;
             $view = $this->view;
         } else {
             $view = 'v_priority_book';
